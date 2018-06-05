@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-   android:id="@+id/main_rl_all"
+    android:id="@+id/main_rl_all"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white_back"
-    >
+    android:background="@color/white_back">
 
     <RelativeLayout
         android:id="@+id/main_rl_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/main_ll_id_bottom"
-        android:clickable="true"
-        >
+        android:clickable="true">
 
     </RelativeLayout>
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="1.5dp"
-    android:background="@color/white_back"
-    ></RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="1.5dp"
+        android:background="@color/white_back"
+        android:visibility="gone"></RelativeLayout>
 
     <LinearLayout
         android:id="@+id/main_ll_id_bottom"
@@ -37,27 +36,25 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:visibility="gone"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <ImageButton
                 android:id="@+id/main_ib_message"
                 android:layout_width="@dimen/main_icon"
                 android:layout_height="@dimen/main_icon"
                 android:background="@mipmap/icon_message_normal"
-                android:clickable="false"
-                />
+                android:clickable="false" />
 
             <TextView
                 android:id="@+id/main_tv_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:clickable="false"
                 android:text="消息"
                 android:textAlignment="center"
-                android:clickable="false"
                 android:textSize="@dimen/main_text" />
         </LinearLayout>
-
 
         <LinearLayout
             android:id="@+id/main_ll_work"
@@ -100,19 +97,18 @@
                 android:layout_width="@dimen/main_icon"
                 android:layout_height="@dimen/main_icon"
                 android:background="@mipmap/icon_contact_normal"
-                android:clickable="false"
-                />
+                android:clickable="false" />
 
             <TextView
                 android:id="@+id/main_tv_contact"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:clickable="false"
                 android:text="通讯录"
                 android:textAlignment="center"
-                android:textSize="@dimen/main_text"
-                android:clickable="false"
-                />
+                android:textSize="@dimen/main_text" />
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/main_ll_mine"
             android:layout_width="1dp"
@@ -126,18 +122,16 @@
                 android:layout_width="@dimen/main_icon"
                 android:layout_height="@dimen/main_icon"
                 android:background="@mipmap/icon_mine_normal"
-                android:clickable="false"
-                />
+                android:clickable="false" />
 
             <TextView
                 android:id="@+id/main_tv_mine"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:clickable="false"
                 android:text="我的"
                 android:textAlignment="center"
-                android:textSize="@dimen/main_text"
-                android:clickable="false"
-                />
+                android:textSize="@dimen/main_text" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
