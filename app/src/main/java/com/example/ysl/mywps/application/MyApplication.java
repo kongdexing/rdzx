@@ -3,13 +3,10 @@ package com.example.ysl.mywps.application;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Process;
 import android.support.multidex.MultiDexApplication;
-import android.telecom.Call;
 import android.util.Log;
 
 import com.example.ysl.mywps.R;
-import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.ui.activity.LoginActivity;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -22,15 +19,11 @@ import com.taobao.sophix.listener.PatchLoadStatusListener;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 
-
-import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 
 import cn.jpush.android.api.JPushInterface;
-import io.rong.imkit.RongIM;
-import io.rong.imlib.RongIMClient;
 
 
 /**
@@ -205,8 +198,6 @@ public class MyApplication extends MultiDexApplication implements Thread.Uncaugh
     }
 
     private void stopActivity() {
-
-
         // 跳转到崩溃提示Activity
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);

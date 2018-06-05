@@ -29,16 +29,17 @@ public class DocumentTurnActivity extends BaseActivity {
     LinearLayout issueDocument;
 
     private MyClickListener click = new MyClickListener();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_document_turn_layout);
         ButterKnife.bind(this);
-       llInside.setOnClickListener(click);
-       outDocument.setOnClickListener(click);
-       queryDocument.setOnClickListener(click);
-       issueDocument.setOnClickListener(click);
+        llInside.setOnClickListener(click);
+        outDocument.setOnClickListener(click);
+        queryDocument.setOnClickListener(click);
+        issueDocument.setOnClickListener(click);
     }
 
     @Override
@@ -58,36 +59,36 @@ public class DocumentTurnActivity extends BaseActivity {
 
     }
 
-    private class MyClickListener extends NoDoubleClickListener{
+    private class MyClickListener extends NoDoubleClickListener {
         @Override
         public void click(View v) {
 
             Intent intent = null;
-            switch (v.getId()){
+            switch (v.getId()) {
 
                 case R.id.document_ll_inside:
-                    intent =   new Intent(DocumentTurnActivity.this,StayToDoActivity.class);
-                    intent.putExtra(SysytemSetting.WPS_MODE,SysytemSetting.INSIDE_WPS);
+                    //内部公文
+                    intent = new Intent(DocumentTurnActivity.this, StayToDoActivity.class);
+                    intent.putExtra(SysytemSetting.WPS_MODE, SysytemSetting.INSIDE_WPS);
                     break;
                 case R.id.out_document:
-                    intent =   new Intent(DocumentTurnActivity.this,StayToDoActivity
+                    //外部公文
+                    intent = new Intent(DocumentTurnActivity.this, StayToDoActivity
                             .class);
-                    intent.putExtra(SysytemSetting.WPS_MODE,SysytemSetting.OUT_WPS);
+                    intent.putExtra(SysytemSetting.WPS_MODE, SysytemSetting.OUT_WPS);
                     break;
-                case  R.id.query_document:
-                    intent =   new Intent(DocumentTurnActivity.this,HandleActivity.class);
-                    intent.putExtra(SysytemSetting.WPS_MODE,SysytemSetting.HANDLE_WPS);
+                case R.id.query_document:
+                    //经办查询
+                    intent = new Intent(DocumentTurnActivity.this, HandleActivity.class);
+                    intent.putExtra(SysytemSetting.WPS_MODE, SysytemSetting.HANDLE_WPS);
                     break;
                 case R.id.issue_document:
-                    intent =   new Intent(DocumentTurnActivity.this,HandleActivity.class);
-                    intent.putExtra(SysytemSetting.WPS_MODE,SysytemSetting.ISSUE_WPS);
+                    //下发查询
+                    intent = new Intent(DocumentTurnActivity.this, HandleActivity.class);
+                    intent.putExtra(SysytemSetting.WPS_MODE, SysytemSetting.ISSUE_WPS);
                     break;
-
             }
-
             startActivity(intent);
-
-
         }
     }
 }

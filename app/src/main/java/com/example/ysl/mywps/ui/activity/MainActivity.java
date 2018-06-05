@@ -2,71 +2,41 @@ package com.example.ysl.mywps.ui.activity;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.content.ActivityNotFoundException;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Intent;
-
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.database.Cursor;
-import android.graphics.Typeface;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.annotation.StringDef;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.ysl.mywps.R;
-import com.example.ysl.mywps.bean.FileType;
-import com.example.ysl.mywps.bean.TransportBean;
 import com.example.ysl.mywps.net.HttpUtl;
-import com.example.ysl.mywps.provider.UploadProvider;
-import com.example.ysl.mywps.ui.adapter.PagerAdapter;
 import com.example.ysl.mywps.ui.fragment.ContactFragment;
-import com.example.ysl.mywps.ui.fragment.MessageFragment;
 import com.example.ysl.mywps.ui.fragment.MineFragment;
-import com.example.ysl.mywps.ui.fragment.WorkFragment;
+import com.example.ysl.mywps.ui.fragment.NewWorkFragment;
 import com.example.ysl.mywps.utils.CommonUtil;
 import com.example.ysl.mywps.utils.NoDoubleClickListener;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.example.ysl.mywps.utils.ToastUtils;
-import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.BindInt;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.jpush.android.api.JPushInterface;
-import cn.jpush.android.api.JPushMessage;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -150,13 +120,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      * 当token过期后跳转到登陆界面
      * */
     private void jumpToLogin(){
-
-        SharedPreferenceUtils.loginSave(this, "token", "");
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
-
+//        SharedPreferenceUtils.loginSave(this, "token", "");
+//        Intent intent = new Intent(this, LoginActivity.class);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//        startActivity(intent);
+//        finish();
     }
 
 
@@ -425,7 +393,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case 1:
                 currentIndex = 1;
                 if(workFragment == null){
-                    workFragment = new WorkFragment();
+                    workFragment = new NewWorkFragment();
                     fragmentTransaction.add(R.id.main_rl_container,workFragment);
                 }else {
 

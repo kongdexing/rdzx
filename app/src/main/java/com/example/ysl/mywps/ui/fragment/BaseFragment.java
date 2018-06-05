@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,18 +15,19 @@ import com.umeng.analytics.MobclickAgent;
  */
 public abstract class BaseFragment extends Fragment {
     public int kindFlag = 0;
+    public static String TAG;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
+        TAG = getClass().getSimpleName();
         return setView(inflater, container);
-
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-    initData();
+        initData();
     }
 
     @Override
@@ -45,8 +45,6 @@ public abstract class BaseFragment extends Fragment {
 
     public abstract void initData();
 
-
-
     public abstract View setView(LayoutInflater inflater, ViewGroup container);
 
     @Override
@@ -56,5 +54,6 @@ public abstract class BaseFragment extends Fragment {
     }
 
     public abstract void afterView(View view);
+
     public abstract void setKindFlag(int kindFlag);
 }

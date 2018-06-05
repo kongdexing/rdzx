@@ -2,28 +2,6 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="loading_size">60dp</dimen>
-    <dimen name="margin_small">6dp</dimen>
-    <dimen name="padding_large">8dp</dimen>
-    <dimen name="paddingVertical">12dp</dimen>
-    <dimen name="flow_text_time_top">10dp</dimen>
-    <dimen name="padding_small">5dp</dimen>
-    <dimen name="text_title">20sp</dimen>
-    <dimen name="text_large">18sp</dimen>
-    <dimen name="text_normal">16sp</dimen>
-    <dimen name="text_small">14sp</dimen>
-    <dimen name="button_nomal">12sp</dimen>
-    <dimen name="button_small">10sp</dimen>
-    <dimen name="icon_normal">27sp</dimen>
-    <dimen name="icon_large">30sp</dimen>
-    <dimen name="padding_left">16dp</dimen>
-    <dimen name="work_rect_margin">22dp</dimen>
-    <dimen name="button_padding_top">1.5dp</dimen>
-    <dimen name="button_padding_left">6dp</dimen>
-    <dimen name="button_text_small">14.5sp</dimen>
-    <dimen name="main_small">4dp</dimen>
-    <dimen name="main_icon">25dp</dimen>
-    <dimen name="main_text">14dp</dimen>
 
     <dimen name="dp_0.5">0.5dp</dimen>
     <dimen name="dp_1">1dp</dimen>
@@ -73,5 +51,25 @@
     <dimen name="sp_24">24sp</dimen>
     <dimen name="sp_26">26sp</dimen>
     <dimen name="sp_30">30sp</dimen>
+
+    <!--text size-->
+    <dimen name="txt_display4">112sp</dimen>
+    <dimen name="txt_display3">56sp</dimen>
+    <dimen name="txt_display2">45sp</dimen>
+    <dimen name="txt_display1">34sp</dimen>
+    <dimen name="txt_headline">24sp</dimen>
+    <dimen name="txt_title">21sp</dimen>
+    <dimen name="txt_subhead">17sp</dimen>
+    <dimen name="txt_body">15sp</dimen>
+    <dimen name="txt_caption">13sp</dimen>
+    <dimen name="txt_button">15sp</dimen>
+    <dimen name="splash_margin_bottom">40dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <item name="sp_int_10" format="float" type="dimen">10</item>
+    <item name="sp_int_12" format="float" type="dimen">12</item>
+    <item name="sp_int_14" format="float" type="dimen">14</item>
+    <item name="sp_int_16" format="float" type="dimen">16</item>
+    <item name="sp_int_18" format="float" type="dimen">18</item>
 
 </resources>

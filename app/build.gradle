@@ -94,6 +94,8 @@ dependencies {
     compile project(':fit7')
     compile project(":silicompressor")
     compile project(":IMKit")
+    compile project(":viewpagerindicator")
+
     compile 'com.android.support:multidex:1.0.1'
 //    compile 'com.android.support:multidex:'
     compile 'com.github.navasmdc:MaterialDesign:1.5@aar'
@@ -102,4 +104,8 @@ dependencies {
     compile 'com.umeng.sdk:common:latest.integration'
     compile 'com.aliyun.ams:alicloud-android-hotfix:3.2.2'
 //    compile(name:'SmallVideoLib', ext:'aar')
+    //轮播图控件
+    compile 'com.youth.banner:banner:1.4.9'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.parse:parse-android:1.13.1'
 }

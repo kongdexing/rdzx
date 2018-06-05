@@ -1,2 +1,2 @@
-include ':app', ':fit7', ':silicompressor', ':IMLib', ':IMKit'
+include ':app', ':fit7', ':silicompressor', ':IMLib', ':IMKit', ':viewpagerindicator'
 include ':pulltoRefresh'

@@ -172,7 +172,6 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
      * 当token过期后跳转到登陆界面
      */
     private void jumpToLogin() {
-
         SharedPreferenceUtils.loginSave(this, "token", "");
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

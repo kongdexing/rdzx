@@ -1,15 +1,12 @@
 package com.example.ysl.mywps.utils;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.provider.Settings;
 import android.view.Display;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
-
-import net.sourceforge.pinyin4j.PinyinHelper;
 
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
@@ -85,7 +82,6 @@ public class CommonUtil {
         return wh;
     }
 
-
     public static String getAndroidId(Context context) {
 
         String serialnum = null;
@@ -125,42 +121,41 @@ public class CommonUtil {
             df.format(gb);
 
             return gb + " G";
-        }else if(mb > 0){
+        } else if (mb > 0) {
             df.format(mb);
-            return mb+" M";
-        }else if(kb > 0){
+            return mb + " M";
+        } else if (kb > 0) {
             df.format(kb);
-            return kb+" kb";
-        }else {
-            return length+" b";
+            return kb + " kb";
+        } else {
+            return length + " b";
         }
     }
 
-    public static boolean isVideo(String name){
-        if(isEmpty(name)){
+    public static boolean isVideo(String name) {
+        if (isEmpty(name)) {
             return false;
         }
         String videoType = "3gp,asf,avi,m4u,m4v,mov,mp4,mpe,mpeg,mpg,mpg4";
 
-        String type = name.substring(name.length()-3,name.length());
-        Logger.i("type   "+type);
+        String type = name.substring(name.length() - 3, name.length());
+        Logger.i("type   " + type);
         type = type.toLowerCase();
 
-        if(videoType.contains(type)) return true;
-        else  return false;
+        if (videoType.contains(type)) return true;
+        else return false;
     }
 
 
-    public static String subsSize(String size){
-        if(CommonUtil.isEmpty(size)) return size;
+    public static String subsSize(String size) {
+        if (CommonUtil.isEmpty(size)) return size;
         int startIndex = size.indexOf(".");
         int lastIndex = size.length();
-        if(lastIndex - startIndex > 5){
-            size = size.substring(0,startIndex+2)+size.substring(size.length()-2,size.length());
+        if (lastIndex - startIndex > 5) {
+            size = size.substring(0, startIndex + 2) + size.substring(size.length() - 2, size.length());
         }
         return size;
     }
-
 
 
 }

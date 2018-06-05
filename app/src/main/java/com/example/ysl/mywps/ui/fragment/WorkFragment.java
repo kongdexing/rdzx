@@ -75,18 +75,13 @@ public class WorkFragment extends BaseFragment {
 
     @Override
     public View setView(LayoutInflater inflater, ViewGroup container) {
-
         View view = inflater.inflate(R.layout.fragment_work_layout, container, false);
         ButterKnife.bind(this, view);
-
-
         return view;
     }
 
-
     @Override
     public void afterView(View view) {
-
         llTurn.setOnClickListener(myclickListener);
         llMaterial.setOnClickListener(myclickListener);
         rlSocialCondition.setOnClickListener(myclickListener);
@@ -98,8 +93,6 @@ public class WorkFragment extends BaseFragment {
         llColleagues.setOnClickListener(myclickListener);
         llQuession.setOnClickListener(myclickListener);
         llMembers.setOnClickListener(myclickListener);
-
-
     }
 
     @Override
@@ -127,21 +120,16 @@ public class WorkFragment extends BaseFragment {
         public void click(View v) {
             Intent intent = null;
             switch (v.getId()) {
-
                 case R.id.work_ll_document_turn:
-
                     intent = new Intent(getActivity(), DocumentTurnActivity.class);
                     break;
-
                 case R.id.work_ll_material:
                     intent = new Intent(getActivity(), MaterialActivity.class);
                     break;
                 case R.id.work_rl_social_condition:
-
                     intent = new Intent(getActivity(), WebviewActivity.class);
                     break;
                 case R.id.fragment_work_ll_kefu:
-
                     try {
                         RongIM.getInstance().startCustomerServiceChat(getActivity(), "KEFU152077670318138", "在线客服1", csInfo);
                     } catch (Exception e) {
@@ -150,29 +138,20 @@ public class WorkFragment extends BaseFragment {
                     }
                     break;
                 case R.id.work_ll_proposal:
-
                     intent = new Intent(getActivity(), ProposalActivity.class);
                     break;
                 case R.id.work_ll_theme_activity: //主题活动
-
                     intent = new Intent(getActivity(), ThemeActivity.class);
-
                     break;
-
                 case R.id.work_ll_meetting: //会议助手
-
                     intent = new Intent(getActivity(), MeettingActivity.class);
                     break;
                 case R.id.work_ll_report://通知公告
-
                     intent = new Intent(getActivity(), ReportActivity.class);
                     break;
-
                 case R.id.work_ll_colleagues://同事吧
-
                     intent = new Intent(getActivity(), ColleagueAcitivity.class);
                     break;
-
                 case R.id.work_ll_quession://问卷调查
 
                     intent = new Intent(getActivity(), QuestionActivity.class);
