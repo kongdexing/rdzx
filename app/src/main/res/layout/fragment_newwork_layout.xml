@@ -72,6 +72,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_6"
+                    android:textSize="@dimen/sp_14"
+                    android:textColor="@color/text_gray"
                     android:text="移动办公" />
             </LinearLayout>
 
@@ -91,6 +93,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_6"
+                    android:textSize="@dimen/sp_14"
+                    android:textColor="@color/text_gray"
                     android:text="提案系统" />
             </LinearLayout>
 
@@ -110,6 +114,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_6"
+                    android:textSize="@dimen/sp_14"
+                    android:textColor="@color/text_gray"
                     android:text="社情民意" />
             </LinearLayout>
 
@@ -129,6 +135,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_6"
+                    android:textSize="@dimen/sp_14"
+                    android:textColor="@color/text_gray"
                     android:text="委员之家" />
             </LinearLayout>
         </LinearLayout>
@@ -142,7 +150,7 @@
             android:layout_marginTop="@dimen/dp_20"
             android:text="热门推荐"
             android:textColor="@color/text_black"
-            android:textSize="@dimen/sp_22"
+            android:textSize="@dimen/sp_18"
             android:textStyle="bold" />
 
         <!--动态添加的分组-->
