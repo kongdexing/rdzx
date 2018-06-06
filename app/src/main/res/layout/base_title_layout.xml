@@ -4,13 +4,13 @@
     android:layout_height="match_parent"
     android:clipToPadding="true"
     android:orientation="vertical"
-    android:background="@color/tool_bar"
-    android:fitsSystemWindows="true">
+    android:background="@color/tool_bar">
 
     <RelativeLayout
         android:id="@+id/tittle_rl_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_25"
         android:background="@color/tool_bar"
         android:paddingBottom="8dp"
         android:paddingTop="8dp"

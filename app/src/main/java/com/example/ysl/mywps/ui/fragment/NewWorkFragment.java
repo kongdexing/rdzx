@@ -68,7 +68,7 @@ public class NewWorkFragment extends BaseFragment {
         Log.i(TAG, "afterView: ");
         int[] WHs = CommonUtil.getScreenWH(this.getContext());
         int width = WHs[0];
-        int height = width / 2;
+        int height = width * 3 / 5;
         Log.i(TAG, "initView: " + width + "  " + height);
 
         try {

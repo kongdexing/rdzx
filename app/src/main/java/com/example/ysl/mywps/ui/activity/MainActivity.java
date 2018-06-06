@@ -2,7 +2,6 @@ package com.example.ysl.mywps.ui.activity;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
@@ -85,7 +84,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Fragment currentFragment;
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
-    float x1,x2,y1,y2;
+    float x1, x2, y1, y2;
     int currentIndex = 0;
 //    private PagerAdapter pagerAdapter;
 
@@ -106,7 +105,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         llContact.setOnClickListener(this);
 
 
-
         colorNomal = getResources().getColorStateList(R.color.bottom_normal);
         colorSelect = getResources().getColorStateList(R.color.bottom_selected);
         fragmentManager = getSupportFragmentManager();
@@ -115,11 +113,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
-
     /**
      * 当token过期后跳转到登陆界面
-     * */
-    private void jumpToLogin(){
+     */
+    private void jumpToLogin() {
 //        SharedPreferenceUtils.loginSave(this, "token", "");
 //        Intent intent = new Intent(this, LoginActivity.class);
 //        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -128,11 +125,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
-
     /**
      * 获取文件类目
-     * */
-    private void saveFileTypes(final String token){
+     */
+    private void saveFileTypes(final String token) {
         final Thread fileTypeThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -150,7 +146,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                             int code = object.getInt("code");
                             String msg = object.getString("msg");
 
-                            if(CommonUtil.isNotEmpty(msg) && msg.contains("登陆信息有误") || code == 1){
+                            if (CommonUtil.isNotEmpty(msg) && msg.contains("登陆信息有误") || code == 1) {
                                 jumpToLogin();
 
                             }
@@ -184,8 +180,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void initView() {
-
-
 
 
 //        ArrayList<Fragment> fragments = new ArrayList<>();
@@ -269,15 +263,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
-
     @Override
     protected void onPause() {
         super.onPause();
     }
 
     private int currentMyIndex = 1;
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void setTextBack(int index) {
+        showTitle(true);
 
         switch (index) {
 //            case 0:
@@ -294,9 +289,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //
 //                break;
             case 1:
-
                 setTitleText("工作");
-
+                showTitle(false);
                 tvMessage.setTextColor(colorNomal);
                 tvConact.setTextColor(colorNomal);
                 tvWork.setTextColor(colorSelect);
@@ -345,7 +339,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     /**
      * viewpager下的
-     * */
+     */
 //    private void showMessage(int index) {
 //
 //
@@ -370,14 +364,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //        }
 //
 //    }
-
-
-
-    public void showMessage(int index){
+    public void showMessage(int index) {
 
         fragmentTransaction = fragmentManager.beginTransaction();
-        if(currentFragment != null && index != currentMyIndex) fragmentTransaction.hide(currentFragment);
-        switch (index){
+        if (currentFragment != null && index != currentMyIndex)
+            fragmentTransaction.hide(currentFragment);
+        switch (index) {
 
 //            case 0:
 //                currentIndex = 0;
@@ -392,12 +384,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //                break;
             case 1:
                 currentIndex = 1;
-                if(workFragment == null){
+                if (workFragment == null) {
                     workFragment = new NewWorkFragment();
-                    fragmentTransaction.add(R.id.main_rl_container,workFragment);
-                }else {
+                    fragmentTransaction.add(R.id.main_rl_container, workFragment);
+                } else {
 
-                 if(workFragment.isHidden())   fragmentTransaction.show(workFragment);
+                    if (workFragment.isHidden()) fragmentTransaction.show(workFragment);
                 }
                 currentFragment = workFragment;
                 setTextBack(1);
@@ -405,11 +397,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case 2:
 
                 currentIndex = 2;
-                if(contactFragment == null){
+                if (contactFragment == null) {
                     contactFragment = new ContactFragment();
-                    fragmentTransaction.add(R.id.main_rl_container,contactFragment);
-                }else {
-                    if(contactFragment.isHidden())       fragmentTransaction.show(contactFragment);
+                    fragmentTransaction.add(R.id.main_rl_container, contactFragment);
+                } else {
+                    if (contactFragment.isHidden()) fragmentTransaction.show(contactFragment);
                 }
                 currentFragment = contactFragment;
                 setTextBack(2);
@@ -417,19 +409,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case 3:
 
                 currentIndex = 3;
-                if(mineFragment == null){
+                if (mineFragment == null) {
 
                     mineFragment = new MineFragment();
-                    fragmentTransaction.add(R.id.main_rl_container,mineFragment);
-                }else {
-                    if(mineFragment.isHidden())     fragmentTransaction.show(mineFragment);
+                    fragmentTransaction.add(R.id.main_rl_container, mineFragment);
+                } else {
+                    if (mineFragment.isHidden()) fragmentTransaction.show(mineFragment);
                 }
                 currentFragment = mineFragment;
                 setTextBack(3);
                 break;
 
         }
-        fragmentTransaction.setCustomAnimations(R.anim.fragment_out,R.anim.fragment_back,R.anim.fragment_out,R.anim.fragment_back);
+        fragmentTransaction.setCustomAnimations(R.anim.fragment_out, R.anim.fragment_back, R.anim.fragment_out, R.anim.fragment_back);
         fragmentTransaction.commit();
 
     }
@@ -438,7 +430,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
 
-        switch (ev.getAction()){
+        switch (ev.getAction()) {
 
             case MotionEvent.ACTION_DOWN:
 
@@ -454,19 +446,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 float reduceX = x1 - x2;
                 float reduceY = Math.abs(y1 - y2);
 
-                if(reduceY < 100){
+                if (reduceY < 100) {
 
-                    if(Math.abs(reduceX) >  50){
+                    if (Math.abs(reduceX) > 50) {
 
-                        if(reduceX < 0){
-                            if (currentIndex > 1){
+                        if (reduceX < 0) {
+                            if (currentIndex > 1) {
                                 int movieIndex = currentIndex - 1;
                                 showMessage(movieIndex);
                             }
 
-                        }else {
+                        } else {
                             if (currentIndex < 3) {
-                                int movieIndex = currentIndex+1;
+                                int movieIndex = currentIndex + 1;
                                 showMessage(movieIndex);
                             }
                         }
@@ -478,7 +470,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 
         }
-
 
 
         return super.dispatchTouchEvent(ev);
@@ -526,7 +517,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
-
     /**
      * 检查存储权限，如果没有就请求
      */
@@ -551,7 +541,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 Log.i("CMCC", "权限被允许");
             } else {
                 Log.i("CMCC", "权限被拒绝");
-                ToastUtils.showShort(this,"请开启存储权限");
+                ToastUtils.showShort(this, "请开启存储权限");
                 writePermission();
             }
 
