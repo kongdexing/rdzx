@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.ui.activity.MembersActivity;
+import com.example.ysl.mywps.ui.activity.NewOAActivity;
 import com.example.ysl.mywps.ui.activity.ProposalActivity;
 import com.example.ysl.mywps.ui.activity.WebviewActivity;
 import com.example.ysl.mywps.ui.view.HomeNewsView;
@@ -180,7 +181,7 @@ public class NewWorkFragment extends BaseFragment {
         Intent intent = null;
         switch (view.getId()) {
             case R.id.llItem1://移动办公
-
+                intent = new Intent(getActivity(), NewOAActivity.class);
                 break;
             case R.id.llItem2://提案系统
                 intent = new Intent(getActivity(), ProposalActivity.class);
@@ -194,7 +195,6 @@ public class NewWorkFragment extends BaseFragment {
         }
         if (intent != null) startActivity(intent);
     }
-
 
     @Override
     public void onResume() {

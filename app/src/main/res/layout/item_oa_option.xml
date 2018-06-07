@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llHomeItem"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_back"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/dp_18">
+
+    <ImageView
+        android:id="@+id/optionImg"
+        android:layout_width="@dimen/dp_30"
+        android:layout_height="@dimen/dp_30"
+        android:clickable="false" />
+
+    <TextView
+        android:id="@+id/optionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_5"
+        android:clickable="false"
+        android:text=""
+        android:textColor="@color/txt_oa"
+        android:textSize="@dimen/sp_13" />
+
+</LinearLayout>
