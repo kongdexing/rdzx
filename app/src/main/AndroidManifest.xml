@@ -28,7 +28,6 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -50,38 +49,31 @@
         <activity
             android:name=".ui.activity.MainActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity android:name=".ui.activity.BaseActivity" />
         <activity android:name=".ui.activity.DocumentFlowActivity" />
         <activity android:name=".ui.activity.DocumentTurnActivity" />
         <activity
             android:name=".ui.activity.StayToDoActivity"
-            android:launchMode="singleTask"></activity>
-        <activity android:name=".ui.activity.WpsDetailActivity"></activity>
-        <activity android:name=".ui.activity.SignActivity"></activity>
-        <activity android:name=".ui.activity.CommitActivity"></activity>
-        <activity android:name=".ui.activity.FlowActivity"></activity>
-        <activity android:name=".ui.activity.ContactActivity"></activity>
-        <activity android:name=".ui.activity.MaterialActivity"></activity>
-        <activity android:name=".ui.activity.SearchActivity"></activity>
-
-        <activity android:name=".ui.activity.ContactDetailActivity"></activity>
-        <activity android:name=".ui.activity.DocumentDetailActivity"></activity>
-        <activity android:name=".ui.activity.ThemeActivity"></activity>
-        <activity android:name=".ui.activity.MeettingActivity"></activity>
-        <activity android:name=".ui.activity.ReportActivity"></activity>
-        <activity android:name=".ui.activity.ColleagueAcitivity"></activity>
-        <activity android:name=".ui.activity.QuestionActivity"></activity>
-        <activity android:name=".ui.activity.MembersActivity"></activity>
-        <activity android:name=".ui.activity.WebviewActivity"
-
-            ></activity>
-        <activity android:name=".ui.activity.ProposalActivity"
-
-            ></activity>
-        <activity android:name=".ui.activity.HandleActivity"></activity>
+            android:launchMode="singleTask" />
+        <activity android:name=".ui.activity.WpsDetailActivity" />
+        <activity android:name=".ui.activity.SignActivity" />
+        <activity android:name=".ui.activity.CommitActivity" />
+        <activity android:name=".ui.activity.FlowActivity" />
+        <activity android:name=".ui.activity.ContactActivity" />
+        <activity android:name=".ui.activity.MaterialActivity" />
+        <activity android:name=".ui.activity.SearchActivity" />
+        <activity android:name=".ui.activity.ContactDetailActivity" />
+        <activity android:name=".ui.activity.DocumentDetailActivity" />
+        <activity android:name=".ui.activity.ThemeActivity" />
+        <activity android:name=".ui.activity.MeettingActivity" />
+        <activity android:name=".ui.activity.ReportActivity" />
+        <activity android:name=".ui.activity.ColleagueAcitivity" />
+        <activity android:name=".ui.activity.QuestionActivity" />
+        <activity android:name=".ui.activity.MembersActivity" />
+        <activity android:name=".ui.activity.WebviewActivity" />
+        <activity android:name=".ui.activity.ProposalActivity" />
+        <activity android:name=".ui.activity.HandleActivity" />
         <activity android:name=".ui.activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -90,19 +82,19 @@
             </intent-filter>
         </activity>
 
-        <!--融云客服Activity注册-->
+        <!-- 融云客服Activity注册 -->
         <activity android:name=".ui.activity.ConversionListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data
                     android:host="com.example.ysl.mywps"
                     android:pathPrefix="/conversationlist"
                     android:scheme="rong" />
             </intent-filter>
         </activity>
-
         <activity android:name=".ui.activity.ConversionActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -129,10 +121,9 @@
         </activity>
         <activity android:name=".ui.activity.ProposalActivity" />
 
-
         <service android:name=".agent.AgentMessageService">
             <intent-filter>
-                <action android:name="cn.wps.moffice.agent.OfficeServiceAgent"></action>
+                <action android:name="cn.wps.moffice.agent.OfficeServiceAgent" />
             </intent-filter>
         </service>
         <service android:name=".client.MofficeClientService">
@@ -149,7 +140,6 @@
                 <action android:name="cn.wps.moffice.broadcast.AfterSaved" />
                 <action android:name="com.kingsoft.writer.back.key.down" />
                 <action android:name="com.kingsoft.writer.home.key.down" />
-
             </intent-filter>
         </receiver>
         <receiver
@@ -170,19 +160,21 @@
             android:enabled="true">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" />
+
                 <category android:name="com.example.ysl.mywps" />
             </intent-filter>
         </receiver>
 
         <provider
-            android:name="com.example.ysl.mywps.provider.UploadProvider"
+            android:name=".provider.UploadProvider"
             android:authorities="com.example.ysl.mywps.upload"
             android:exported="true" />
         <provider
-            android:name="com.example.ysl.mywps.provider.DownLoadProvider"
+            android:name=".provider.DownLoadProvider"
             android:authorities="com.example.ysl.mywps.download.file"
             android:exported="true" />
 
+        <activity android:name=".ui.activity.NewOAActivity"></activity>
     </application>
 
 </manifest>

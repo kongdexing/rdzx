@@ -1,5 +1,6 @@
 package com.example.ysl.mywps.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -11,6 +12,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.ysl.mywps.R;
+import com.example.ysl.mywps.ui.activity.MembersActivity;
+import com.example.ysl.mywps.ui.activity.ProposalActivity;
+import com.example.ysl.mywps.ui.activity.WebviewActivity;
 import com.example.ysl.mywps.ui.view.HomeNewsView;
 import com.example.ysl.mywps.ui.view.autoviewpager.GlideImageLoader;
 import com.example.ysl.mywps.utils.CommonUtil;
@@ -24,6 +28,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -44,6 +49,7 @@ public class NewWorkFragment extends BaseFragment {
 
     @BindView(R.id.llGroup)
     LinearLayout llGroup;
+
 
     List<String> advertList = new ArrayList<>();
     private String token = "";
@@ -68,7 +74,7 @@ public class NewWorkFragment extends BaseFragment {
         Log.i(TAG, "afterView: ");
         int[] WHs = CommonUtil.getScreenWH(this.getContext());
         int width = WHs[0];
-        int height = width * 3 / 5;
+        int height = width * 49 / 72;
         Log.i(TAG, "initView: " + width + "  " + height);
 
         try {
@@ -117,11 +123,12 @@ public class NewWorkFragment extends BaseFragment {
         listBannerImages.add("http://f.hiphotos.baidu.com/image/pic/item/b812c8fcc3cec3fdf10120e3da88d43f8794276c.jpg");
         listBannerImages.add("http://c.hiphotos.baidu.com/image/pic/item/f11f3a292df5e0fe43250e97506034a85edf7263.jpg");
 
-        listTitles.add("balabala");
-        listTitles.add("balabala");
-        listTitles.add("balabala");
-        listTitles.add("balabala");
-        listTitles.add("balabala");
+        listTitles.add("balabala0");
+        listTitles.add("balabala1");
+        listTitles.add("balabala2");
+        listTitles.add("balabala3");
+        listTitles.add("balabala4");
+        tipTitle.setText(listTitles.get(0));
 
         if (topBanner == null) {
             return;
@@ -135,7 +142,12 @@ public class NewWorkFragment extends BaseFragment {
 
             @Override
             public void onPageSelected(int position) {
-                tipTitle.setText(listTitles.get(position));
+                Log.i(TAG, "onPageSelected: " + position);
+                try {
+                    tipTitle.setText(listTitles.get(position - 1));
+                } catch (Exception ex) {
+                    Log.i(TAG, "onPageSelected error: " + ex.getMessage());
+                }
             }
 
             @Override
@@ -161,6 +173,26 @@ public class NewWorkFragment extends BaseFragment {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         unbinder = ButterKnife.bind(this, rootView);
         return rootView;
+    }
+
+    @OnClick({R.id.llItem1, R.id.llItem2, R.id.llItem3, R.id.llItem4})
+    void viewClick(View view) {
+        Intent intent = null;
+        switch (view.getId()) {
+            case R.id.llItem1://移动办公
+
+                break;
+            case R.id.llItem2://提案系统
+                intent = new Intent(getActivity(), ProposalActivity.class);
+                break;
+            case R.id.llItem3://社情民意
+                intent = new Intent(getActivity(), WebviewActivity.class);
+                break;
+            case R.id.llItem4://委员之家
+                intent = new Intent(getActivity(), MembersActivity.class);
+                break;
+        }
+        if (intent != null) startActivity(intent);
     }
 
 

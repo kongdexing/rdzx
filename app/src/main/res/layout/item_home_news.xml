@@ -17,6 +17,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/optionImg"
+            android:layout_marginRight="@dimen/dp_5"
             android:orientation="vertical">
 
             <TextView
@@ -25,8 +27,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_4"
                 android:clickable="false"
-                android:text="title"
-                android:textSize="@dimen/sp_18" />
+                android:ellipsize="end"
+                android:lines="2"
+                android:textColor="@color/text_stay"
+                android:text="重磅！国务院常务会决定，全面清理各类证明事项！"
+                android:textSize="@dimen/sp_16" />
 
             <TextView
                 android:id="@+id/txtContent"
@@ -35,14 +40,15 @@
                 android:layout_marginTop="@dimen/dp_4"
                 android:clickable="false"
                 android:text="content"
-                android:textSize="@dimen/sp_13" />
+                android:textSize="@dimen/sp_13"
+                android:visibility="gone" />
 
         </LinearLayout>
 
         <ImageView
             android:id="@+id/optionImg"
-            android:layout_width="@dimen/dp_70"
-            android:layout_height="@dimen/dp_50"
+            android:layout_width="@dimen/dp_120"
+            android:layout_height="@dimen/dp_70"
             android:layout_alignParentRight="true"
             android:background="@drawable/tip_ad_def" />
     </RelativeLayout>

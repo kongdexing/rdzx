@@ -107,7 +107,6 @@ public class LoginActivity extends BaseActivity {
 
     private void getLogin() {
 
-
         preferences = getSharedPreferences(SysytemSetting.USER_FILE, Context.MODE_PRIVATE);
         String name = preferences.getString(SysytemSetting.USER_NAME, "");
         String passowrd = preferences.getString(SysytemSetting.USER_PASSWORD, "");
@@ -130,14 +129,12 @@ public class LoginActivity extends BaseActivity {
         }
         if (CommonUtil.isNotEmpty(name)) {
             etPhone.setText(name);
+            etPhone.setSelection(name.length());
         }
         if (CommonUtil.isNotEmpty(passowrd)) {
             etPassword.setText(passowrd);
         }
-
     }
-
-
 
     private void doLogin() {
         loading.setVisibility(View.VISIBLE);
@@ -188,8 +185,6 @@ public class LoginActivity extends BaseActivity {
                     CommonUtil.showShort(getApplicationContext(), msg);
                     JSONObject childObject = object.getJSONObject("data");
                     if (childObject.has("token")) {
-
-
                         String token = childObject.getString("token");
                         String realName = childObject.getString("realname");
                         saveFileTypes(token);
@@ -200,16 +195,12 @@ public class LoginActivity extends BaseActivity {
                         editor.commit();
                         loginSuccess();
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
-
 //                    CommonUtil.showLong(getApplicationContext(), s);
                 }
 
                 loading.setVisibility(View.GONE);
-
             }
 
 
@@ -218,8 +209,8 @@ public class LoginActivity extends BaseActivity {
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
-
     }
+
     /**
      * 获取文件类目
      * */

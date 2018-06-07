@@ -9,6 +9,7 @@ import android.util.Log;
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.ui.activity.LoginActivity;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
+import com.example.ysl.mywps.utils.ToastUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.orhanobut.logger.AndroidLogAdapter;
@@ -112,7 +113,7 @@ public class MyApplication extends MultiDexApplication implements Thread.Uncaugh
         super.attachBaseContext(base);
 
         String appVersion = getResources().getString(R.string.version_name);
-        Log.e("aaa","版本号"+appVersion);
+        Log.e("aaa", "版本号" + appVersion);
         // initialize必须放在attachBaseContext最前面，初始化代码直接写在Application类里面，切勿封装到其他类。
         SophixManager.getInstance().setContext(this)
                 .setAppVersion(appVersion)
@@ -137,14 +138,11 @@ public class MyApplication extends MultiDexApplication implements Thread.Uncaugh
                         }
                     }
                 }).initialize();
-
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-
-
         context = getApplicationContext();
         Logger.addLogAdapter(new AndroidLogAdapter());
         config = new ImageLoaderConfiguration.Builder(getBaseContext())
@@ -158,7 +156,6 @@ public class MyApplication extends MultiDexApplication implements Thread.Uncaugh
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
         int myALias = 3;
-
 
         SophixManager.getInstance().queryAndLoadNewPatch();
 
@@ -178,8 +175,6 @@ public class MyApplication extends MultiDexApplication implements Thread.Uncaugh
 
 //崩溃捕获并处理
         Thread.setDefaultUncaughtExceptionHandler(this);
-
-//
     }
 
 
@@ -192,7 +187,7 @@ public class MyApplication extends MultiDexApplication implements Thread.Uncaugh
     public void uncaughtException(Thread thread, Throwable throwable) {
 
         String result = getStackTrace(throwable);
-        Log.e("aaa", "crash " + result);
+        Log.i("aaa", "crash " + result);
         SharedPreferenceUtils.loginSave(this, "token", "");
         stopActivity();
     }

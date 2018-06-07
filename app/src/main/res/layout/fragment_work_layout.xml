@@ -7,8 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -16,8 +15,7 @@
             android:background="@color/tool_bar"
             android:paddingBottom="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_horizontal_margin"
-            android:visibility="gone"
-            >
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -227,6 +225,7 @@
                 android:layout_marginTop="@dimen/paddingVertical"
                 android:background="@color/arrow" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -234,8 +233,6 @@
             android:orientation="vertical"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin">
-
-
 
 
             <LinearLayout
@@ -494,8 +491,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/paddingVertical"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="@dimen/icon_normal"
@@ -535,6 +531,7 @@
 
                 </LinearLayout>
             </LinearLayout>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
@@ -547,8 +544,8 @@
             android:layout_height="match_parent"
             android:background="@color/stay_back"
             android:paddingBottom="@dimen/paddingVertical"
-            android:paddingTop="@dimen/paddingVertical"
-            android:paddingLeft="@dimen/activity_horizontal_margin">
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/paddingVertical">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -568,52 +565,52 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin">
 
-   <LinearLayout
-       android:id="@+id/work_ll_proposal"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/paddingVertical"
-    android:orientation="horizontal"
-    >
-
-
-    <ImageView
-        android:layout_width="@dimen/icon_normal"
-        android:layout_height="@dimen/icon_normal"
-        android:background="@mipmap/sucaigongxian" />
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/activity_horizontal_margin">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/work_ll_proposal"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:text="提案"
-                android:textColor="@color/text_black"
-                android:textSize="@dimen/text_large" />
+                android:layout_marginTop="@dimen/paddingVertical"
+                android:orientation="horizontal">
 
 
-            <com.example.ysl.mywps.ui.view.IconTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="&#xe679;"
-                android:textColor="@color/arrow"
-                android:textSize="@dimen/icon_normal" />
+                <ImageView
+                    android:layout_width="@dimen/icon_normal"
+                    android:layout_height="@dimen/icon_normal"
+                    android:background="@mipmap/sucaigongxian" />
 
-        </RelativeLayout>
 
-    </LinearLayout>
-</LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/activity_horizontal_margin">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="提案"
+                            android:textColor="@color/text_black"
+                            android:textSize="@dimen/text_large" />
+
+
+                        <com.example.ysl.mywps.ui.view.IconTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="&#xe679;"
+                            android:textColor="@color/arrow"
+                            android:textSize="@dimen/icon_normal" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
@@ -628,8 +625,8 @@
             android:layout_height="wrap_content"
             android:background="@color/stay_back"
             android:paddingBottom="@dimen/paddingVertical"
-            android:paddingTop="@dimen/paddingVertical"
-            android:paddingLeft="@dimen/activity_horizontal_margin">
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/paddingVertical">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -652,8 +649,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/paddingVertical"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="@dimen/icon_normal"
@@ -707,8 +703,8 @@
             android:layout_height="wrap_content"
             android:background="@color/stay_back"
             android:paddingBottom="@dimen/paddingVertical"
-            android:paddingTop="@dimen/paddingVertical"
-            android:paddingLeft="@dimen/activity_horizontal_margin">
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/paddingVertical">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -729,52 +725,51 @@
             android:paddingRight="@dimen/activity_horizontal_margin">
 
 
-           <LinearLayout
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_marginTop="@dimen/paddingVertical"
-               android:orientation="horizontal"
-               >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/paddingVertical"
+                android:orientation="horizontal">
 
-               <ImageView
-                   android:layout_width="@dimen/icon_normal"
-                   android:layout_height="@dimen/icon_normal"
-                   android:background="@mipmap/huiyizhu" />
-
-
-               <LinearLayout
-                   android:id="@+id/work_ll_members"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:orientation="vertical"
-                   android:paddingLeft="@dimen/activity_horizontal_margin">
-
-                   <RelativeLayout
-                       android:layout_width="match_parent"
-                       android:layout_height="wrap_content">
-
-                       <TextView
-                           android:layout_width="wrap_content"
-                           android:layout_height="wrap_content"
-                           android:layout_alignParentLeft="true"
-                           android:text="委员之家"
-                           android:textColor="@color/text_black"
-                           android:textSize="@dimen/text_large" />
+                <ImageView
+                    android:layout_width="@dimen/icon_normal"
+                    android:layout_height="@dimen/icon_normal"
+                    android:background="@mipmap/huiyizhu" />
 
 
-                       <com.example.ysl.mywps.ui.view.IconTextView
-                           android:layout_width="wrap_content"
-                           android:layout_height="wrap_content"
-                           android:layout_alignParentRight="true"
-                           android:text="&#xe679;"
-                           android:textColor="@color/arrow"
-                           android:textSize="@dimen/icon_normal" />
+                <LinearLayout
+                    android:id="@+id/work_ll_members"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/activity_horizontal_margin">
 
-                   </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-               </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="委员之家"
+                            android:textColor="@color/text_black"
+                            android:textSize="@dimen/text_large" />
 
-           </LinearLayout>
+
+                        <com.example.ysl.mywps.ui.view.IconTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="&#xe679;"
+                            android:textColor="@color/arrow"
+                            android:textSize="@dimen/icon_normal" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
