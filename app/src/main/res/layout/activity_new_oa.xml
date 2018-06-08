@@ -11,7 +11,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_0.5"
-        android:layout_marginTop="@dimen/dp_20"
+        android:layout_marginTop="@dimen/dp_40"
         android:background="@color/arrow" />
 
     <com.example.ysl.mywps.ui.view.MyGridView
