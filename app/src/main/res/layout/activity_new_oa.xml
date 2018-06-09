@@ -22,13 +22,13 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_0.5"
-        android:background="@color/arrow" />
+        android:background="@color/gray_0" />
 
     <com.example.ysl.mywps.ui.view.MyGridView
         android:id="@+id/grd_oa"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/arrow"
+        android:background="@color/gray_0"
         android:horizontalSpacing="@dimen/dp_0.5"
         android:numColumns="3"
         android:scrollbars="none"
