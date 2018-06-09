@@ -30,7 +30,6 @@ public class ContactAdapter extends BaseAdapter {
 
     }
     public void update(ArrayList<ContactBean> list){
-
         this.list = list;
         notifyDataSetChanged();
     }

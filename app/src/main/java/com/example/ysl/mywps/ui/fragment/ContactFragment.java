@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,10 +17,10 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.ContactBean;
 import com.example.ysl.mywps.net.HttpUtl;
-import com.example.ysl.mywps.ui.activity.ContactActivity;
 import com.example.ysl.mywps.ui.activity.ContactDetailActivity;
 import com.example.ysl.mywps.ui.adapter.ContactAdapter;
 import com.example.ysl.mywps.ui.view.IconTextView;
@@ -36,7 +35,9 @@ import com.orhanobut.logger.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
@@ -138,14 +139,11 @@ public class ContactFragment extends BaseFragment {
         Consumer<String> consumer = new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
-
                 if (s.equals("Y")) {
-
                     adapter.update(list);
                 } else {
                     ToastUtils.showShort(getActivity(), s);
                 }
-
             }
         };
 
@@ -157,14 +155,8 @@ public class ContactFragment extends BaseFragment {
 
     @Override
     public View setView(LayoutInflater inflater, ViewGroup container) {
-
         View view = inflater.inflate(R.layout.fragment_contact_layout, container, false);
         ButterKnife.bind(this,view);
-
-
-
-
-
         return view;
     }
 
@@ -174,8 +166,6 @@ public class ContactFragment extends BaseFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-
                 ContactBean bean = list.get((int) id);
 
                 Intent intent = new Intent(getActivity(), ContactDetailActivity.class);
