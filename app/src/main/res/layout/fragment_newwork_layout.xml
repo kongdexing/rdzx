@@ -75,7 +75,7 @@
                     android:layout_marginTop="@dimen/dp_6"
                     android:text="移动办公"
                     android:textColor="@color/text_gray"
-                    android:textSize="@dimen/sp_14" />
+                    android:textSize="@dimen/sp_13" />
             </LinearLayout>
 
             <LinearLayout
@@ -97,7 +97,7 @@
                     android:layout_marginTop="@dimen/dp_6"
                     android:text="提案系统"
                     android:textColor="@color/text_gray"
-                    android:textSize="@dimen/sp_14" />
+                    android:textSize="@dimen/sp_13" />
             </LinearLayout>
 
             <LinearLayout
@@ -119,7 +119,7 @@
                     android:layout_marginTop="@dimen/dp_6"
                     android:text="社情民意"
                     android:textColor="@color/text_gray"
-                    android:textSize="@dimen/sp_14" />
+                    android:textSize="@dimen/sp_13" />
             </LinearLayout>
 
             <LinearLayout
@@ -141,7 +141,7 @@
                     android:layout_marginTop="@dimen/dp_6"
                     android:text="委员之家"
                     android:textColor="@color/text_gray"
-                    android:textSize="@dimen/sp_14" />
+                    android:textSize="@dimen/sp_13" />
             </LinearLayout>
         </LinearLayout>
 
@@ -149,12 +149,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_3"
             android:layout_marginLeft="@dimen/dp_15"
             android:layout_marginTop="@dimen/dp_20"
             android:text="热门推荐"
             android:textColor="@color/text_black"
-            android:textSize="@dimen/sp_18"
+            android:textSize="@dimen/sp_16"
             android:textStyle="bold" />
 
         <!--动态添加的分组-->

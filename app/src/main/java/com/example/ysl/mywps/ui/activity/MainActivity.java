@@ -104,7 +104,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         llMine.setOnClickListener(this);
         llContact.setOnClickListener(this);
 
-
         colorNomal = getResources().getColorStateList(R.color.bottom_normal);
         colorSelect = getResources().getColorStateList(R.color.bottom_selected);
         fragmentManager = getSupportFragmentManager();
