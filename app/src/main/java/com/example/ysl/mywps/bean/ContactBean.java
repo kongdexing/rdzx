@@ -7,8 +7,7 @@ import android.os.Parcelable;
  * Created by ysl on 2018/1/16.
  */
 
-public class ContactBean  implements Parcelable {
-
+public class ContactBean implements Parcelable {
 
     /**
      * uid : 215
@@ -18,9 +17,6 @@ public class ContactBean  implements Parcelable {
      * dept : zhengxie
      * dept_name : 政协
      */
-
-
-
     private String capital;
     private String uid;
     private String username;
@@ -29,11 +25,9 @@ public class ContactBean  implements Parcelable {
     private String dept;
     private String dept_name;
 
-
-    public ContactBean(){
+    public ContactBean() {
 
     }
-
 
     protected ContactBean(Parcel in) {
         capital = in.readString();
@@ -113,7 +107,6 @@ public class ContactBean  implements Parcelable {
         this.dept_name = dept_name;
     }
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -129,4 +122,5 @@ public class ContactBean  implements Parcelable {
         parcel.writeString(dept);
         parcel.writeString(dept_name);
     }
+
 }

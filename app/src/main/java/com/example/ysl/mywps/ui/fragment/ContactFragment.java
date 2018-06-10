@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.ysl.mywps.R;
@@ -40,6 +39,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.halfbit.pinnedsection.PinnedSectionListView;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -55,14 +55,14 @@ import retrofit2.Response;
  */
 
 public class ContactFragment extends BaseFragment {
-    @BindView(R.id.contact_listview)
-    ListView listView;
+
+    @BindView(R.id.list)
+    PinnedSectionListView listView;
 
     @BindView(R.id.contact_itv_search)
     IconTextView tvSearch;
     @BindView(R.id.contact_et_search)
     EditText etSearch;
-
 
     private ContactAdapter adapter;
 
@@ -76,13 +76,10 @@ public class ContactFragment extends BaseFragment {
         checkPermission();
     }
 
-
     /**
      * 获取通讯录联系人
-     * */
+     */
     private void netWork() {
-
-
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(final ObservableEmitter<String> e) {
@@ -92,7 +89,7 @@ public class ContactFragment extends BaseFragment {
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
-                        if(!response.isSuccessful()){
+                        if (!response.isSuccessful()) {
                             e.onNext(response.message());
                             return;
                         }
@@ -110,9 +107,7 @@ public class ContactFragment extends BaseFragment {
                             for (int i = 0; i < jsonArray.length(); ++i) {
                                 JSONObject object = jsonArray.getJSONObject(i);
                                 JSONArray jsonArray1 = object.getJSONArray("contact");
-
                                 for (int j = 0; j < jsonArray1.length(); ++j) {
-
                                     JSONObject childObject = jsonArray1.getJSONObject(j);
                                     ContactBean bean = gson.fromJson(childObject.toString(), ContactBean.class);
                                     bean.setCapital(PingYinUtils.getPinYinHeadChar(bean.getUsername()));
@@ -136,6 +131,7 @@ public class ContactFragment extends BaseFragment {
 
             }
         });
+
         Consumer<String> consumer = new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
@@ -156,7 +152,7 @@ public class ContactFragment extends BaseFragment {
     @Override
     public View setView(LayoutInflater inflater, ViewGroup container) {
         View view = inflater.inflate(R.layout.fragment_contact_layout, container, false);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
         return view;
     }
 
@@ -170,7 +166,7 @@ public class ContactFragment extends BaseFragment {
 
                 Intent intent = new Intent(getActivity(), ContactDetailActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putParcelable("contact",bean);
+                bundle.putParcelable("contact", bean);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -261,7 +257,7 @@ public class ContactFragment extends BaseFragment {
 //        ActivityCompat.requestPermissions(getActivity(), new String[]{
 //                Manifest.permission.CALL_PHONE
 //        }, 11);
-        if (getActivity().checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED ) {
+        if (getActivity().checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, 11);
         }
     }
