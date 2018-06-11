@@ -51,7 +51,6 @@ public class NewWorkFragment extends BaseFragment {
     @BindView(R.id.llGroup)
     LinearLayout llGroup;
 
-
     List<String> advertList = new ArrayList<>();
     private String token = "";
 
