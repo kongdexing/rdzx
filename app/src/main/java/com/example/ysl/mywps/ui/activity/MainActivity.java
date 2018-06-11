@@ -426,53 +426,53 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-
-        switch (ev.getAction()) {
-
-            case MotionEvent.ACTION_DOWN:
-
-                x1 = ev.getX();
-                y1 = ev.getY();
-                break;
-            case MotionEvent.ACTION_UP:
-
-                x2 = ev.getX();
-                y2 = ev.getY();
-
-
-                float reduceX = x1 - x2;
-                float reduceY = Math.abs(y1 - y2);
-
-                if (reduceY < 100) {
-
-                    if (Math.abs(reduceX) > 50) {
-
-                        if (reduceX < 0) {
-                            if (currentIndex > 1) {
-                                int movieIndex = currentIndex - 1;
-                                showMessage(movieIndex);
-                            }
-
-                        } else {
-                            if (currentIndex < 3) {
-                                int movieIndex = currentIndex + 1;
-                                showMessage(movieIndex);
-                            }
-                        }
-                    }
-
-                }
-
-                break;
-
-
-        }
-
-
-        return super.dispatchTouchEvent(ev);
-    }
+//    @Override
+//    public boolean dispatchTouchEvent(MotionEvent ev) {
+//
+//        switch (ev.getAction()) {
+//
+//            case MotionEvent.ACTION_DOWN:
+//
+//                x1 = ev.getX();
+//                y1 = ev.getY();
+//                break;
+//            case MotionEvent.ACTION_UP:
+//
+//                x2 = ev.getX();
+//                y2 = ev.getY();
+//
+//
+//                float reduceX = x1 - x2;
+//                float reduceY = Math.abs(y1 - y2);
+//
+//                if (reduceY < 100) {
+//
+//                    if (Math.abs(reduceX) > 50) {
+//
+//                        if (reduceX < 0) {
+//                            if (currentIndex > 1) {
+//                                int movieIndex = currentIndex - 1;
+//                                showMessage(movieIndex);
+//                            }
+//
+//                        } else {
+//                            if (currentIndex < 3) {
+//                                int movieIndex = currentIndex + 1;
+//                                showMessage(movieIndex);
+//                            }
+//                        }
+//                    }
+//
+//                }
+//
+//                break;
+//
+//
+//        }
+//
+//
+//        return super.dispatchTouchEvent(ev);
+//    }
 
     @Override
     public void onClick(View v) {

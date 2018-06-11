@@ -14,8 +14,8 @@
 
         <com.example.ysl.mywps.ui.view.CircularImageView
             android:id="@+id/imgHead"
-            android:layout_width="@dimen/dp_100"
-            android:layout_height="@dimen/dp_100"
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="@dimen/dp_80"
             android:layout_marginTop="@dimen/dp_30"
             android:clickable="true"
             android:src="@drawable/abc" />
@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_15"
-            android:text="小花"
+            android:text="崔小花"
             android:textSize="@dimen/sp_18"
             android:textColor="@color/white_back" />
 
