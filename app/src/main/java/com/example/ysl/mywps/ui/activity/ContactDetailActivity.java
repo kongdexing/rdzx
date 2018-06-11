@@ -29,20 +29,6 @@ import butterknife.OnClick;
 
 public class ContactDetailActivity extends BaseActivity {
 
-    @BindView(R.id.contact_detail_iv_avatar)
-    ImageView ivAvatar;
-    @BindView(R.id.contact_detail_tv_uname)
-    TextView tvUname;
-    @BindView(R.id.contact_detail_tv_id)
-    TextView tvId;
-    @BindView(R.id.contact_detail_tv_rname)
-    TextView tvRname;
-    @BindView(R.id.contact_detail_tv_dept)
-    TextView tvDept;
-    @BindView(R.id.contact_detail_tv_tel)
-    TextView tvTel;
-    @BindView(R.id.contact_detail_bt_tel)
-    ButtonRectangle contactDetailBtTel;
 
     ContactBean contactBean;
 
@@ -58,7 +44,7 @@ public class ContactDetailActivity extends BaseActivity {
                 finish();
             }
         });
-        setTitleText("通讯录详情");
+//        setTitleText("通讯录详情");
 
         contactBean = getIntent().getExtras().getParcelable("contact");
 
@@ -67,12 +53,11 @@ public class ContactDetailActivity extends BaseActivity {
     @Override
     public void initView() {
 
-        tvUname.setText(contactBean.getUsername());
-        tvId.setText(contactBean.getUid());
-        tvRname.setText(contactBean.getRealname());
-        tvDept.setText(contactBean.getDept_name());
-        tvTel.setText(contactBean.getMobile());
-
+//        tvUname.setText(contactBean.getUsername());
+//        tvId.setText(contactBean.getUid());
+//        tvRname.setText(contactBean.getRealname());
+//        tvDept.setText(contactBean.getDept_name());
+//        tvTel.setText(contactBean.getMobile());
 
     }
 

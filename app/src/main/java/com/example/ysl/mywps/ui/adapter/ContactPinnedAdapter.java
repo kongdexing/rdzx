@@ -1,7 +1,9 @@
 package com.example.ysl.mywps.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.ContactBean;
 import com.example.ysl.mywps.bean.Item;
+import com.example.ysl.mywps.ui.activity.ContactDetailActivity;
 
 import java.util.List;
 import java.util.Locale;
@@ -84,10 +87,20 @@ public class ContactPinnedAdapter extends ArrayAdapter<Item> implements PinnedSe
 
             TextView tvName = (TextView) view.findViewById(R.id.contact_tv_name);
             TextView tvPhone = (TextView) view.findViewById(R.id.contact_tv_phone);
-            ContactBean contactBean = item.contactBean;
+            final ContactBean contactBean = item.contactBean;
             tvName.setText(contactBean.getUsername());
             tvPhone.setText(contactBean.getMobile());
 
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), ContactDetailActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("contact", contactBean);
+                    intent.putExtras(bundle);
+                    getContext().startActivity(intent);
+                }
+            });
             return view;
         }
     }

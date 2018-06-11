@@ -162,13 +162,7 @@ public class ContactFragment extends BaseFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ContactBean bean = list.get((int) id);
 
-                Intent intent = new Intent(getActivity(), ContactDetailActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("contact", bean);
-                intent.putExtras(bundle);
-                startActivity(intent);
             }
         });
 
