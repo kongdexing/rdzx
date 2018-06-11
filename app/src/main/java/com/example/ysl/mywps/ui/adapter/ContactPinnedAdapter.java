@@ -2,7 +2,6 @@ package com.example.ysl.mywps.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -17,7 +16,6 @@ import com.example.ysl.mywps.bean.Item;
 import com.example.ysl.mywps.ui.activity.ContactDetailActivity;
 
 import java.util.List;
-import java.util.Locale;
 
 import de.halfbit.pinnedsection.PinnedSectionListView;
 
@@ -29,6 +27,7 @@ public class ContactPinnedAdapter extends ArrayAdapter<Item> implements PinnedSe
 
     public ContactPinnedAdapter(@NonNull Context context, int resource) {
         super(context, resource);
+
 
     }
 

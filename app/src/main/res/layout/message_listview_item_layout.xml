@@ -5,10 +5,10 @@
     android:background="@drawable/mine_item_selector"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/dp_10"
+    android:paddingBottom="@dimen/dp_12"
     android:paddingLeft="@dimen/dp_10"
     android:paddingRight="@dimen/dp_10"
-    android:paddingTop="@dimen/dp_10">
+    android:paddingTop="@dimen/dp_12">
 
     <com.example.ysl.mywps.ui.view.CircularImageView
         android:id="@+id/imgHead"
