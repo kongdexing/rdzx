@@ -10,7 +10,8 @@ public class Item {
     public static final int SECTION = 1;
 
     public final int type;
-    public final ContactBean contactBean;
+    public ContactBean contactBean;
+    public String group;
 
     public int sectionPosition;
     public int listPosition;
@@ -18,6 +19,11 @@ public class Item {
     public Item(int type, ContactBean bean) {
         this.type = type;
         contactBean = bean;
+    }
+
+    public Item(int type, String bean) {
+        this.type = type;
+        group = bean;
     }
 
 }

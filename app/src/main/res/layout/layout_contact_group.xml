@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/white_back"
+    android:paddingBottom="@dimen/dp_5"
+    android:paddingLeft="@dimen/dp_18"
+    android:paddingTop="@dimen/dp_5">
 
     <TextView
         android:id="@+id/txtGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:textColor="@color/text_gray" />
+        android:text="A"
+        android:textColor="@color/text_gray"
+        android:textSize="@dimen/sp_18" />
 
 </LinearLayout>

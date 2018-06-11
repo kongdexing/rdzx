@@ -22,6 +22,7 @@ import com.example.ysl.mywps.bean.ContactBean;
 import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.ui.activity.ContactDetailActivity;
 import com.example.ysl.mywps.ui.adapter.ContactAdapter;
+import com.example.ysl.mywps.ui.adapter.ContactPinnedAdapter;
 import com.example.ysl.mywps.ui.view.IconTextView;
 import com.example.ysl.mywps.utils.CommonUtil;
 import com.example.ysl.mywps.utils.MatchesUtil;
@@ -64,14 +65,14 @@ public class ContactFragment extends BaseFragment {
     @BindView(R.id.contact_et_search)
     EditText etSearch;
 
-    private ContactAdapter adapter;
+    private ContactPinnedAdapter adapter;
 
     private ArrayList<ContactBean> list = new ArrayList<>();
     private ArrayList<ContactBean> searchList = new ArrayList<>();
 
     @Override
     public void initData() {
-        adapter = new ContactAdapter(list, getActivity());
+        adapter = new ContactPinnedAdapter(getContext(), R.layout.layout_contact_group);
         netWork();
         checkPermission();
     }
@@ -135,7 +136,7 @@ public class ContactFragment extends BaseFragment {
             @Override
             public void accept(String s) throws Exception {
                 if (s.equals("Y")) {
-                    adapter.update(list);
+                    adapter.loadData(list);
                 } else {
                     ToastUtils.showShort(getActivity(), s);
                 }
@@ -207,7 +208,7 @@ public class ContactFragment extends BaseFragment {
                             public void run() {
 
                                 if (adapter != null) {
-                                    adapter.update(searchList);
+                                    adapter.loadData(searchList);
                                 }
                             }
                         });
@@ -236,7 +237,7 @@ public class ContactFragment extends BaseFragment {
 
                 if (CommonUtil.isEmpty(s.toString())) {
 
-                    if (adapter != null) adapter.update(list);
+                    if (adapter != null) adapter.loadData(list);
                 }
 
             }
@@ -275,8 +276,6 @@ public class ContactFragment extends BaseFragment {
                 Toast.makeText(getActivity(), "请开启电话权限", Toast.LENGTH_SHORT).show();
             }
         } else {
-
-
 //            finish();
         }
     }
