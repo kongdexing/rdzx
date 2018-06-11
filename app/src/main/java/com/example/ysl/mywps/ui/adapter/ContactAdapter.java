@@ -23,14 +23,11 @@ public class ContactAdapter extends BaseAdapter {
 
 
     public ContactAdapter(ArrayList<ContactBean> list, Context context) {
-
-
-        this.list =  list;
+        this.list = list;
         this.context = context;
-
     }
-    public void update(ArrayList<ContactBean> list){
 
+    public void update(ArrayList<ContactBean> list) {
         this.list = list;
         notifyDataSetChanged();
     }
@@ -58,24 +55,24 @@ public class ContactAdapter extends BaseAdapter {
 //
 //        } else {
 
-            if (view == null) {
-                view = LayoutInflater.from(context).inflate(R.layout.message_listview_item_layout, null);
-                holder = new ViewHolder();
+        if (view == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.message_listview_item_layout, null);
+            holder = new ViewHolder();
 
-                holder.tvName = (TextView) view.findViewById(R.id.contact_tv_name);
-                holder.tvDepart = (TextView) view.findViewById(R.id.contact_tv_num);
-                holder.tvPhone = (TextView) view.findViewById(R.id.contact_tv_phone);
+            holder.tvName = (TextView) view.findViewById(R.id.contact_tv_name);
+            holder.tvDepart = (TextView) view.findViewById(R.id.contact_tv_num);
+            holder.tvPhone = (TextView) view.findViewById(R.id.contact_tv_phone);
 
-                view.setTag(holder);
-            }else {
+            view.setTag(holder);
+        } else {
 
-                holder = (ViewHolder) view.getTag();
-            }
+            holder = (ViewHolder) view.getTag();
+        }
 
-            final ContactBean info = list.get(i);
-            holder.tvName.setText(info.getUsername());
-            holder.tvDepart.setText(info.getDept_name());
-            holder.tvPhone.setText(info.getMobile());
+        final ContactBean info = list.get(i);
+        holder.tvName.setText(info.getUsername());
+        holder.tvDepart.setText(info.getDept_name());
+        holder.tvPhone.setText(info.getMobile());
 
 //        }
         return view;

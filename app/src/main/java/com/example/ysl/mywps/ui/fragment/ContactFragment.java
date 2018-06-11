@@ -80,8 +80,6 @@ public class ContactFragment extends BaseFragment {
      * 获取通讯录联系人
      * */
     private void netWork() {
-
-
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(final ObservableEmitter<String> e) {
@@ -111,7 +109,6 @@ public class ContactFragment extends BaseFragment {
                                 JSONArray jsonArray1 = object.getJSONArray("contact");
 
                                 for (int j = 0; j < jsonArray1.length(); ++j) {
-
                                     JSONObject childObject = jsonArray1.getJSONObject(j);
                                     ContactBean bean = gson.fromJson(childObject.toString(), ContactBean.class);
                                     bean.setCapital(PingYinUtils.getPinYinHeadChar(bean.getUsername()));
@@ -127,7 +124,6 @@ public class ContactFragment extends BaseFragment {
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-
                         Logger.i("通讯录  " + t.getMessage());
                         e.onNext(t.getMessage());
                     }
@@ -140,12 +136,10 @@ public class ContactFragment extends BaseFragment {
             public void accept(String s) throws Exception {
 
                 if (s.equals("Y")) {
-
                     adapter.update(list);
                 } else {
                     ToastUtils.showShort(getActivity(), s);
                 }
-
             }
         };
 
