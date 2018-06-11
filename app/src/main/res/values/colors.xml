@@ -19,7 +19,7 @@
     <color name="text_black">#191919</color>
     <color name="txt_contact_name">#464646</color>
     <color name="txt_contact_phone">#868686</color>
-
+    <color name="transparent_gray">#10000000</color>
 
     <!--通讯录界面-->
     <color name="rect_orange">#FF8133</color>

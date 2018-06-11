@@ -106,5 +106,6 @@
         android:layout_height="@dimen/loading_size"
         android:layout_centerInParent="true"
         app:indicatorColor="@color/title"
-        app:indicatorName="BallSpinFadeLoaderIndicator" />
+        app:indicatorName="BallClipRotateIndicator"
+        />
 </RelativeLayout>

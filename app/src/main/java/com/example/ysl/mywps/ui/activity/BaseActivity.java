@@ -1,11 +1,12 @@
 package com.example.ysl.mywps.ui.activity;
 
+import android.app.Dialog;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -16,9 +17,6 @@ import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.ui.view.IconTextView;
 import com.example.ysl.mywps.utils.CommonUtil;
 import com.umeng.analytics.MobclickAgent;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 
 /**
@@ -33,13 +31,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     private LinearLayout llBack;
     private RelativeLayout rlCotent;
     private RelativeLayout tittle_rl_content;
+    private Dialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.base_title_layout);
-
-
         findView();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -91,10 +88,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         llBack.setVisibility(View.INVISIBLE);
         tvTitle.setVisibility(View.INVISIBLE);
         tvRight.setVisibility(View.INVISIBLE);
-
-
     }
-
 
     public void showLeftButton(boolean isShow, String back, View.OnClickListener click) {
         if (isShow)
@@ -103,7 +97,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             llBack.setVisibility(View.INVISIBLE);
         if (CommonUtil.isNotEmpty(back)) tvBack.setText(back);
         if (click != null) llBack.setOnClickListener(click);
-
     }
 
     public void setTitleContent(int visible) {
@@ -186,8 +179,32 @@ public abstract class BaseActivity extends AppCompatActivity {
         lp.addRule(RelativeLayout.BELOW, R.id.ll_basetitle_root);
         if (null != llRoot)
             llRoot.addView(view, lp);
-
     }
 
+    public void showProgress(String str) {
+        if (progressDialog == null) {
+            progressDialog = new Dialog(this, R.style.CustomDialog);
+            progressDialog.setContentView(R.layout.layout_dialog);
+            progressDialog.setCancelable(true);
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        }
+        TextView msg = (TextView) progressDialog.findViewById(R.id.tv_load_dialog);
+        msg.setText(str);
+        try {
+            progressDialog.show();
+        } catch (Exception ex) {
+//            Log.e(TAG, "showProgress: " + ex.getMessage());
+        }
+    }
 
+    public void showProgress(int strId) {
+        showProgress(getResources().getString(strId));
+    }
+
+    public void hideProgress() {
+        if (progressDialog != null) {
+            progressDialog.hide();
+        }
+    }
 }

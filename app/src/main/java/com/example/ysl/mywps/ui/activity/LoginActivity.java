@@ -140,7 +140,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void doLogin() {
-        loading.setVisibility(View.VISIBLE);
+        showProgress("正在登录");
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
@@ -203,7 +203,7 @@ public class LoginActivity extends BaseActivity {
 //                    CommonUtil.showLong(getApplicationContext(), s);
                 }
 
-                loading.setVisibility(View.GONE);
+                hideProgress();
             }
 
 
