@@ -17,6 +17,9 @@
     <color name="txt_oa">#626262</color>
     <color name="text_stay">#4D5A68</color>
     <color name="text_black">#191919</color>
+    <color name="txt_contact_name">#464646</color>
+    <color name="txt_contact_phone">#868686</color>
+
 
     <!--通讯录界面-->
     <color name="rect_orange">#FF8133</color>
@@ -31,7 +34,7 @@
     <color name="rect_green">#8E8E93</color>
     <!--箭头颜色-->
     <color name="arrow">#C7C7CC</color>
-
+    <color name="gray_0">#E4E4E4</color>
     <!--导航栏   #2B3136-->
     <color name="tool_bar">#2B3136</color>
     <!--按钮背景  #E62F2D-->

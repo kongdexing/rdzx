@@ -50,9 +50,7 @@ public class ContactAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
 //        if (i == list.size() - 1) {
-//
 //            view = LayoutInflater.from(context).inflate(R.layout.contact_last_item_layout, null);
-//
 //        } else {
 
         if (view == null) {

@@ -1,42 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/margin_small"
+    android:paddingTop="@dimen/margin_small">
 
-
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/margin_small"
-        android:paddingTop="@dimen/margin_small"
-        >
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@mipmap/avatar"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        />
+    <com.example.ysl.mywps.ui.view.CircularImageView
+        android:id="@+id/imgHead"
+        android:layout_width="@dimen/dp_60"
+        android:layout_height="@dimen/dp_60"
+        android:layout_marginLeft="@dimen/dp_5"
+        android:clickable="true"
+        android:background="@drawable/avatar" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_10"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/contact_tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_marginLeft="@dimen/padding_large"
                 android:layout_marginTop="@dimen/padding_small"
                 android:text="名称"
-                android:textColor="@color/text_black"
+                android:textColor="@color/txt_contact_name"
                 android:textSize="@dimen/text_normal" />
 
             <TextView
@@ -46,16 +42,15 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="@dimen/padding_small"
                 android:text="2018-1-9"
-                android:textColor="@color/text_black"
-                android:textSize="@dimen/text_normal" />
+                android:textColor="@color/txt_contact_phone"
+                android:textSize="@dimen/text_normal"
+                android:visibility="gone" />
         </RelativeLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="17dp"
-            android:layout_marginStart="17dp"
             android:layout_toEndOf="@+id/message_icon"
             android:layout_toRightOf="@+id/message_icon"
             android:orientation="vertical">
@@ -64,7 +59,7 @@
                 android:id="@+id/contact_tv_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginTop="@dimen/dp_5"
                 android:text="[消息]"
                 android:textColor="@color/text_gray"
                 android:textSize="@dimen/text_normal" />

@@ -107,7 +107,6 @@ public class ContactBean implements Parcelable {
         this.dept_name = dept_name;
     }
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -123,4 +122,5 @@ public class ContactBean implements Parcelable {
         parcel.writeString(dept);
         parcel.writeString(dept_name);
     }
+
 }

@@ -109,4 +109,6 @@ dependencies {
     compile 'com.youth.banner:banner:1.4.9'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.parse:parse-android:1.13.1'
+    compile "de.halfbit:pinned-section-listview:1.0.0"
+
 }
