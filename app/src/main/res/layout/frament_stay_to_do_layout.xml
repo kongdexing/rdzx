@@ -15,12 +15,4 @@
         android:dividerHeight="0.5dp"
         android:scrollbars="none"></com.handmark.pulltorefresh.library.PullToRefreshListView>
 
-    <com.wang.avi.AVLoadingIndicatorView
-        android:id="@+id/av_loading"
-        android:layout_width="@dimen/loading_size"
-        android:layout_height="@dimen/loading_size"
-        android:layout_centerInParent="true"
-        app:indicatorColor="@color/title"
-        app:indicatorName="LineSpinFadeLoaderIndicator" />
-
 </RelativeLayout>

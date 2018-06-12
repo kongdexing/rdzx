@@ -11,6 +11,7 @@ import android.widget.ListView;
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.DocumentListBean;
 import com.example.ysl.mywps.net.HttpUtl;
+import com.example.ysl.mywps.ui.activity.HandleActivity;
 import com.example.ysl.mywps.ui.activity.WpsDetailActivity;
 import com.example.ysl.mywps.ui.adapter.StayDoAdapter;
 import com.example.ysl.mywps.utils.CommonSetting;
@@ -21,7 +22,6 @@ import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.orhanobut.logger.Logger;
-import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,14 +45,12 @@ import retrofit2.Response;
  * Created by Administrator on 2018/3/25 0025.
  */
 
-public class HandleFragment  extends BaseFragment{
+public class HandleFragment extends BaseFragment {
     private static final int PAGE_SIZE = 20;
 
 
     @BindView(R.id.stay_to_listview)
     PullToRefreshListView listView;
-    @BindView(R.id.av_loading)
-    AVLoadingIndicatorView loading;
 
     private StayDoAdapter adapter;
     private ArrayList<String> list = new ArrayList<>();
@@ -79,13 +77,13 @@ public class HandleFragment  extends BaseFragment{
     public void setWpsMode(String wpsMode) {
         this.wpsMode = wpsMode;
 
-        switch (wpsMode){
+        switch (wpsMode) {
 
             case SysytemSetting.HANDLE_WPS:
 
                 wps_type = "3";
-            break;
-                case SysytemSetting.OUT_WPS:
+                break;
+            case SysytemSetting.OUT_WPS:
 
                 wps_type = "1";
                 break;
@@ -114,7 +112,7 @@ public class HandleFragment  extends BaseFragment{
 
                 Intent intent = new Intent(getActivity(), WpsDetailActivity.class);
 
-                intent.putExtra(SysytemSetting.WPS_MODE,wpsMode);
+                intent.putExtra(SysytemSetting.WPS_MODE, wpsMode);
 //                intent.putExtra(SysytemSetting.ACTIVITY_KIND,SysytemSetting.HANDLE_WPS);
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("documentben", documents.get((int) id));
@@ -136,7 +134,9 @@ public class HandleFragment  extends BaseFragment{
         if (isLoadMore) {
             documents.clear();
         }
-        if (!isLoadMore) loading.setVisibility(View.VISIBLE);
+        if (!isLoadMore) {
+            ((HandleActivity) getActivity()).showProgress();
+        }
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
@@ -147,7 +147,7 @@ public class HandleFragment  extends BaseFragment{
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
 
-                        if(!response.isSuccessful()){
+                        if (!response.isSuccessful()) {
                             emitter.onNext(response.message());
                             emitter.onNext("N");
                             return;
@@ -199,17 +199,16 @@ public class HandleFragment  extends BaseFragment{
             @Override
             public void accept(String s) {
                 finishLoad();
-                loading.setVisibility(View.GONE);
-
+                ((HandleActivity) getActivity()).hideProgress();
                 if (s.equals("Y")) {
 
                     adapter.updateList(documents);
 
-                }else if(s.equals("N")){
+                } else if (s.equals("N")) {
 
                 } else {
-if(getActivity() != null)
-                    CommonUtil.showShort(getActivity(), s);
+                    if (getActivity() != null)
+                        CommonUtil.showShort(getActivity(), s);
                 }
 //                Logger.i("等待事项  " + s);
 

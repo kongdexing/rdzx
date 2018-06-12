@@ -20,7 +20,6 @@ import com.example.ysl.mywps.utils.SysytemSetting;
 import com.example.ysl.mywps.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
-import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,8 +55,6 @@ public class LoginActivity extends BaseActivity {
     EditText etPhone;
     @BindView(R.id.login_rl_confirm)
     TextView rlConfirm;
-    @BindView(R.id.av_loading)
-    AVLoadingIndicatorView loading;
 
     private String name;
     private String password;
@@ -76,7 +73,6 @@ public class LoginActivity extends BaseActivity {
         ButterKnife.bind(this);
         setTitleText("登录");
         rlConfirm.setOnClickListener(clik);
-        loading.setVisibility(View.GONE);
         getLogin();
     }
 

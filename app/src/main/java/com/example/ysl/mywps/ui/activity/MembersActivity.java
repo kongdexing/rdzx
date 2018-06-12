@@ -18,7 +18,6 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.example.ysl.mywps.R;
-import com.wang.avi.AVLoadingIndicatorView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,11 +31,8 @@ import static android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW;
 public class MembersActivity extends BaseActivity {
     @BindView(R.id.webview_webview)
     WebView webView;
-    @BindView(R.id.av_loading)
-    AVLoadingIndicatorView loading;
     @BindView(R.id.webview_progerss)
     ProgressBar progressbar;
-
 
     private static final String TAG = ProposalActivity.class.getName();
 
@@ -49,18 +45,15 @@ public class MembersActivity extends BaseActivity {
         showLeftButton(true, "", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (webView.canGoBack()) {
                     webView.goBack();
                 } else {
                     finish();
                 }
-
             }
         });
         initView();
         afterView();
-
     }
 
     @Override

@@ -9,12 +9,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_alignParentTop="true"
+        android:layout_above="@+id/contact_rl_bottom"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/contact_rl_bottom"
-        >
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -46,11 +45,12 @@
                 android:textColor="@color/black_panit"
                 android:textSize="@dimen/text_small" />
         </LinearLayout>
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="10dp"
-    android:background="@color/white_back"
-    ></RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="@color/white_back"></RelativeLayout>
+
         <ListView
             android:id="@+id/contact_listview"
             android:layout_width="match_parent"
@@ -64,71 +64,69 @@
         android:id="@+id/contact_rl_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/paddingVertical"
+        android:layout_alignParentBottom="true"
+        android:background="@color/stay_back"
         android:paddingBottom="@dimen/paddingVertical"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:layout_alignParentBottom="true"
-        android:background="@color/stay_back"
-        android:visibility="gone"
-        >
+        android:paddingTop="@dimen/paddingVertical"
+        android:visibility="gone">
 
         <CheckBox
             android:id="@+id/contact_cb_all"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@drawable/cb_back"
-            android:button="@null"
             android:layout_centerVertical="true"
-            />
+            android:background="@drawable/cb_back"
+            android:button="@null" />
+
         <TextView
             android:id="@+id/contact_tv_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="全选"
- android:layout_toRightOf="@+id/contact_cb_all"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/padding_small"
-            />
+            android:layout_toRightOf="@+id/contact_cb_all"
+            android:text="全选" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_centerInParent="true"
-            >
+            android:orientation="horizontal">
+
             <com.gc.materialdesign.views.ButtonRectangle
                 android:id="@+id/contact_bt_confirm"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:background="@color/rect_red"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:background="@color/rect_red"
 
                 >
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="确认"
                     android:layout_centerInParent="true"
+                    android:text="确认"
                     android:textColor="@color/white_back"
-                    android:textSize="@dimen/text_normal"
-                    />
+                    android:textSize="@dimen/text_normal" />
             </com.gc.materialdesign.views.ButtonRectangle>
+
             <com.gc.materialdesign.views.ButtonRectangle
                 android:id="@+id/contact_bt_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:background="@color/white_back"
-android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                >
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:background="@color/white_back">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="取消"
                     android:layout_centerInParent="true"
+                    android:text="取消"
                     android:textColor="@color/black_panit"
-                    android:textSize="@dimen/text_normal"
-                    />
+                    android:textSize="@dimen/text_normal" />
             </com.gc.materialdesign.views.ButtonRectangle>
 
 
@@ -136,13 +134,5 @@ android:layout_marginLeft="@dimen/activity_horizontal_margin"
 
 
     </RelativeLayout>
-    <com.wang.avi.AVLoadingIndicatorView
-        android:id="@+id/av_loading"
-        android:layout_width="@dimen/loading_size"
-        android:layout_height="@dimen/loading_size"
-        android:layout_centerInParent="true"
-        app:indicatorColor="@color/title"
-        app:indicatorName="LineSpinFadeLoaderIndicator" />
-
 
 </RelativeLayout>

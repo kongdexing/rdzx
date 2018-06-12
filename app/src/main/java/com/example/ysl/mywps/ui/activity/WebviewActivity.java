@@ -56,7 +56,6 @@ import com.gc.materialdesign.views.ButtonRectangle;
 import com.iceteck.silicompressorr.VideoCompress;
 import com.lx.fit7.Fit7Utils;
 import com.orhanobut.logger.Logger;
-import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -81,8 +80,6 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
     private static final String TAG = "aaa";
     @BindView(R.id.webview_webview)
     WebView webView;
-    @BindView(R.id.av_loading)
-    AVLoadingIndicatorView loading;
     @BindView(R.id.webview_progerss)
     ProgressBar progressbar;
 
@@ -99,8 +96,6 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
     private String realname = "";
 
     private boolean needToken = true;
-
-//   private
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -393,12 +388,10 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
                 if (version < 18) {
                     webView.loadUrl("javascript:setFile('" + filePath + "','" + fileName + "')");
                 } else {
-
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                         webView.evaluateJavascript("javascript:setFile('" + filePath + "','" + fileName + "')", new ValueCallback<String>() {
                             @Override
                             public void onReceiveValue(String s) {
-
                                 Log.i("aaa", "return  " + s);
                             }
                         });
@@ -430,13 +423,13 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
                     @Override
                     public void onStart() {
                         ToastUtils.showShort(WebviewActivity.this, "正在压缩");
-                        loading.setVisibility(View.VISIBLE);
+                        showProgress("正在压缩");
                     }
 
                     @Override
                     public void onSuccess() {
                         ToastUtils.showShort(WebviewActivity.this, "压缩完成");
-                        loading.setVisibility(View.GONE);
+                        hideProgress();
                         Logger.i("success");
                         uploadFile(myPath, name);
                     }
@@ -444,7 +437,7 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
                     @Override
                     public void onFail() {
                         ToastUtils.showShort(WebviewActivity.this, "压缩完成");
-                        loading.setVisibility(View.GONE);
+                        hideProgress();
                         Logger.i("fail");
                         uploadFile(path, name);
                     }

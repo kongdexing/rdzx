@@ -20,7 +20,6 @@ import android.widget.ProgressBar;
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.interfaces.JSCallBack;
 import com.example.ysl.mywps.interfaces.JavascriptBridge;
-import com.wang.avi.AVLoadingIndicatorView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,11 +34,8 @@ import static android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW;
 public class ProposalActivity extends BaseActivity implements JSCallBack {
     @BindView(R.id.webview_webview)
     WebView webView;
-    @BindView(R.id.av_loading)
-    AVLoadingIndicatorView loading;
     @BindView(R.id.webview_progerss)
     ProgressBar progressbar;
-
 
     private static final String TAG = ProposalActivity.class.getName();
 

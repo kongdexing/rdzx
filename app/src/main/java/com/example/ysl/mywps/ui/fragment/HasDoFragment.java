@@ -11,6 +11,7 @@ import android.widget.ListView;
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.DocumentListBean;
 import com.example.ysl.mywps.net.HttpUtl;
+import com.example.ysl.mywps.ui.activity.StayToDoActivity;
 import com.example.ysl.mywps.ui.activity.WpsDetailActivity;
 import com.example.ysl.mywps.ui.adapter.StayDoAdapter;
 import com.example.ysl.mywps.utils.CommonSetting;
@@ -21,7 +22,6 @@ import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.orhanobut.logger.Logger;
-import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,14 +47,10 @@ import retrofit2.Response;
 
 public class HasDoFragment extends BaseFragment {
 
-
     private static final int PAGE_SIZE = 20;
-
 
     @BindView(R.id.stay_to_listview)
     PullToRefreshListView listView;
-    @BindView(R.id.av_loading)
-    AVLoadingIndicatorView loading;
 
     private StayDoAdapter adapter;
     private ArrayList<String> list = new ArrayList<>();
@@ -99,7 +95,7 @@ public class HasDoFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Intent intent = new Intent(getActivity(), WpsDetailActivity.class);
-                intent.putExtra(SysytemSetting.WPS_MODE,wpsMode);
+                intent.putExtra(SysytemSetting.WPS_MODE, wpsMode);
 
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("documentben", documents.get((int) id));
@@ -121,19 +117,21 @@ public class HasDoFragment extends BaseFragment {
         if (isLoadMore) {
             documents.clear();
         }
-        if(!isLoadMore)   loading.setVisibility(View.VISIBLE);
+        if (!isLoadMore) {
+            ((StayToDoActivity) getActivity()).showProgress();
+        }
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
                 String token = SharedPreferenceUtils.loginValue(getActivity(), "token");
                 Logger.i("token  " + token + "  " + CommonSetting.HTTP_TOKEN);
-                Call<String> call = HttpUtl.documentList("User/Oa/doc_list/", token, pageNUmber + "", PAGE_SIZE + "","2");
+                Call<String> call = HttpUtl.documentList("User/Oa/doc_list/", token, pageNUmber + "", PAGE_SIZE + "", "2");
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
 
-                        if(!response.isSuccessful()){
-                           emitter.onNext(response.message());
+                        if (!response.isSuccessful()) {
+                            emitter.onNext(response.message());
                             return;
                         }
                         String data = response.body();
@@ -145,7 +143,7 @@ public class HasDoFragment extends BaseFragment {
                             if (code != 0) {
                                 emitter.onNext(msg);
                                 isLoadMore = true;
-                            }else {
+                            } else {
                                 isLoadMore = false;
                             }
 //                            String datas = jsonObject.getString("data");
@@ -181,20 +179,16 @@ public class HasDoFragment extends BaseFragment {
             @Override
             public void accept(String s) {
                 finishLoad();
-                loading.setVisibility(View.GONE);
+                ((StayToDoActivity) getActivity()).hideProgress();
 
                 if (s.equals("Y")) {
-
                     adapter.updateList(documents);
-
-                }else if(s.equals("N")){
+                } else if (s.equals("N")) {
 
                 } else {
                     CommonUtil.showShort(getActivity(), s);
                 }
 //                Logger.i("等待事项  " + s);
-
-
             }
 
         };
@@ -202,8 +196,6 @@ public class HasDoFragment extends BaseFragment {
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
-
-
     }
 
     @Override

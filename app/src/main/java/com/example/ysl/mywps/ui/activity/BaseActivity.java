@@ -181,6 +181,10 @@ public abstract class BaseActivity extends AppCompatActivity {
             llRoot.addView(view, lp);
     }
 
+    public void showProgress(){
+        showProgress("正在请求...");
+    }
+
     public void showProgress(String str) {
         if (progressDialog == null) {
             progressDialog = new Dialog(this, R.style.CustomDialog);

@@ -35,6 +35,7 @@ import com.example.ysl.mywps.net.ProgressListener;
 import com.example.ysl.mywps.provider.DownLoadProvider;
 import com.example.ysl.mywps.provider.UploadProvider;
 import com.example.ysl.mywps.ui.activity.DocumentDetailActivity;
+import com.example.ysl.mywps.ui.activity.MaterialActivity;
 import com.example.ysl.mywps.ui.adapter.FileUploadAdapter;
 
 import com.example.ysl.mywps.ui.view.MatchListView;
@@ -44,7 +45,6 @@ import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.example.ysl.mywps.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
-import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -82,9 +82,6 @@ public class TransportFragmentsUpload extends BaseFragment implements PasssStrin
 
     @BindView(R.id.transport_loading)
     LinearLayout loadingContent;
-    @BindView(R.id.av_loading)
-    AVLoadingIndicatorView loading;
-
 
     private FileUploadAdapter adapter;
     ArrayList<UploadSlefBean> list = new ArrayList<>();
@@ -100,18 +97,13 @@ public class TransportFragmentsUpload extends BaseFragment implements PasssStrin
 
     @Override
     public void initData() {
-
         token = SharedPreferenceUtils.loginValue(getActivity(), "token");
-        adapter = new FileUploadAdapter(getActivity(),list,this);
-
-
+        adapter = new FileUploadAdapter(getActivity(), list, this);
     }
-
-
 
     private void netWork() {
         list.clear();
-        if (loading != null) loading.setVisibility(View.VISIBLE);
+        ((MaterialActivity) getActivity()).showProgress();
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(@NonNull final ObservableEmitter<String> emitter) throws Exception {
@@ -121,7 +113,7 @@ public class TransportFragmentsUpload extends BaseFragment implements PasssStrin
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
 
-                        Logger.i("上传的文件 "+response.body());
+                        Logger.i("上传的文件 " + response.body());
                         if (response.isSuccessful()) {
                             String data = response.body();
 //                            {"code":0,"msg":"文件列表获取成功","data":[{"ctime":"2018-02-26","files":[{"id":"53","filen
@@ -130,7 +122,7 @@ public class TransportFragmentsUpload extends BaseFragment implements PasssStrin
                                 int code = jsonObject.getInt("code");
                                 String msg = jsonObject.getString("msg");
 
-                                if(code != 0){
+                                if (code != 0) {
                                     emitter.onNext("N");
                                     emitter.onNext(msg);
                                     emitter.onComplete();
@@ -139,13 +131,13 @@ public class TransportFragmentsUpload extends BaseFragment implements PasssStrin
 
                                 JSONArray array = jsonObject.getJSONArray("data");
                                 Gson gson = new Gson();
-                                for (int i = 0; i < array.length(); ++i){
+                                for (int i = 0; i < array.length(); ++i) {
 
                                     JSONObject object = array.getJSONObject(i);
-                                    UploadSlefBean bean = gson.fromJson(object.toString(),UploadSlefBean.class);
+                                    UploadSlefBean bean = gson.fromJson(object.toString(), UploadSlefBean.class);
                                     list.add(bean);
                                 }
-                                Logger.i("upload_size "+list.size());
+                                Logger.i("upload_size " + list.size());
                                 emitter.onNext("Y");
 
                             } catch (JSONException e) {
@@ -185,12 +177,12 @@ public class TransportFragmentsUpload extends BaseFragment implements PasssStrin
 
             @Override
             public void onNext(@NonNull String s) {
-               if(adapter != null && list != null) adapter.updateList(list);
-                if(s.equals("Y")){
+                if (adapter != null && list != null) adapter.updateList(list);
+                if (s.equals("Y")) {
 
-                }else if (s.equals("N")){
+                } else if (s.equals("N")) {
 
-                }else {
+                } else {
                     ToastUtils.showShort(getActivity(), s);
                 }
 
@@ -206,7 +198,7 @@ public class TransportFragmentsUpload extends BaseFragment implements PasssStrin
             public void onComplete() {
 //                adapter.update(fileListBeens);
 //                listView.onRefreshComplete();
-                if (loading != null) loading.setVisibility(View.GONE);
+                ((MaterialActivity) getActivity()).hideProgress();
             }
         };
 
@@ -214,11 +206,7 @@ public class TransportFragmentsUpload extends BaseFragment implements PasssStrin
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
 
-
     }
-
-
-
 
     @Override
     public View setView(LayoutInflater inflater, ViewGroup container) {
@@ -232,9 +220,7 @@ public class TransportFragmentsUpload extends BaseFragment implements PasssStrin
 
     @Override
     public void afterView(View view) {
-
-        loading.setVisibility(View.GONE);
-
+        ((MaterialActivity) getActivity()).hideProgress();
         contentResolver = getActivity().getContentResolver();
         netWork();
 
@@ -243,10 +229,8 @@ public class TransportFragmentsUpload extends BaseFragment implements PasssStrin
 
     @Override
     public void setKindFlag(int kindFlag) {
-
         this.kindFlag = kindFlag;
     }
-
 
     /***
      * 上传文件
@@ -254,7 +238,7 @@ public class TransportFragmentsUpload extends BaseFragment implements PasssStrin
     @Override
     public void setString(String... args) {
 
-        if(getActivity() == null) return;
+        if (getActivity() == null) return;
         final UploadBean bean = new UploadBean();
         bean.setPath(args[0]);
         bean.setName(args[1]);
@@ -332,7 +316,7 @@ public class TransportFragmentsUpload extends BaseFragment implements PasssStrin
 
                         int progress = ((int) (hasWrittenLen * 100 / totalLen));
 
-                        if (progress > 99){
+                        if (progress > 99) {
                             try {
                                 Thread.sleep(2000);
                                 handler.sendEmptyMessage(progress);
@@ -340,8 +324,8 @@ public class TransportFragmentsUpload extends BaseFragment implements PasssStrin
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                        }else
-                        handler.sendEmptyMessage(progress);
+                        } else
+                            handler.sendEmptyMessage(progress);
 
 
                     }
@@ -379,7 +363,7 @@ public class TransportFragmentsUpload extends BaseFragment implements PasssStrin
 //
 //                                    getActivity().getContentResolver().insert(UploadProvider.CONTENT_URI, values);
 
-                                    if(getActivity() == null) return;
+                                    if (getActivity() == null) return;
                                     getActivity().runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
@@ -426,17 +410,18 @@ public class TransportFragmentsUpload extends BaseFragment implements PasssStrin
 
     /**
      * 获取子菜单选择的item
-     *@param kind 1 加 0 删
-     * */
+     *
+     * @param kind 1 加 0 删
+     */
     @Override
     public void setUploads(UploadChildFileBean bean, int kind) {
 
-        switch (kind){
+        switch (kind) {
 
             case 0:
                 try {
                     selectList.remove(bean);
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;
@@ -447,7 +432,7 @@ public class TransportFragmentsUpload extends BaseFragment implements PasssStrin
         }
         if (bottomWindow == null) {
             showBottomWindow();
-        }else if(!bottomWindow.isShowing()){
+        } else if (!bottomWindow.isShowing()) {
             showBottomWindow();
         } else if (selectList.size() == 0 && bottomWindow != null && bottomWindow.isShowing()) {
             bottomWindow.dismiss();
@@ -490,19 +475,18 @@ public class TransportFragmentsUpload extends BaseFragment implements PasssStrin
                 public void onClick(View v) {
 
 
-                    if(selectList.size() > 1){
-                        ToastUtils.showShort(getActivity(),"只能选择一个文件查看信息");
-                    }else if(selectList.size() == 0){
-                        ToastUtils.showShort(getActivity(),"请选择文件查看信息");
-                    }else if(selectList.size() == 1){
+                    if (selectList.size() > 1) {
+                        ToastUtils.showShort(getActivity(), "只能选择一个文件查看信息");
+                    } else if (selectList.size() == 0) {
+                        ToastUtils.showShort(getActivity(), "请选择文件查看信息");
+                    } else if (selectList.size() == 1) {
                         Intent intent = new Intent(getActivity(), DocumentDetailActivity.class);
-                        intent.putExtra("flag","upload");
+                        intent.putExtra("flag", "upload");
                         Bundle bundle = new Bundle();
-                        bundle.putParcelable("upload",selectList.get(0));
+                        bundle.putParcelable("upload", selectList.get(0));
                         intent.putExtras(bundle);
                         startActivity(intent);
                     }
-
 
 
                     bottomWindow.dismiss();
@@ -519,31 +503,29 @@ public class TransportFragmentsUpload extends BaseFragment implements PasssStrin
 
 
     private void deleteDocument() {
-
-        loading.setVisibility(View.VISIBLE);
-
-        if(selectList.size() <=0){
-            ToastUtils.showShort(getActivity(),"请选择要删除的文件");
+        ((MaterialActivity) getActivity()).showProgress();
+        if (selectList.size() <= 0) {
+            ToastUtils.showShort(getActivity(), "请选择要删除的文件");
             return;
         }
         String id = "";
-        for (int i = 0; i < selectList.size() ;++ i){
-            if("".equals(id)){
+        for (int i = 0; i < selectList.size(); ++i) {
+            if ("".equals(id)) {
                 id = selectList.get(i).getId();
-            }else {
-                id += ","+selectList.get(i).getId();
+            } else {
+                id += "," + selectList.get(i).getId();
             }
 
         }
 
         final String ids = id;
-        Logger.i("ids  "+id);
+        Logger.i("ids  " + id);
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(@NonNull final ObservableEmitter<String> emitter) throws Exception {
 
 
-                Call<String> call = HttpUtl.deleteFile("User/Share/del_file/",ids, token);
+                Call<String> call = HttpUtl.deleteFile("User/Share/del_file/", ids, token);
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
@@ -583,7 +565,7 @@ public class TransportFragmentsUpload extends BaseFragment implements PasssStrin
         Consumer<String> observer = new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
-                if (loading.getVisibility() == View.VISIBLE) loading.setVisibility(View.GONE);
+                ((MaterialActivity) getActivity()).hideProgress();
                 if (s.equals("Y") || s.equals("N")) {
                     netWork();
                 } else {

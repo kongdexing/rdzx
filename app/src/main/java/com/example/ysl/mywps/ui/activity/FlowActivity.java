@@ -13,7 +13,6 @@ import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.example.ysl.mywps.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
-import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,8 +41,6 @@ public class FlowActivity extends BaseActivity {
 
     @BindView(R.id.flow_listview)
     ListView listView;
-    @BindView(R.id.av_loading)
-    AVLoadingIndicatorView loading;
 
     private FlowAdapter adapter;
     private ArrayList<FlowBean> flows = new ArrayList<>();
@@ -91,7 +88,7 @@ public class FlowActivity extends BaseActivity {
 
     private void netWork() {
         flows.clear();
-        loading.setVisibility(View.VISIBLE);
+        showProgress();
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(@NonNull final ObservableEmitter<String> emitter) {
@@ -177,15 +174,12 @@ public class FlowActivity extends BaseActivity {
         Consumer<String> observer = new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
-                loading.setVisibility(View.GONE);
+                hideProgress();
                 if (s.equals("N") || s.equals("Y")) {
-
                     adapter.updateAdapter(flows);
-
                 } else {
                     ToastUtils.showShort(getApplicationContext(), s);
                 }
-
             }
         };
 

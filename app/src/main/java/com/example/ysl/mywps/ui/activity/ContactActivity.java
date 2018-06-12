@@ -18,10 +18,8 @@ import com.example.ysl.mywps.bean.DocumentListBean;
 import com.example.ysl.mywps.bean.WpsdetailFinish;
 import com.example.ysl.mywps.interfaces.PasssString;
 import com.example.ysl.mywps.net.HttpUtl;
-import com.example.ysl.mywps.ui.adapter.ContactAdapter;
 import com.example.ysl.mywps.ui.adapter.ContactMyAdapter;
 import com.example.ysl.mywps.ui.view.IconTextView;
-import com.example.ysl.mywps.utils.CommonSetting;
 import com.example.ysl.mywps.utils.CommonUtil;
 import com.example.ysl.mywps.utils.MatchesUtil;
 import com.example.ysl.mywps.utils.NoDoubleClickListener;
@@ -31,7 +29,6 @@ import com.example.ysl.mywps.utils.ToastUtils;
 import com.gc.materialdesign.views.ButtonRectangle;
 import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
-import com.wang.avi.AVLoadingIndicatorView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
@@ -59,12 +56,12 @@ import retrofit2.Response;
  * Created by ysl on 2018/1/16.
  */
 
-public class ContactActivity extends BaseActivity implements PasssString{
+public class ContactActivity extends BaseActivity implements PasssString {
 
     @BindView(R.id.contact_listview)
     ListView listView;
-    @BindView(R.id.av_loading)
-    AVLoadingIndicatorView loading;
+    //    @BindView(R.id.av_loading)
+//    AVLoadingIndicatorView loading;
     @BindView(R.id.contact_itv_search)
     IconTextView tvSearch;
     @BindView(R.id.contact_et_search)
@@ -99,13 +96,13 @@ public class ContactActivity extends BaseActivity implements PasssString{
         docPath = getIntent().getStringExtra("path");
         documentInfo = getIntent().getExtras().getParcelable("documentInfo");
 
-        if(documentInfo.getStatus().equals("4")) {
+        if (documentInfo.getStatus().equals("4")) {
             rlBottom.setVisibility(View.VISIBLE);
             cbAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                    if(adapter == null) return;
+                    if (adapter == null) return;
                     adapter.selectAll(isChecked);
 
                 }
@@ -120,7 +117,7 @@ public class ContactActivity extends BaseActivity implements PasssString{
                 Logger.i("提交人  " + list.get((int) id).getUsername());
                 if (documentInfo.getStatus().equals("1")) {
                     commitAudit(list.get((int) id).getUid());
-                } else if(documentInfo.getStatus().equals("5")){
+                } else if (documentInfo.getStatus().equals("5")) {
                     commitSign(list.get((int) id).getUid());
                 }
 
@@ -141,8 +138,7 @@ public class ContactActivity extends BaseActivity implements PasssString{
      * 提交审核
      */
     private void commitAudit(final String uid) {
-
-        loading.setVisibility(View.VISIBLE);
+        showProgress();
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(final ObservableEmitter<String> emitter) {
@@ -152,7 +148,7 @@ public class ContactActivity extends BaseActivity implements PasssString{
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
                         try {
-                            if(!response.isSuccessful()){
+                            if (!response.isSuccessful()) {
                                 emitter.onNext(response.message());
                                 return;
                             }
@@ -183,7 +179,7 @@ public class ContactActivity extends BaseActivity implements PasssString{
         Consumer<String> observer = new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
-                loading.setVisibility(View.GONE);
+                hideProgress();
                 if (s.equals("Y") || s.equals("N")) {
 
                     if (s.equals("Y")) {
@@ -206,7 +202,7 @@ public class ContactActivity extends BaseActivity implements PasssString{
      * 提交文件领导签署
      */
     private void commitSign(final String uid) {
-        loading.setVisibility(View.VISIBLE);
+        showProgress();
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(final ObservableEmitter<String> emitter) {
@@ -216,7 +212,7 @@ public class ContactActivity extends BaseActivity implements PasssString{
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
-                        if(!response.isSuccessful()){
+                        if (!response.isSuccessful()) {
                             emitter.onNext(response.message());
                             return;
                         }
@@ -249,7 +245,7 @@ public class ContactActivity extends BaseActivity implements PasssString{
         Consumer<String> observer = new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
-                loading.setVisibility(View.GONE);
+                hideProgress();
                 if (s.equals("Y") || s.equals("N")) {
 
                     if (s.equals("Y")) {
@@ -269,12 +265,11 @@ public class ContactActivity extends BaseActivity implements PasssString{
 
     }
 
-/**
- * 获取通讯录联系人
- * */
+    /**
+     * 获取通讯录联系人
+     */
     private void netWork() {
-
-        loading.setVisibility(View.VISIBLE);
+        showProgress();
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(final ObservableEmitter<String> e) {
@@ -284,7 +279,7 @@ public class ContactActivity extends BaseActivity implements PasssString{
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
-                        if(!response.isSuccessful()){
+                        if (!response.isSuccessful()) {
                             e.onNext(response.message());
                             return;
                         }
@@ -331,19 +326,17 @@ public class ContactActivity extends BaseActivity implements PasssString{
         Consumer<String> consumer = new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
-                loading.setVisibility(View.GONE);
+                hideProgress();
                 if (s.equals("Y")) {
-
                     boolean shouldHide = false;
-                    if(documentInfo.getStatus().equals("4")){
+                    if (documentInfo.getStatus().equals("4")) {
                         shouldHide = true;
                     }
-                    adapter = new ContactMyAdapter(list, ContactActivity.this,shouldHide,ContactActivity.this);
+                    adapter = new ContactMyAdapter(list, ContactActivity.this, shouldHide, ContactActivity.this);
                     listView.setAdapter(adapter);
                 } else {
                     ToastUtils.showShort(ContactActivity.this, s);
                 }
-
             }
         };
 
@@ -355,28 +348,27 @@ public class ContactActivity extends BaseActivity implements PasssString{
 
     /**
      * 转发进入反馈流程
-     * */
-    private void docForward(final String uids){
-
-        loading.setVisibility(View.VISIBLE);
+     */
+    private void docForward(final String uids) {
+        showProgress();
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(@NonNull final ObservableEmitter<String> emitter) {
 
-                Call<String> call = HttpUtl.docForward("User/Oa/doc_forward/",documentInfo.getId(),uids,token);
+                Call<String> call = HttpUtl.docForward("User/Oa/doc_forward/", documentInfo.getId(), uids, token);
 
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
 
-                        if(!response.isSuccessful()){
+                        if (!response.isSuccessful()) {
                             emitter.onNext(response.message());
                             return;
                         }
 
                         String data = response.body();
-                        Logger.i("反馈流程  "+data);
-                        if(CommonUtil.isEmpty(data)) {
+                        Logger.i("反馈流程  " + data);
+                        if (CommonUtil.isEmpty(data)) {
                             emitter.onNext("N");
                             emitter.onComplete();
                             return;
@@ -384,11 +376,11 @@ public class ContactActivity extends BaseActivity implements PasssString{
                         try {
                             JSONObject jsonObject = new JSONObject(data);
                             int code = jsonObject.getInt("code");
-                           String msg = jsonObject.getString("msg");
+                            String msg = jsonObject.getString("msg");
 
                             emitter.onNext(msg);
-                          if(code == 0)  emitter.onNext("Y");
-                            else  emitter.onNext("N");
+                            if (code == 0) emitter.onNext("Y");
+                            else emitter.onNext("N");
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -419,14 +411,9 @@ public class ContactActivity extends BaseActivity implements PasssString{
 
             @Override
             public void onNext(@NonNull String s) {
-
-
-
-                if(s.equals("Y") || s.equals("N")){
-
-                    if(s.equals("Y")) EventBus.getDefault().post(new WpsdetailFinish("转发成功"));
-                }else ToastUtils.showShort(getApplicationContext(),s);
-
+                if (s.equals("Y") || s.equals("N")) {
+                    if (s.equals("Y")) EventBus.getDefault().post(new WpsdetailFinish("转发成功"));
+                } else ToastUtils.showShort(getApplicationContext(), s);
 
 
             }
@@ -438,23 +425,16 @@ public class ContactActivity extends BaseActivity implements PasssString{
 
             @Override
             public void onComplete() {
-
-
-                loading.setVisibility(View.GONE);
+                hideProgress();
             }
         };
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
-
-
-
     }
 
     @Override
     public void initView() {
-
-
         tvSearch.setOnClickListener(click);
         tvAll.setOnClickListener(click);
         btConfirm.setOnClickListener(click);
@@ -492,7 +472,7 @@ public class ContactActivity extends BaseActivity implements PasssString{
     @Override
     public void setString(String... datas) {
 
-        if(datas.length > 0){
+        if (datas.length > 0) {
 
             docForward(datas[0]);
         }
@@ -515,7 +495,7 @@ public class ContactActivity extends BaseActivity implements PasssString{
                     }
                     final boolean isNumber = MatchesUtil.isInteger(value);
                     searchList.clear();
-                    loading.setVisibility(View.VISIBLE);
+                    showProgress();
                     Thread searchThread = new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -537,7 +517,7 @@ public class ContactActivity extends BaseActivity implements PasssString{
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    loading.setVisibility(View.GONE);
+                                    hideProgress();
                                     if (adapter != null) {
                                         adapter.update(searchList);
                                     }
@@ -550,24 +530,16 @@ public class ContactActivity extends BaseActivity implements PasssString{
                     searchThread.start();
                     break;
                 case R.id.contact_bt_confirm:
-
-
-                    if(adapter != null){
+                    if (adapter != null) {
                         adapter.docFroward();
                     }
-
                     break;
-
                 case R.id.contact_bt_cancel:
-
                     cbAll.setChecked(false);
                     break;
                 case R.id.contact_tv_all:
-
                     cbAll.setChecked(!cbAll.isChecked());
                     break;
-
-
             }
 
         }

@@ -20,7 +20,6 @@ import com.example.ysl.mywps.utils.NoDoubleClickListener;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.example.ysl.mywps.utils.ToastUtils;
 import com.orhanobut.logger.Logger;
-import com.wang.avi.AVLoadingIndicatorView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
@@ -59,9 +58,8 @@ public class CommitActivity extends BaseActivity {
     @BindView(R.id.commit_tv_opinion)
     TextView tvOpinion;
 
-    @BindView(R.id.av_loading)
-    AVLoadingIndicatorView loading;
-
+//    @BindView(R.id.av_loading)
+//    AVLoadingIndicatorView loading;
 
     private MyclickListener click = new MyclickListener();
     private String downloadPath = "";
@@ -90,15 +88,10 @@ public class CommitActivity extends BaseActivity {
 
         rlCommit.setOnClickListener(click);
 
-        loading.setVisibility(View.GONE);
         afterData();
-
     }
 
-
     private void afterData() {
-
-
         tvTtitle.setText("公文标题：  " + documentInfo.getTitle());
         tvPeople.setText("呈报人:   " + documentInfo.getNow_nickname());
         tvDept.setText("拟文单位:   " + documentInfo.getDept_name());
@@ -151,8 +144,8 @@ public class CommitActivity extends BaseActivity {
      * 签署审核意见
      */
     private void uploadFile(final String opinion) {
+        showProgress();
 
-        loading.setVisibility(View.VISIBLE);
         final Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
@@ -199,9 +192,8 @@ public class CommitActivity extends BaseActivity {
         Consumer<String> consumer = new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
-                loading.setVisibility(View.GONE);
+                hideProgress();
                 if (s.equals("Y") || s.equals("N")) {
-
                     if (s.equals("Y")) {
                         EventBus.getDefault().post(new WpsdetailFinish("commit 提交成功"));
                         finish();
@@ -209,14 +201,11 @@ public class CommitActivity extends BaseActivity {
                 } else {
                     ToastUtils.showShort(CommitActivity.this, s);
                 }
-
             }
         };
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(consumer);
-
-
     }
 
     /**
@@ -228,7 +217,8 @@ public class CommitActivity extends BaseActivity {
 //            ToastUtils.showShort(this, "图片保存失败，请重新点击信息按钮");
 //            return;
 //        }
-        loading.setVisibility(View.VISIBLE);
+        showProgress();
+
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(@NonNull final ObservableEmitter<String> emitter) throws Exception {
@@ -286,10 +276,8 @@ public class CommitActivity extends BaseActivity {
         Consumer<String> observer = new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
-                loading.setVisibility(View.GONE);
+                hideProgress();
                 if (s.equals("Y") || s.equals("N")) {
-
-
                     if (s.equals("Y")) {
                         EventBus.getDefault().post(new WpsdetailFinish("commit 提交成功"));
                         finish();
@@ -310,8 +298,7 @@ public class CommitActivity extends BaseActivity {
      *反馈意见
      */
     private void feedBack(final String opinion){
-
-        loading.setVisibility(View.VISIBLE);
+        showProgress();
         final Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
@@ -362,9 +349,8 @@ public class CommitActivity extends BaseActivity {
         Consumer<String> consumer = new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
-                loading.setVisibility(View.GONE);
+                hideProgress();
                 if (s.equals("Y") || s.equals("N")) {
-
                     if (s.equals("Y")) {
                         EventBus.getDefault().post(new WpsdetailFinish("commit 提交成功"));
                         finish();
@@ -393,12 +379,8 @@ public class CommitActivity extends BaseActivity {
     private class MyclickListener extends NoDoubleClickListener {
         @Override
         public void click(View v) {
-
             switch (v.getId()) {
-
-
                 case R.id.commit_rl_upload:
-
                     String opinion = etOpinion.getText().toString();
 
                     if (CommonUtil.isEmpty(opinion)) {

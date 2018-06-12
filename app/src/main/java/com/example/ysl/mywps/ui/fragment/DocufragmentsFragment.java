@@ -2,14 +2,11 @@ package com.example.ysl.mywps.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -23,6 +20,7 @@ import com.example.ysl.mywps.interfaces.PassFileChildList;
 import com.example.ysl.mywps.interfaces.PasssString;
 import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.ui.activity.DocumentDetailActivity;
+import com.example.ysl.mywps.ui.activity.MaterialActivity;
 import com.example.ysl.mywps.ui.adapter.DocumentAdapter;
 import com.example.ysl.mywps.utils.NoDoubleClickListener;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
@@ -31,7 +29,6 @@ import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.orhanobut.logger.Logger;
-import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,8 +60,6 @@ public class DocufragmentsFragment extends BaseFragment implements PassFileChild
 
     @BindView(R.id.fragment_documents_listview)
     PullToRefreshListView listView;
-    @BindView(R.id.av_loading)
-    AVLoadingIndicatorView loading;
 
     private DocumentAdapter adapter;
     private int kindFlag;
@@ -114,7 +109,7 @@ public class DocufragmentsFragment extends BaseFragment implements PassFileChild
             if (kindFlag == 0) {
 
                 fileType = "all";
-                Log.i("aaa","filetype  "+fileType);
+                Log.i("aaa", "filetype  " + fileType);
                 netWork();
             }
 
@@ -182,8 +177,6 @@ public class DocufragmentsFragment extends BaseFragment implements PassFileChild
             }
         });
         listView.setAdapter(adapter);
-
-        loading.setVisibility(View.GONE);
     }
 
     private void finishLoad() {
@@ -198,7 +191,8 @@ public class DocufragmentsFragment extends BaseFragment implements PassFileChild
 
     private void netWork() {
 
-        if (loading != null) loading.setVisibility(View.VISIBLE);
+        ((MaterialActivity) getActivity()).showProgress();
+
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(@NonNull final ObservableEmitter<String> emitter) throws Exception {
@@ -210,7 +204,7 @@ public class DocufragmentsFragment extends BaseFragment implements PassFileChild
 
                         if (response.isSuccessful()) {
                             String data = response.body();
-                            if(kindFlag == 0)   Logger.i("data   " + fileType + "  " + data);
+                            if (kindFlag == 0) Logger.i("data   " + fileType + "  " + data);
                             if (data == null) {
                                 emitter.onNext("N");
                                 return;
@@ -293,7 +287,7 @@ public class DocufragmentsFragment extends BaseFragment implements PassFileChild
             public void onComplete() {
                 adapter.update(fileListBeens);
                 listView.onRefreshComplete();
-                if (loading != null) loading.setVisibility(View.GONE);
+                ((MaterialActivity) getActivity()).hideProgress();
             }
         };
 
@@ -358,15 +352,15 @@ public class DocufragmentsFragment extends BaseFragment implements PassFileChild
                 @Override
                 public void onClick(View v) {
 
-                    if(selectList.size() > 1){
-                        ToastUtils.showShort(getActivity(),"只能选择一个文件查看信息");
-                    }else if(selectList.size() == 0){
-                        ToastUtils.showShort(getActivity(),"请选择文件查看信息");
-                    }else if(selectList.size() == 1){
+                    if (selectList.size() > 1) {
+                        ToastUtils.showShort(getActivity(), "只能选择一个文件查看信息");
+                    } else if (selectList.size() == 0) {
+                        ToastUtils.showShort(getActivity(), "请选择文件查看信息");
+                    } else if (selectList.size() == 1) {
                         Intent intent = new Intent(getActivity(), DocumentDetailActivity.class);
-                        intent.putExtra("flag","file");
+                        intent.putExtra("flag", "file");
                         Bundle bundle = new Bundle();
-                        bundle.putParcelable("file",selectList.get(0));
+                        bundle.putParcelable("file", selectList.get(0));
                         intent.putExtras(bundle);
                         startActivity(intent);
                     }
@@ -392,18 +386,18 @@ public class DocufragmentsFragment extends BaseFragment implements PassFileChild
 
     private void deleteDocument() {
 
-        loading.setVisibility(View.VISIBLE);
+        ((MaterialActivity) getActivity()).showProgress();
 
-        if(selectList.size() <=0){
-            ToastUtils.showShort(getActivity(),"请选择要删除的文件");
+        if (selectList.size() <= 0) {
+            ToastUtils.showShort(getActivity(), "请选择要删除的文件");
             return;
         }
         String id = "";
-        for (int i = 0; i < selectList.size() ;++ i){
-            if("".equals(id)){
+        for (int i = 0; i < selectList.size(); ++i) {
+            if ("".equals(id)) {
                 id = selectList.get(i).getId();
-            }else {
-                id += ","+id;
+            } else {
+                id += "," + id;
             }
 
         }
@@ -453,7 +447,7 @@ public class DocufragmentsFragment extends BaseFragment implements PassFileChild
         Consumer<String> observer = new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
-                if (loading.getVisibility() == View.VISIBLE) loading.setVisibility(View.GONE);
+                ((MaterialActivity) getActivity()).hideProgress();
                 if (s.equals("Y") || s.equals("N")) {
 
                     if (s.equals("Y")) {
@@ -463,15 +457,12 @@ public class DocufragmentsFragment extends BaseFragment implements PassFileChild
                 } else {
                     ToastUtils.showLong(getActivity(), s);
                 }
-
-
             }
         };
 
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
-
     }
 
     /***
@@ -480,9 +471,9 @@ public class DocufragmentsFragment extends BaseFragment implements PassFileChild
     @Override
     public void passFileChild(ArrayList<FileListChildBean> files, int kind) {
 
-        if(selectList.size() > 4){
+        if (selectList.size() > 4) {
 
-            ToastUtils.showShort(getActivity(),"当前只能同时下载4个");
+            ToastUtils.showShort(getActivity(), "当前只能同时下载4个");
             return;
         }
 
@@ -502,7 +493,7 @@ public class DocufragmentsFragment extends BaseFragment implements PassFileChild
             }
             if (bottomWindow == null) {
                 showBottomWindow();
-            }else if(!bottomWindow.isShowing()){
+            } else if (!bottomWindow.isShowing()) {
                 showBottomWindow();
             } else if (selectList.size() == 0 && bottomWindow != null && bottomWindow.isShowing()) {
                 bottomWindow.dismiss();

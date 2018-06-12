@@ -100,12 +100,4 @@
             android:textSize="@dimen/text_large" />
     </LinearLayout>
 
-    <com.wang.avi.AVLoadingIndicatorView
-        android:id="@+id/av_loading"
-        android:layout_width="@dimen/loading_size"
-        android:layout_height="@dimen/loading_size"
-        android:layout_centerInParent="true"
-        app:indicatorColor="@color/title"
-        app:indicatorName="BallClipRotateIndicator"
-        />
 </RelativeLayout>

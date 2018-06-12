@@ -27,18 +27,13 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.ysl.mywps.R;
-
 import com.example.ysl.mywps.interfaces.JSCallBack;
 import com.example.ysl.mywps.interfaces.JavascriptBridge;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.example.ysl.mywps.utils.SysytemSetting;
-import com.example.ysl.mywps.utils.ToastUtils;
-import com.wang.avi.AVLoadingIndicatorView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW;
 
 /**
  * Created by Administrator on 2018/5/14 0014.
@@ -48,8 +43,6 @@ import static android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW;
 public class ThemeActivity extends BaseActivity implements JSCallBack {
     @BindView(R.id.webview_webview)
     WebView webView;
-    @BindView(R.id.av_loading)
-    AVLoadingIndicatorView loading;
     @BindView(R.id.webview_progerss)
     ProgressBar progressbar;
 
