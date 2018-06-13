@@ -883,6 +883,8 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
+    private boolean webviewFinished = false;
+
     private class MyWebviewClient extends WebViewClient {
 
 
@@ -904,7 +906,7 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             Log.i(TAG, "onPageFinished " + url + "  needToken " + needToken);
-
+            webviewFinished = true;
         }
 
         @Override
@@ -932,7 +934,7 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
 //            Log.i(TAG, "progress  " + newProgress);
             if (newProgress >= 100) {
                 Log.i(TAG, "progress  " + newProgress);
-                if (needToken) {
+                if (needToken && webviewFinished) {
                     setToken();
                     needToken = false;
                 }
