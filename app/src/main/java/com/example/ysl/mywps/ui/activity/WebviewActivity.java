@@ -43,6 +43,7 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
+import com.example.ysl.mywps.BuildConfig;
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.interfaces.JSCallBack;
 import com.example.ysl.mywps.interfaces.JavascriptBridge;
@@ -253,7 +254,7 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
 //file:///android_asset/index.html
 //     http://www.haont.cn/OAPhone/sqmy/
         webView.addJavascriptInterface(new JavascriptBridge(this), "javaBridge");
-        webView.loadUrl("http://www.haont.cn/OAPhone/sqmy/");
+        webView.loadUrl(HttpUtl.HTTP_WEB_URL+"/sqmy/");
         webView.setWebChromeClient(chromeClient);
         webView.setWebViewClient(client);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

@@ -75,16 +75,10 @@ public class NewOAActivity extends BaseActivity {
                 .setTitle("问卷调查")
                 .setIntent(new Intent(this, QuestionActivity.class)));
 
-//        try {
-//            RongIM.getInstance().startCustomerServiceChat(getActivity(), "KEFU152077670318138", "在线客服1", csInfo);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            ToastUtils.showShort(getActivity(), "融云登陆异常，请回到登陆界面重新登陆!");
-//        }
         oaItems.add(new NewOAItem()
                 .setIconId(R.drawable.icon_oa_8)
                 .setTitle("在线客服")
-                .setIntent(new Intent(this, DocumentDetailActivity.class)));
+                .setIntent(null));
 
         oaItems.add(null);
         OAItemGridAdapter itemAdapter = new OAItemGridAdapter(this);

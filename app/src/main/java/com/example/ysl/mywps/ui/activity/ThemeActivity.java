@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.interfaces.JSCallBack;
 import com.example.ysl.mywps.interfaces.JavascriptBridge;
+import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.example.ysl.mywps.utils.SysytemSetting;
 
@@ -67,9 +68,9 @@ public class ThemeActivity extends BaseActivity implements JSCallBack {
             @Override
             public void onClick(View view) {
 
-                if(webView.canGoBack()){
+                if (webView.canGoBack()) {
                     webView.goBack();
-                }else {
+                } else {
                     finish();
                 }
 
@@ -113,7 +114,7 @@ public class ThemeActivity extends BaseActivity implements JSCallBack {
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //            //两者都可以
 //            webSettings.setMixedContentMode(MIXED_CONTENT_ALWAYS_ALLOW);
-            //mWebView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        //mWebView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
 //        }
 
 
@@ -158,7 +159,7 @@ public class ThemeActivity extends BaseActivity implements JSCallBack {
 //   http://www.haont.cn/CPPCC/sqmy/#!/submit/    http://www.haont.cn/TiAnPhone/
 //        http://www.haont.cn/TiAnPhone/
         webView.addJavascriptInterface(new JavascriptBridge(this), "javaBridge");
-        webView.loadUrl("http://www.haont.cn/wxqy/wxqyh/pages/activity/index.html");
+        webView.loadUrl(HttpUtl.HTTP_WEB_URL + "activity/index.html");
         webView.setWebChromeClient(chromeClient);
         webView.setWebViewClient(client);
 
@@ -179,15 +180,13 @@ public class ThemeActivity extends BaseActivity implements JSCallBack {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         //这是一个监听用的按键的方法，keyCode 监听用户的动作，如果是按了返回键，同时Webview要返回的话，WebView执行回退操作，因为mWebView.canGoBack()返回的是一个Boolean类型，所以我们把它返回为true
-        if(keyCode==KeyEvent.KEYCODE_BACK && webView.canGoBack()){
+        if (keyCode == KeyEvent.KEYCODE_BACK && webView.canGoBack()) {
             webView.goBack();
             return true;
         }
 
         return super.onKeyDown(keyCode, event);
     }
-
-
 
 
     @Override
@@ -222,7 +221,7 @@ public class ThemeActivity extends BaseActivity implements JSCallBack {
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
 
-            Log.i(TAG,"finish");
+            Log.i(TAG, "finish");
         }
 
         @Override
@@ -236,8 +235,10 @@ public class ThemeActivity extends BaseActivity implements JSCallBack {
         }
 
     }
+
     // Android版本变量
     final int version = Build.VERSION.SDK_INT;
+
     private void setToken() {
 //        webView.loadUrl("javascript:setFile('" + filePath + "','"+fileName+"')");
         Log.i("aaa", "mytoken   " + token);
@@ -264,6 +265,7 @@ public class ThemeActivity extends BaseActivity implements JSCallBack {
             }
         });
     }
+
     private class MyWebChromeClient extends WebChromeClient {
 
         @Override
@@ -333,7 +335,6 @@ public class ThemeActivity extends BaseActivity implements JSCallBack {
         }
 
 
-
         // For Lollipop 5.0+ Devices
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         public boolean onShowFileChooser(WebView mWebView,
@@ -355,6 +356,7 @@ public class ThemeActivity extends BaseActivity implements JSCallBack {
             }
             return true;
         }
+
         @Override
         public void onReceivedTitle(WebView view, String title) {
             super.onReceivedTitle(view, title);
@@ -365,6 +367,7 @@ public class ThemeActivity extends BaseActivity implements JSCallBack {
             Log.i(TAG, "title  " + title);
         }
     }
+
     private Handler progressHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -380,6 +383,7 @@ public class ThemeActivity extends BaseActivity implements JSCallBack {
             }
         }
     };
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == FILECHOOSER_RESULTCODE) {

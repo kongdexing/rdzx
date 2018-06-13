@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.interfaces.JSCallBack;
 import com.example.ysl.mywps.interfaces.JavascriptBridge;
+import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.example.ysl.mywps.utils.SysytemSetting;
 import com.example.ysl.mywps.utils.ToastUtils;
@@ -45,7 +46,7 @@ import static android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW;
 public class ColleagueAcitivity extends BaseActivity implements JSCallBack {
     @BindView(R.id.webview_webview)
     WebView webView;
-//    @BindView(R.id.av_loading)
+    //    @BindView(R.id.av_loading)
 //    AVLoadingIndicatorView loading;
     @BindView(R.id.webview_progerss)
     ProgressBar progressbar;
@@ -149,10 +150,7 @@ public class ColleagueAcitivity extends BaseActivity implements JSCallBack {
             webView.destroy();
             webView = null;
         }
-
-
         super.onDestroy();
-
     }
 
     private void afterView() {
@@ -163,7 +161,7 @@ public class ColleagueAcitivity extends BaseActivity implements JSCallBack {
 //   http://www.haont.cn/CPPCC/sqmy/#!/submit/    http://www.haont.cn/TiAnPhone/
 //        http://www.haont.cn/TiAnPhone/
         webView.addJavascriptInterface(new JavascriptBridge(this), "javaBridge");
-        webView.loadUrl("http://www.haont.cn/wxqy/wxqyh/pages/topic/index.html");
+        webView.loadUrl(HttpUtl.HTTP_WEB_URL + "topic/index.html");
         webView.setWebChromeClient(chromeClient);
         webView.setWebViewClient(client);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -254,6 +252,7 @@ public class ColleagueAcitivity extends BaseActivity implements JSCallBack {
             mUploadMessage5 = null;
         }
     }
+
     // Android版本变量
     final int version = Build.VERSION.SDK_INT;
 
@@ -299,6 +298,7 @@ public class ColleagueAcitivity extends BaseActivity implements JSCallBack {
             }
         }
     };
+
     private class MyWebChromeClient extends WebChromeClient {
 
         @Override
@@ -368,7 +368,6 @@ public class ColleagueAcitivity extends BaseActivity implements JSCallBack {
         }
 
 
-
         // For Lollipop 5.0+ Devices
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         public boolean onShowFileChooser(WebView mWebView,
@@ -390,6 +389,7 @@ public class ColleagueAcitivity extends BaseActivity implements JSCallBack {
             }
             return true;
         }
+
         @Override
         public void onReceivedTitle(WebView view, String title) {
             super.onReceivedTitle(view, title);

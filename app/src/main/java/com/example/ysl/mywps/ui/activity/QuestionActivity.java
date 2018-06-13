@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.interfaces.JSCallBack;
 import com.example.ysl.mywps.interfaces.JavascriptBridge;
+import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.example.ysl.mywps.utils.SysytemSetting;
 import com.example.ysl.mywps.utils.ToastUtils;
@@ -160,7 +161,7 @@ public class QuestionActivity extends BaseActivity implements JSCallBack {
 //   http://www.haont.cn/CPPCC/sqmy/#!/submit/    http://www.haont.cn/TiAnPhone/
 //        http://www.haont.cn/TiAnPhone/
         webView.addJavascriptInterface(new JavascriptBridge(this), "javaBridge");
-        webView.loadUrl("http://www.haont.cn/wxqy/wxqyh/pages/question/index.html");
+        webView.loadUrl(HttpUtl.HTTP_WEB_URL + "question/index.html");
         webView.setWebChromeClient(chromeClient);
         webView.setWebViewClient(client);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -187,6 +188,7 @@ public class QuestionActivity extends BaseActivity implements JSCallBack {
 
         return super.onKeyDown(keyCode, event);
     }
+
     // Android版本变量
     final int version = Build.VERSION.SDK_INT;
 
@@ -216,6 +218,7 @@ public class QuestionActivity extends BaseActivity implements JSCallBack {
             }
         });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == FILECHOOSER_RESULTCODE) {
@@ -237,6 +240,7 @@ public class QuestionActivity extends BaseActivity implements JSCallBack {
             mUploadMessage5 = null;
         }
     }
+
     @Override
     public void initData() {
         token = SharedPreferenceUtils.loginValue(this, SysytemSetting.USER_TOKEN);
@@ -283,6 +287,7 @@ public class QuestionActivity extends BaseActivity implements JSCallBack {
         }
 
     }
+
     private Handler progressHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -298,6 +303,7 @@ public class QuestionActivity extends BaseActivity implements JSCallBack {
             }
         }
     };
+
     private class MyWebChromeClient extends WebChromeClient {
 
         @Override
@@ -342,6 +348,7 @@ public class QuestionActivity extends BaseActivity implements JSCallBack {
 //                });
 //            }
         }
+
         // For Android < 3.0
         public void openFileChooser(ValueCallback<Uri> uploadMsg) {
             this.openFileChooser(uploadMsg, "*/*");
@@ -363,7 +370,6 @@ public class QuestionActivity extends BaseActivity implements JSCallBack {
             startActivityForResult(Intent.createChooser(i, "File Browser"),
                     FILECHOOSER_RESULTCODE);
         }
-
 
 
         // For Lollipop 5.0+ Devices

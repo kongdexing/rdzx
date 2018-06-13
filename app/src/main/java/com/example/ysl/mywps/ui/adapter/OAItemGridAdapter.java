@@ -13,9 +13,13 @@ import android.widget.TextView;
 
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.NewOAItem;
+import com.example.ysl.mywps.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.rong.imkit.RongIM;
+import io.rong.imlib.model.CSCustomServiceInfo;
 
 public class OAItemGridAdapter extends BaseAdapter {
     private Context mContext;
@@ -64,7 +68,7 @@ public class OAItemGridAdapter extends BaseAdapter {
         }
 
         final NewOAItem item = getItem(position);
-        if (item == null || item.getIntent() == null) {
+        if (item == null) {
             viewHolder.llHomeItem.setBackgroundColor(Color.WHITE);
             return convertView;
         }
@@ -72,7 +76,19 @@ public class OAItemGridAdapter extends BaseAdapter {
         viewHolder.llHomeItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mContext.startActivity(item.getIntent());
+                if (item.getIntent() == null) {
+                    try {
+                        //融云客服信息
+                        CSCustomServiceInfo.Builder csBuilder = new CSCustomServiceInfo.Builder();
+                        final CSCustomServiceInfo csInfo = csBuilder.nickName("ysl").build();
+                        RongIM.getInstance().startCustomerServiceChat(mContext, "KEFU152077670318138", "在线客服1", csInfo);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        ToastUtils.showShort(mContext, "融云登陆异常，请回到登陆界面重新登陆!");
+                    }
+                } else {
+                    mContext.startActivity(item.getIntent());
+                }
             }
         });
 

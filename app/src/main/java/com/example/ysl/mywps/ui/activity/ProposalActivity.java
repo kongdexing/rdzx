@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.interfaces.JSCallBack;
 import com.example.ysl.mywps.interfaces.JavascriptBridge;
+import com.example.ysl.mywps.net.HttpUtl;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -133,7 +134,7 @@ public class ProposalActivity extends BaseActivity implements JSCallBack {
 //   http://www.haont.cn/CPPCC/sqmy/#!/submit/    http://www.haont.cn/TiAnPhone/
         webView.addJavascriptInterface(new JavascriptBridge(this), "javaBridge");
 //        http://www.haont.cn/TiAnPhone/
-        webView.loadUrl("http://www.haont.cn/TiAnPhone/");
+        webView.loadUrl(HttpUtl.HTTP_WEB_URL+"TiAn/");
         webView.setWebChromeClient(chromeClient);
         webView.setWebViewClient(client);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {

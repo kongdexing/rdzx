@@ -29,10 +29,11 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class HttpUtl {
     private final static String HTTP_URL = "http://oa.qupeiyi.cn/index.php/";
+    public final static String HTTP_WEB_URL = "http://www.haont.cn/OA/";
     private static final OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(60, TimeUnit.SECONDS)
-            .readTimeout(1,TimeUnit.DAYS)
-            .writeTimeout(1,TimeUnit.DAYS)
+            .readTimeout(1, TimeUnit.DAYS)
+            .writeTimeout(1, TimeUnit.DAYS)
             .build();
 
 
@@ -48,7 +49,7 @@ public class HttpUtl {
         return retrofit;
     }
 
-    public static Retrofit geRomRetrofit(String url){
+    public static Retrofit geRomRetrofit(String url) {
         Retrofit retrofit = new Retrofit.Builder()
 
                 .addConverterFactory(ScalarsConverterFactory.create())
@@ -185,7 +186,7 @@ public class HttpUtl {
     /**
      * 文件共享上传文件
      */
-    public static Call<String> sharedUpload(String url, String fileType, String token, String fileName, String filePath,ProgressListener listener) {
+    public static Call<String> sharedUpload(String url, String fileType, String token, String fileName, String filePath, ProgressListener listener) {
 
         String httpUrl = HTTP_URL + url;
         NetApi netApi = getRetrofit(httpUrl).create(NetApi.class);
@@ -199,7 +200,7 @@ public class HttpUtl {
         }
         RequestBody requestFile = RequestBody.create(MediaType.parse("application/otcet-stream"), file);
 //        MultipartBody.Part body = MultipartBody.Part.createFormData("name", fileName, requestFile);
-        UploadFileRequestBody fileRequestBody = new UploadFileRequestBody(requestFile,listener);
+        UploadFileRequestBody fileRequestBody = new UploadFileRequestBody(requestFile, listener);
         Map<String, RequestBody> requestBodyMap = new HashMap<>();
         requestBodyMap.put("file\"; filename=\"" + fileName, fileRequestBody);
         return netApi.sharedUpload(fileType, token, requestBodyMap);
@@ -238,11 +239,12 @@ public class HttpUtl {
         NetApi netApi = getRetrofit(httpUrl).create(NetApi.class);
         return netApi.deleteDocument(id, token);
     }
+
     /**
      * 社情民意上传文件
-     * */
+     */
 
-    public static Call<String> socialUpload(String url,  String token, String fileName, String filePath,ProgressListener listener){
+    public static Call<String> socialUpload(String url, String token, String fileName, String filePath, ProgressListener listener) {
         String httpUrl = HTTP_URL + url;
         NetApi netApi = getRetrofit(httpUrl).create(NetApi.class);
 
@@ -255,7 +257,7 @@ public class HttpUtl {
         }
         RequestBody requestFile = RequestBody.create(MediaType.parse("application/otcet-stream"), file);
 //        MultipartBody.Part body = MultipartBody.Part.createFormData("name", fileName, requestFile);
-        UploadFileRequestBody fileRequestBody = new UploadFileRequestBody(requestFile,listener);
+        UploadFileRequestBody fileRequestBody = new UploadFileRequestBody(requestFile, listener);
         Map<String, RequestBody> requestBodyMap = new HashMap<>();
         requestBodyMap.put("file\"; filename=\"" + fileName, fileRequestBody);
         return netApi.socialUpload(fileName, token, requestBodyMap);
@@ -264,11 +266,11 @@ public class HttpUtl {
 
     /**
      * 获取自己的上传文件
-     * */
+     */
 
-    public static Call<String> selfUpload(String url,  String token){
+    public static Call<String> selfUpload(String url, String token) {
 
-        String httpUrl  = HTTP_URL+url;
+        String httpUrl = HTTP_URL + url;
         NetApi netApi = getRetrofit(httpUrl).create(NetApi.class);
 
         return netApi.selfUpload(token);
@@ -277,9 +279,9 @@ public class HttpUtl {
     /***
      * 获取融云token
      * */
-    public static Call<String> getRoimToken(String url,String token){
+    public static Call<String> getRoimToken(String url, String token) {
 
-        String httpUrl  = url;
+        String httpUrl = url;
         NetApi netApi = geRomRetrofit(httpUrl).create(NetApi.class);
         return netApi.roimToken(token);
     }
