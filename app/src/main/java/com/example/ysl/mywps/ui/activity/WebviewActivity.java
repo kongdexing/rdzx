@@ -72,7 +72,7 @@ import retrofit2.Response;
 
 public class WebviewActivity extends BaseActivity implements JSCallBack {
 
-    private static final String TAG = "aaa";
+    //    private static final String TAG = TAG;
     @BindView(R.id.webview_webview)
     WebView webView;
     @BindView(R.id.webview_progerss)
@@ -247,7 +247,7 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
 //file:///android_asset/index.html
 //     http://www.haont.cn/OAPhone/sqmy/
         webView.addJavascriptInterface(new JavascriptBridge(this), "javaBridge");
-        webView.loadUrl(HttpUtl.HTTP_WEB_URL+"sqmy/");
+        webView.loadUrl(HttpUtl.HTTP_WEB_URL + "sqmy/");
         webView.setWebChromeClient(chromeClient);
         webView.setWebViewClient(client);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -267,7 +267,7 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
 
     private void setToken() {
 //        webView.loadUrl("javascript:setFile('" + filePath + "','"+fileName+"')");
-        Log.i("aaa", "mytoken   " + token);
+        Log.i(TAG, "mytoken   " + token + "  realname " + realname);
 //        ToastUtils.showLong(WebviewActivity.this, "setToken:" + token);
         webView.post(new Runnable() {
             @Override
@@ -279,7 +279,7 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
                         webView.evaluateJavascript("javascript:setToken('" + token + "','" + realname + "')", new ValueCallback<String>() {
                             @Override
                             public void onReceiveValue(String s) {
-                                Log.i("aaa", "return  " + s);
+                                Log.i(TAG, "return  " + s);
                             }
                         });
                     } else {
@@ -312,9 +312,9 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
 
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.i("aaa", "权限被允许");
+                Log.i(TAG, "权限被允许");
             } else {
-                Log.i("aaa", "权限被拒绝");
+                Log.i(TAG, "权限被拒绝");
                 ToastUtils.showShort(this, "请开启文件存储权限");
                 finish();
 //                writePermission();
@@ -384,7 +384,7 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
                         webView.evaluateJavascript("javascript:setFile('" + filePath + "','" + fileName + "')", new ValueCallback<String>() {
                             @Override
                             public void onReceiveValue(String s) {
-                                Log.i("aaa", "return  " + s);
+                                Log.i(TAG, "return  " + s);
                             }
                         });
                     } else {
@@ -468,7 +468,7 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
                     public void onProgress(long hasWrittenLen, long totalLen, boolean hasFinish) {
 
                         int percent = (int) (hasWrittenLen * 100 / totalLen);
-//                        Log.i("aaa", percent + "");
+//                        Log.i(TAG, percent + "");
 
                         if (percent > 99) try {
                             Thread.sleep(2000);
@@ -883,11 +883,12 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
-    private static class MyWebviewClient extends WebViewClient {
+    private class MyWebviewClient extends WebViewClient {
 
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            Log.i(TAG, "shouldOverrideUrlLoading: " + url);
             view.loadUrl(url);
 
             return super.shouldOverrideUrlLoading(view, url);
@@ -896,18 +897,20 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
+            Log.i(TAG, "onPageStarted: ");
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
+            Log.i(TAG, "onPageFinished " + url + "  needToken " + needToken);
 
-            Log.i(TAG, "finish" + url);
         }
 
         @Override
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
             super.onReceivedError(view, request, error);
+            Log.i(TAG, "onReceivedError: ");
         }
 
         @Override
@@ -917,12 +920,8 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
             // handler.cancel();// Android默认的处理方式
             handler.proceed();// 接受所有网站的证书
             // handleMessage(Message msg);// 进行其他处理
-
-
         }
-
     }
-
 
     private class MyWebChromeClient extends WebChromeClient {
 
@@ -932,7 +931,11 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
 
 //            Log.i(TAG, "progress  " + newProgress);
             if (newProgress >= 100) {
-
+                Log.i(TAG, "progress  " + newProgress);
+                if (needToken) {
+                    setToken();
+                    needToken = false;
+                }
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -948,13 +951,11 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
 //                webView.post(new Runnable() {
 //                    @Override
 //                    public void run() {
-//
-//
 //                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 //                            webView.evaluateJavascript("javascript:getToken('" + token + "')", new ValueCallback<String>() {
 //                                @Override
 //                                public void onReceiveValue(String s) {
-//                                    Log.i("aaa", "return  " + s);
+//                                    Log.i(TAG, "return  " + s);
 //                                }
 //                            });
 //                        } else {
@@ -970,10 +971,10 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
         @Override
         public void onReceivedTitle(WebView view, String title) {
             super.onReceivedTitle(view, title);
-            if (needToken) {
-                setToken();
-                needToken = false;
-            }
+//            if (needToken) {
+//                setToken();
+//                needToken = false;
+//            }
             Log.i(TAG, "title  " + title);
         }
     }

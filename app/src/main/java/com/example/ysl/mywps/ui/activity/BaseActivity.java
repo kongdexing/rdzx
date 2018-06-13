@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -24,6 +23,7 @@ import com.umeng.analytics.MobclickAgent;
  */
 public abstract class BaseActivity extends AppCompatActivity {
     private LinearLayout llRoot;
+    public static String TAG = "aaa";
 
     private TextView tvBack;
     private TextView tvTitle;
@@ -37,6 +37,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.base_title_layout);
+        TAG = getClass().getSimpleName();
         findView();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -181,7 +182,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             llRoot.addView(view, lp);
     }
 
-    public void showProgress(){
+    public void showProgress() {
         showProgress("正在请求...");
     }
 
