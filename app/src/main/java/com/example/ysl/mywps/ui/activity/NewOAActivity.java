@@ -48,7 +48,7 @@ public class NewOAActivity extends BaseActivity {
         oaItems.add(new NewOAItem()
                 .setIconId(R.drawable.icon_oa_1)
                 .setTitle("公文流转")
-                .setIntent(new Intent(this, DocumentDetailActivity.class)));
+                .setIntent(new Intent(this, DocumentTurnActivity.class)));
 
         oaItems.add(new NewOAItem()
                 .setIconId(R.drawable.icon_oa_2)

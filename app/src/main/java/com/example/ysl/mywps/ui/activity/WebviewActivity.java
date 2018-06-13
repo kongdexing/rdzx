@@ -10,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
@@ -28,7 +27,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
@@ -41,9 +39,7 @@ import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
-import com.example.ysl.mywps.BuildConfig;
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.interfaces.JSCallBack;
 import com.example.ysl.mywps.interfaces.JavascriptBridge;
@@ -68,8 +64,6 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW;
 
 /**
  * Created by ysl on 2018/2/28.
@@ -248,13 +242,12 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
 
 
     private void afterView() {
-
         MyWebChromeClient chromeClient = new MyWebChromeClient();
         MyWebviewClient client = new MyWebviewClient();
 //file:///android_asset/index.html
 //     http://www.haont.cn/OAPhone/sqmy/
         webView.addJavascriptInterface(new JavascriptBridge(this), "javaBridge");
-        webView.loadUrl(HttpUtl.HTTP_WEB_URL+"/sqmy/");
+        webView.loadUrl(HttpUtl.HTTP_WEB_URL+"sqmy/");
         webView.setWebChromeClient(chromeClient);
         webView.setWebViewClient(client);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -282,12 +275,10 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
                 if (version < 18) {
                     webView.loadUrl("javascript:setToken('" + token + "','" + realname + "')");
                 } else {
-
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                         webView.evaluateJavascript("javascript:setToken('" + token + "','" + realname + "')", new ValueCallback<String>() {
                             @Override
                             public void onReceiveValue(String s) {
-
                                 Log.i("aaa", "return  " + s);
                             }
                         });
