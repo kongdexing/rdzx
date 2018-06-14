@@ -60,6 +60,9 @@ public class LoginActivity extends BaseActivity {
     private String password;
     private String identity;
     private boolean havIdentity = false;
+    public static String finishType = "finishType";
+    public static String finishSelf = "finishSelf";
+    private String _finishType = "";
 
     private MyclickListener clik = new MyclickListener();
     private SharedPreferences preferences;
@@ -72,6 +75,10 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login_layout);
         ButterKnife.bind(this);
         setTitleText("登录");
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            _finishType = bundle.getString(finishType);
+        }
         rlConfirm.setOnClickListener(clik);
         getLogin();
     }
@@ -268,9 +275,14 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void loginSuccess() {
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        //判断跳转类型
+        if (!_finishType.isEmpty() && _finishType.equals(finishSelf)) {
+            finish();
+        } else {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     private void getRomiToken(final String token) {

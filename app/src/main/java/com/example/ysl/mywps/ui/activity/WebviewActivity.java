@@ -164,6 +164,7 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
         SharedPreferenceUtils.loginSave(this, "token", "");
         Intent intent = new Intent(this, LoginActivity.class);
 //        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(LoginActivity.finishType, LoginActivity.finishSelf);
         startActivity(intent);
 //        finish();
     }
@@ -925,7 +926,7 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
         }
     }
 
-    private void setTokenToWeb(){
+    private void setTokenToWeb() {
         if (needToken && webviewFinished) {
             setToken();
             needToken = false;
