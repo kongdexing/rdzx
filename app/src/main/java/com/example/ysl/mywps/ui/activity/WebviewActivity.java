@@ -139,7 +139,6 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
 
                             if (CommonUtil.isNotEmpty(msg) && msg.contains("登陆信息有误") || code == 1) {
                                 jumpToLogin();
-
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -164,9 +163,9 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
     private void jumpToLogin() {
         SharedPreferenceUtils.loginSave(this, "token", "");
         Intent intent = new Intent(this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-        finish();
+//        finish();
     }
 
 
@@ -344,16 +343,17 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
                 ToastUtils.showShort(this, "选择文件");
                 findDocuments();
                 break;
-
             case "callCommit":
 
                 break;
-
             case "callToken":
-//                setToken();
-                saveFileTypes(token);
-                Logger.i("CALLtOKEN");
+                setToken();
+//                saveFileTypes(token);
+//                Logger.i("CALLtOKEN");
                 message = realname + "," + token;
+                break;
+            case "invalidToken":
+                jumpToLogin();
                 break;
         }
         Log.i(TAG, "jscallBack");
@@ -485,9 +485,7 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
                         if (response.isSuccessful()) {
                             try {
                                 JSONObject object = new JSONObject(response.body());
-
                                 int code = object.getInt("code");
-
                                 String message = object.getString("msg");
                                 if (code == 0) {
                                     msg.obj = "Y";
@@ -510,14 +508,11 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
                                 } else {
                                     msg.obj = "N";
                                     if (CommonUtil.isNotEmpty(message)) msg.obj = message;
-
                                 }
-
                                 Logger.i("文件上传成功 " + response.body());
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-
                         } else {
                             msg.obj = "N";
                         }
@@ -560,28 +555,18 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
                     } else {
                         ToastUtils.showShort(WebviewActivity.this, msg.obj.toString());
                     }
-
                 }
-
             }
-
         }
     };
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (resultCode == RESULT_OK) {
-
             if (requestCode == CAMERA_REQUEST_CODE) {
-
                 path = imgPath;
-
-
             } else {
-
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {//4.4以后
                     try {
                         path = getPath(this, data.getData());
@@ -614,17 +599,12 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
                     if (size > 5) {
                         if (CommonUtil.isVideo(file.getName()))
                             comprossVideo(file.getName());
-
                     } else {
-
                         uploadFile(path, file.getName());
                     }
                 }
             });
-
-
         }
-
         Log.i(TAG, "默认content地址：" + path);
     }
 
@@ -641,7 +621,6 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
     String imgPath = "";
 
     private void takePhoto() {
-
         final String outPutPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "wpsSign";
         File file = new File(outPutPath);
         if (!file.exists())
@@ -675,12 +654,9 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
 //设置视频录制的画质
         intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
         startActivityForResult(intent, VIDEO_WITH_CAMERA);
-
     }
 
-
     private void findDocuments() {
-
         /***
          *打开文件管理器
          */
@@ -695,8 +671,6 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
     float alpha = 1;
 
     private void showBottomWindow() {
-
-
         if (bottomWindow == null) {
             View view = LayoutInflater.from(this).inflate(R.layout.choose_photo_or_video, null);
             bottomWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
@@ -715,7 +689,6 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
             btVideo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     takeVideo();
                     bottomWindow.dismiss();
                 }
@@ -735,18 +708,11 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
             bottomWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 @Override
                 public void onDismiss() {
-
-
                     bottomWindow.dismiss();
-
-
                 }
             });
-
             bottomWindow.showAtLocation(webView, Gravity.BOTTOM, 0, 0);
-
         } else {
-
             bottomWindow.showAtLocation(webView, Gravity.BOTTOM, 0, 0);
         }
     }
@@ -907,7 +873,7 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
             super.onPageFinished(view, url);
             Log.i(TAG, "onPageFinished " + url + "  needToken " + needToken);
             webviewFinished = true;
-            setTokenToWeb();
+//            setTokenToWeb();
         }
 
         @Override
@@ -947,22 +913,6 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
                         progressHandler.sendEmptyMessage(100);
                     }
                 }).start();
-//                progressbar.setVisibility(View.GONE);
-//                webView.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//                            webView.evaluateJavascript("javascript:getToken('" + token + "')", new ValueCallback<String>() {
-//                                @Override
-//                                public void onReceiveValue(String s) {
-//                                    Log.i(TAG, "return  " + s);
-//                                }
-//                            });
-//                        } else {
-//                            webView.loadUrl("javascript:getToken('" + token + "')");
-//                        }
-//                    }
-//                });
             } else {
                 progressHandler.sendEmptyMessage(newProgress);
             }
@@ -971,10 +921,6 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
         @Override
         public void onReceivedTitle(WebView view, String title) {
             super.onReceivedTitle(view, title);
-//            if (needToken) {
-//                setToken();
-//                needToken = false;
-//            }
             Log.i(TAG, "title  " + title);
         }
     }

@@ -18,43 +18,51 @@ public class JavascriptBridge extends Object {
 
     /**
      * 调用相机拍照
-     * **/
+     **/
     @JavascriptInterface
     public void callCamera() {
 
         jsCallBack.jsCallBack("callCamera", "callCamera");
     }
+
     /**
      * 选择文件
-     * **/
+     **/
     @JavascriptInterface
-    public void callDocument(){
+    public void callDocument() {
 
-        jsCallBack.jsCallBack("callDocument","callDocument");
+        jsCallBack.jsCallBack("callDocument", "callDocument");
 
     }
 
     /**
      * 选择提交
-     * **/
+     **/
 
-    public void callCommit(){
+    public void callCommit() {
 
-        jsCallBack.jsCallBack("callCommit","callDocument");
+        jsCallBack.jsCallBack("callCommit", "callDocument");
 
     }
 
     /**
      * 获取token 和name
-     * */
+     */
     @JavascriptInterface
 
-    public String callToken(){
+    public String callToken() {
 
-       return jsCallBack.jsCallBack("callToken","callToken");
+        return jsCallBack.jsCallBack("callToken", "callToken");
 
     }
 
+    /**
+     * token 无效，重新登录
+     */
+    @JavascriptInterface
+    public String invalidToken() {
+        return jsCallBack.jsCallBack("invalidToken", "invalidToken");
+    }
 //    /**
 //     * 传递token和name
 //     * */
