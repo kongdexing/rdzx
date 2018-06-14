@@ -1,7 +1,6 @@
 package com.example.ysl.mywps.ui.activity;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -32,42 +31,43 @@ import com.example.ysl.mywps.interfaces.JavascriptBridge;
 import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.example.ysl.mywps.utils.SysytemSetting;
-import com.example.ysl.mywps.utils.ToastUtils;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 import static android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW;
 
-/**
- * Created by Administrator on 2018/5/14 0014.
- */
+public class BaseWebActivity extends BaseActivity implements JSCallBack {
 
-public class ColleagueAcitivity extends BaseActivity implements JSCallBack {
     @BindView(R.id.webview_webview)
     WebView webView;
-    //    @BindView(R.id.av_loading)
-//    AVLoadingIndicatorView loading;
     @BindView(R.id.webview_progerss)
     ProgressBar progressbar;
-    private String token = "";
-    private String realname = "";
 
-    private static final String TAG = ProposalActivity.class.getName();
-    private boolean needToken = true;
+    public String token = "";
+    public String realname = "";
 
-
-    private ValueCallback<Uri> mUploadMessage;
-    private ValueCallback<Uri[]> mUploadMessage5;
+    public ValueCallback<Uri> mUploadMessage;
+    public ValueCallback<Uri[]> mUploadMessage5;
     public static final int FILECHOOSER_RESULTCODE = 5173;
     public static final int FILECHOOSER_RESULTCODE_FOR_ANDROID_5 = 5174;
+
+    public static final String TAG = ProposalActivity.class.getName();
+    public boolean needToken = true;
+
+    String webUrl = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_webview_layout);
-        ButterKnife.bind(this);
-        setTitleText("同事吧");
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            webUrl = bundle.getString("webUrl");
+        }
+    }
+
+    @Override
+    public void initView() {
         showLeftButton(true, "", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,13 +80,7 @@ public class ColleagueAcitivity extends BaseActivity implements JSCallBack {
 
             }
         });
-        initView();
-        afterView();
 
-    }
-
-    @Override
-    public void initView() {
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);//设置js交互
 //        webSettings.setUseWideViewPort(true);//设置图片调整到适合webview的大小
@@ -108,52 +102,17 @@ public class ColleagueAcitivity extends BaseActivity implements JSCallBack {
         // 设置允许JS弹窗
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setDomStorageEnabled(true);//设置适应Html5 重点是这个设置
-
         String userAgent = webSettings.getUserAgentString();
         userAgent += "webview";
         Log.i(TAG, userAgent + "  useragent");
         webSettings.setUserAgentString(userAgent);
         webView.getSettings().setDomStorageEnabled(true);
         webView.clearCache(true);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             //两者都可以
             webSettings.setMixedContentMode(MIXED_CONTENT_ALWAYS_ALLOW);
             //mWebView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
-
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        webView.onPause();
-        webView.pauseTimers();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        webView.onResume();
-        webView.resumeTimers();
-    }
-
-
-    @Override
-    protected void onDestroy() {
-
-        if (webView != null) {
-            webView.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
-            webView.clearHistory();
-            ((ViewGroup) webView.getParent()).removeView(webView);
-            webView.destroy();
-            webView = null;
-        }
-        super.onDestroy();
-    }
-
-    private void afterView() {
 
         MyWebChromeClient chromeClient = new MyWebChromeClient();
         MyWebviewClient client = new MyWebviewClient();
@@ -161,16 +120,28 @@ public class ColleagueAcitivity extends BaseActivity implements JSCallBack {
 //   http://www.haont.cn/CPPCC/sqmy/#!/submit/    http://www.haont.cn/TiAnPhone/
 //        http://www.haont.cn/TiAnPhone/
         webView.addJavascriptInterface(new JavascriptBridge(this), "javaBridge");
-        webView.loadUrl(HttpUtl.HTTP_WEB_URL + "topic/index.html");
+        webView.loadUrl(webUrl);
         webView.setWebChromeClient(chromeClient);
         webView.setWebViewClient(client);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
+            webView.setWebContentsDebuggingEnabled(true);
+
+        }
 //        // 设置是否允许 WebView 使用 File 协议,默认设置为true，即允许在 File 域下执行任意 JavaScript 代码
 //        webView.getSettings().setAllowFileAccess(true);
         webView.getSettings().setDomStorageEnabled(true);
     }
+
+    @Override
+    public void initData() {
+        token = SharedPreferenceUtils.loginValue(this, SysytemSetting.USER_TOKEN);
+        realname = SharedPreferenceUtils.loginValue(this, SysytemSetting.REAL_NAME);
+    }
+
 
     //使用Webview的时候，返回键没有重写的时候会直接关闭程序，这时候其实我们要其执行的知识回退到上一步的操作
     @Override
@@ -184,11 +155,34 @@ public class ColleagueAcitivity extends BaseActivity implements JSCallBack {
         return super.onKeyDown(keyCode, event);
     }
 
+    // Android版本变量
+    final int version = Build.VERSION.SDK_INT;
 
-    @Override
-    public void initData() {
-        token = SharedPreferenceUtils.loginValue(this, SysytemSetting.USER_TOKEN);
-        realname = SharedPreferenceUtils.loginValue(this, SysytemSetting.REAL_NAME);
+    private void setToken() {
+//        webView.loadUrl("javascript:setFile('" + filePath + "','"+fileName+"')");
+        Log.i("aaa", "mytoken   " + token);
+//        ToastUtils.showLong(MeettingActivity.this, "setToken:" + token);
+        webView.post(new Runnable() {
+            @Override
+            public void run() {
+                if (version < 18) {
+                    webView.loadUrl("javascript:setToken('" + token + "','" + realname + "')");
+                } else {
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        webView.evaluateJavascript("javascript:setToken('" + token + "','" + realname + "')", new ValueCallback<String>() {
+                            @Override
+                            public void onReceiveValue(String s) {
+
+                                Log.i("aaa", "return  " + s);
+                            }
+                        });
+                    } else {
+
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -196,9 +190,7 @@ public class ColleagueAcitivity extends BaseActivity implements JSCallBack {
         return realname + "," + token;
     }
 
-
     private static class MyWebviewClient extends WebViewClient {
-
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             view.loadUrl(url);
@@ -229,57 +221,6 @@ public class ColleagueAcitivity extends BaseActivity implements JSCallBack {
             super.onReceivedSslError(view, handler, error);
         }
 
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (requestCode == FILECHOOSER_RESULTCODE) {
-            if (null == mUploadMessage) {
-                return;
-            }
-            Uri result = intent == null || resultCode != Activity.RESULT_OK ? null
-                    : intent.getData();
-            mUploadMessage.onReceiveValue(result);
-            mUploadMessage = null;
-        } else if (requestCode == FILECHOOSER_RESULTCODE_FOR_ANDROID_5) {
-            if (null == mUploadMessage5) {
-                return;
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mUploadMessage5.onReceiveValue(WebChromeClient.FileChooserParams
-                        .parseResult(resultCode, intent));
-            }
-            mUploadMessage5 = null;
-        }
-    }
-
-    // Android版本变量
-    final int version = Build.VERSION.SDK_INT;
-
-    private void setToken() {
-//        webView.loadUrl("javascript:setFile('" + filePath + "','"+fileName+"')");
-        Log.i("aaa", "mytoken   " + token);
-//        ToastUtils.showLong(ColleagueAcitivity.this, "setToken:" + token);
-        webView.post(new Runnable() {
-            @Override
-            public void run() {
-                if (version < 18) {
-                    webView.loadUrl("javascript:setToken('" + token + "','" + realname + "')");
-                } else {
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        webView.evaluateJavascript("javascript:setToken('" + token + "','" + realname + "')", new ValueCallback<String>() {
-                            @Override
-                            public void onReceiveValue(String s) {
-
-                                Log.i("aaa", "return  " + s);
-                            }
-                        });
-                    } else {
-
-                    }
-                }
-            }
-        });
     }
 
     private Handler progressHandler = new Handler() {
@@ -319,26 +260,6 @@ public class ColleagueAcitivity extends BaseActivity implements JSCallBack {
             } else {
                 progressHandler.sendEmptyMessage(newProgress);
             }
-//            Log.i(TAG, "progress  " + newProgress);
-//            progressbar.setProgress(newProgress);
-//            if (newProgress == 100) {
-//                progressbar.setVisibility(View.GONE);
-//                webView.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//                            webView.evaluateJavascript("javascript:getToken('" + token + "')", new ValueCallback<String>() {
-//                                @Override
-//                                public void onReceiveValue(String s) {
-//                                    Log.i("aaa", "return  " + s);
-//                                }
-//                            });
-//                        } else {
-//                            webView.loadUrl("javascript:getToken('" + token + "')");
-//                        }
-//                    }
-//                });
-//            }
         }
 
 
@@ -363,7 +284,6 @@ public class ColleagueAcitivity extends BaseActivity implements JSCallBack {
             startActivityForResult(Intent.createChooser(i, "File Browser"),
                     FILECHOOSER_RESULTCODE);
         }
-
 
         // For Lollipop 5.0+ Devices
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -397,4 +317,33 @@ public class ColleagueAcitivity extends BaseActivity implements JSCallBack {
             Log.i(TAG, "title  " + title);
         }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        webView.onPause();
+        webView.pauseTimers();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        webView.onResume();
+        webView.resumeTimers();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        if (webView != null) {
+            webView.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
+            webView.clearHistory();
+            ((ViewGroup) webView.getParent()).removeView(webView);
+            webView.destroy();
+            webView = null;
+        }
+        super.onDestroy();
+    }
+
+
 }

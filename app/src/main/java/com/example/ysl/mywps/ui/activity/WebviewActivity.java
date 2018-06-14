@@ -907,6 +907,7 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
             super.onPageFinished(view, url);
             Log.i(TAG, "onPageFinished " + url + "  needToken " + needToken);
             webviewFinished = true;
+            setTokenToWeb();
         }
 
         @Override
@@ -934,10 +935,7 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
 //            Log.i(TAG, "progress  " + newProgress);
             if (newProgress >= 100) {
                 Log.i(TAG, "progress  " + newProgress);
-                if (needToken && webviewFinished) {
-                    setToken();
-                    needToken = false;
-                }
+                setTokenToWeb();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -978,6 +976,13 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
 //                needToken = false;
 //            }
             Log.i(TAG, "title  " + title);
+        }
+    }
+
+    private void setTokenToWeb(){
+        if (needToken && webviewFinished) {
+            setToken();
+            needToken = false;
         }
     }
 }

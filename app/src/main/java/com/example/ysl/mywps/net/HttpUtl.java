@@ -38,10 +38,7 @@ public class HttpUtl {
 
 
     private static Retrofit getRetrofit(String httpurl) {
-
-
         Retrofit retrofit = new Retrofit.Builder()
-
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .baseUrl(httpurl)
                 .client(client)
