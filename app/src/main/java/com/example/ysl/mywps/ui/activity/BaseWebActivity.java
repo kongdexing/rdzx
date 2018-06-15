@@ -52,8 +52,9 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
     public static final int FILECHOOSER_RESULTCODE_FOR_ANDROID_5 = 5174;
 
     public static final String TAG = ProposalActivity.class.getName();
-    public boolean needToken = true;
-
+    private boolean needToken = true;
+    private boolean webviewFinished = false;
+    public static String WEB_URL = "web_url";
     String webUrl = "";
 
     @Override
@@ -62,7 +63,7 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            webUrl = bundle.getString("webUrl");
+            webUrl = bundle.getString(WEB_URL);
         }
     }
 
@@ -142,7 +143,6 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
         realname = SharedPreferenceUtils.loginValue(this, SysytemSetting.REAL_NAME);
     }
 
-
     //使用Webview的时候，返回键没有重写的时候会直接关闭程序，这时候其实我们要其执行的知识回退到上一步的操作
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -158,9 +158,9 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
     // Android版本变量
     final int version = Build.VERSION.SDK_INT;
 
-    private void setToken() {
+    public void setToken() {
 //        webView.loadUrl("javascript:setFile('" + filePath + "','"+fileName+"')");
-        Log.i("aaa", "mytoken   " + token);
+        Log.i(TAG, "mytoken   " + token);
 //        ToastUtils.showLong(MeettingActivity.this, "setToken:" + token);
         webView.post(new Runnable() {
             @Override
@@ -168,12 +168,10 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
                 if (version < 18) {
                     webView.loadUrl("javascript:setToken('" + token + "','" + realname + "')");
                 } else {
-
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                         webView.evaluateJavascript("javascript:setToken('" + token + "','" + realname + "')", new ValueCallback<String>() {
                             @Override
                             public void onReceiveValue(String s) {
-
                                 Log.i("aaa", "return  " + s);
                             }
                         });
@@ -185,45 +183,36 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
         });
     }
 
+    /**
+     * 当token过期后跳转到登陆界面
+     */
+    public void jumpToLogin() {
+        SharedPreferenceUtils.loginSave(this, "token", "");
+        Intent intent = new Intent(this, LoginActivity.class);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(LoginActivity.finishType, LoginActivity.finishSelf);
+        startActivity(intent);
+//        finish();
+    }
+
     @Override
     public String jsCallBack(String method, String msg) {
-        return realname + "," + token;
+        String message = "";
+        switch (method) {
+            case "callToken":
+                setToken();
+//                saveFileTypes(token);
+//                Logger.i("CALLtOKEN");
+                message = realname + "," + token;
+                break;
+            case "invalidToken":
+                jumpToLogin();
+                break;
+        }
+        return message;
     }
 
-    private static class MyWebviewClient extends WebViewClient {
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            view.loadUrl(url);
-
-            return super.shouldOverrideUrlLoading(view, url);
-        }
-
-        @Override
-        public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            super.onPageStarted(view, url, favicon);
-
-        }
-
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            super.onPageFinished(view, url);
-
-            Log.i(TAG, "finish");
-        }
-
-        @Override
-        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-            super.onReceivedError(view, request, error);
-        }
-
-        @Override
-        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            super.onReceivedSslError(view, handler, error);
-        }
-
-    }
-
-    private Handler progressHandler = new Handler() {
+    public Handler progressHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -231,21 +220,18 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
             progressbar.setProgress(progress);
             if (progress == 100) {
                 progressbar.setVisibility(View.GONE);
-                if (needToken) {
-                    setToken();
-                    needToken = false;
-                }
             }
         }
     };
 
-    private class MyWebChromeClient extends WebChromeClient {
+    public class MyWebChromeClient extends WebChromeClient {
 
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
             super.onProgressChanged(view, newProgress);
             Log.i(TAG, "progress  " + newProgress);
             if (newProgress >= 100) {
+                setTokenToWeb();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -315,6 +301,53 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
                 needToken = false;
             }
             Log.i(TAG, "title  " + title);
+        }
+    }
+
+    private class MyWebviewClient extends WebViewClient {
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            Log.i(TAG, "shouldOverrideUrlLoading: " + url);
+            view.loadUrl(url);
+
+            return super.shouldOverrideUrlLoading(view, url);
+        }
+
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+            Log.i(TAG, "onPageStarted: ");
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            Log.i(TAG, "onPageFinished " + url + "  needToken " + needToken);
+            webviewFinished = true;
+//            setTokenToWeb();
+        }
+
+        @Override
+        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+            super.onReceivedError(view, request, error);
+            Log.i(TAG, "onReceivedError: ");
+        }
+
+        @Override
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+
+            //super.onReceivedSslError(view, handler, error);注意一定要去除这行代码，否则设置无效。
+            // handler.cancel();// Android默认的处理方式
+            handler.proceed();// 接受所有网站的证书
+            // handleMessage(Message msg);// 进行其他处理
+        }
+    }
+
+    private void setTokenToWeb() {
+        if (needToken && webviewFinished) {
+            setToken();
+            needToken = false;
         }
     }
 

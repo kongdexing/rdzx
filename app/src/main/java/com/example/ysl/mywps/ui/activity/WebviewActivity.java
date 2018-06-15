@@ -70,18 +70,10 @@ import retrofit2.Response;
  * 介绍: 社情民意
  */
 
-public class WebviewActivity extends BaseActivity implements JSCallBack {
-
-    //    private static final String TAG = TAG;
-    @BindView(R.id.webview_webview)
-    WebView webView;
-    @BindView(R.id.webview_progerss)
-    ProgressBar progressbar;
+public class WebviewActivity extends BaseWebActivity implements JSCallBack {
 
     private String path = "";
-
     private final int CAMERA_REQUEST_CODE = 111;
-
     private final int DOCUMENT_REQUEST_CODE = 222;
     private final int VIDEO_WITH_CAMERA = 333;
     private static final int WEBVIEW_LOADED = 444;
@@ -89,7 +81,6 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
     private String cameraPath = "";
     private String token = "";
     private String realname = "";
-
     private boolean needToken = true;
 
     @Override
@@ -99,20 +90,6 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
         setContentView(R.layout.activity_webview_layout);
         ButterKnife.bind(this);
         setTitleText("社情民意");
-        showLeftButton(true, null, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (webView.canGoBack()) {
-                    webView.goBack();
-                } else {
-                    finish();
-                }
-            }
-        });
-        initView();
-        afterView();
-
     }
 
     /**
@@ -147,7 +124,6 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-
                         Logger.i("fileType   " + t.getMessage());
                     }
                 });
@@ -157,139 +133,14 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
         fileTypeThread.start();
     }
 
-    /**
-     * 当token过期后跳转到登陆界面
-     */
-    private void jumpToLogin() {
-        SharedPreferenceUtils.loginSave(this, "token", "");
-        Intent intent = new Intent(this, LoginActivity.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(LoginActivity.finishType, LoginActivity.finishSelf);
-        startActivity(intent);
-//        finish();
-    }
-
-
-    @Override
-    public void initView() {
-
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);//设置js交互
-//        webSettings.setUseWideViewPort(true);//设置图片调整到适合webview的大小
-        webSettings.setLoadWithOverviewMode(true);//缩放至屏幕的大小
-
-        //缩放操作
-        webSettings.setSupportZoom(true);//支持缩放
-        webSettings.setBuiltInZoomControls(true);///设置内置的缩放控件。若为false，则该WebView不可缩放
-        webSettings.setDisplayZoomControls(false);//隐藏内置的原生缩放控件
-
-        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE); //缓存模式如下：
-        //LOAD_CACHE_ONLY: 不使用网络，只读取本地缓存数据
-        //LOAD_DEFAULT: （默认）根据cache-control决定是否从网络上取数据。
-        //LOAD_NO_CACHE: 不使用缓存，只从网络获取数据.
-        //LOAD_CACHE_ELSE_NETWORK，只要本地有，无论是否过期，或者no-cache，都使用缓存中的数据。
-
-        // 设置允许JS弹窗
-        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-        webSettings.setDomStorageEnabled(true);//设置适应Html5 重点是这个设置
-        String userAgent = webSettings.getUserAgentString();
-        userAgent += "webview";
-        Log.i(TAG, userAgent + "  useragent");
-        webSettings.setUserAgentString(userAgent);
-        webView.getSettings().setDomStorageEnabled(true);
-        webView.clearCache(true);
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        webView.onPause();
-        webView.pauseTimers();
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
-        webView.onResume();
-        webView.resumeTimers();
         writePermission();
-    }
-
-    @Override
-    protected void onDestroy() {
-
-        if (webView != null) {
-            webView.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
-            webView.clearHistory();
-            ((ViewGroup) webView.getParent()).removeView(webView);
-            webView.destroy();
-            webView = null;
-        }
-
-
-        super.onDestroy();
-
-    }
-
-    @Override
-    public void initData() {
-
-        token = SharedPreferenceUtils.loginValue(this, SysytemSetting.USER_TOKEN);
-        realname = SharedPreferenceUtils.loginValue(this, SysytemSetting.REAL_NAME);
-        saveFileTypes(token);
-    }
-
-
-    private void afterView() {
-        MyWebChromeClient chromeClient = new MyWebChromeClient();
-        MyWebviewClient client = new MyWebviewClient();
-//file:///android_asset/index.html
-//     http://www.haont.cn/OAPhone/sqmy/
-        webView.addJavascriptInterface(new JavascriptBridge(this), "javaBridge");
-        webView.loadUrl(HttpUtl.HTTP_WEB_URL + "sqmy/");
-        webView.setWebChromeClient(chromeClient);
-        webView.setWebViewClient(client);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-
-            webView.setWebContentsDebuggingEnabled(true);
-
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        }
-// 设置是否允许 WebView 使用 File 协议,默认设置为true，即允许在 File 域下执行任意 JavaScript 代码
-        webView.getSettings().setAllowFileAccess(true);
     }
 
     // Android版本变量
     final int version = Build.VERSION.SDK_INT;
-
-    private void setToken() {
-//        webView.loadUrl("javascript:setFile('" + filePath + "','"+fileName+"')");
-        Log.i(TAG, "mytoken   " + token + "  realname " + realname);
-//        ToastUtils.showLong(WebviewActivity.this, "setToken:" + token);
-        webView.post(new Runnable() {
-            @Override
-            public void run() {
-                if (version < 18) {
-                    webView.loadUrl("javascript:setToken('" + token + "','" + realname + "')");
-                } else {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        webView.evaluateJavascript("javascript:setToken('" + token + "','" + realname + "')", new ValueCallback<String>() {
-                            @Override
-                            public void onReceiveValue(String s) {
-                                Log.i(TAG, "return  " + s);
-                            }
-                        });
-                    } else {
-
-                    }
-                }
-            }
-        });
-    }
-
 
     /**
      * 检查存储权限，如果没有就请求
@@ -328,15 +179,11 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
         }
     }
 
-
     @Override
     public String jsCallBack(String method, String msg) {
-
         String message = "";
         switch (method) {
-
             case "callCamera":
-
                 ToastUtils.showShort(this, "随意拍");
                 callCamera();
                 break;
@@ -361,20 +208,7 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
         return message;
     }
 
-    //使用Webview的时候，返回键没有重写的时候会直接关闭程序，这时候其实我们要其执行的知识回退到上一步的操作
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        //这是一个监听用的按键的方法，keyCode 监听用户的动作，如果是按了返回键，同时Webview要返回的话，WebView执行回退操作，因为mWebView.canGoBack()返回的是一个Boolean类型，所以我们把它返回为true
-        if (keyCode == KeyEvent.KEYCODE_BACK && webView.canGoBack()) {
-            webView.goBack();
-            return true;
-        }
-
-        return super.onKeyDown(keyCode, event);
-    }
-
     private void fileHaveUpload(final String filePath, final String fileName) {
-
         webView.post(new Runnable() {
             @Override
             public void run() {
@@ -395,7 +229,6 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
             }
         });
     }
-
 
     /**
      * 压缩视频
@@ -443,16 +276,6 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
             }
         });
     }
-
-    private Handler progressHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            int progress = msg.what;
-            progressbar.setProgress(progress);
-            if (progress == 100) progressbar.setVisibility(View.GONE);
-        }
-    };
 
     /**
      * 上传社情文件
@@ -543,10 +366,7 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-//            loading.setVisibility(View.GONE);
-
             if (msg.obj != null) {
-
                 if (msg.obj.toString().equals("Y")) {
 
                     if (msg.obj.equals("Y")) {
@@ -850,86 +670,5 @@ public class WebviewActivity extends BaseActivity implements JSCallBack {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
-    private boolean webviewFinished = false;
 
-    private class MyWebviewClient extends WebViewClient {
-
-
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            Log.i(TAG, "shouldOverrideUrlLoading: " + url);
-            view.loadUrl(url);
-
-            return super.shouldOverrideUrlLoading(view, url);
-        }
-
-        @Override
-        public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            super.onPageStarted(view, url, favicon);
-            Log.i(TAG, "onPageStarted: ");
-        }
-
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            super.onPageFinished(view, url);
-            Log.i(TAG, "onPageFinished " + url + "  needToken " + needToken);
-            webviewFinished = true;
-//            setTokenToWeb();
-        }
-
-        @Override
-        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-            super.onReceivedError(view, request, error);
-            Log.i(TAG, "onReceivedError: ");
-        }
-
-        @Override
-        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-
-            //super.onReceivedSslError(view, handler, error);注意一定要去除这行代码，否则设置无效。
-            // handler.cancel();// Android默认的处理方式
-            handler.proceed();// 接受所有网站的证书
-            // handleMessage(Message msg);// 进行其他处理
-        }
-    }
-
-    private class MyWebChromeClient extends WebChromeClient {
-
-        @Override
-        public void onProgressChanged(WebView view, int newProgress) {
-            super.onProgressChanged(view, newProgress);
-
-//            Log.i(TAG, "progress  " + newProgress);
-            if (newProgress >= 100) {
-                Log.i(TAG, "progress  " + newProgress);
-                setTokenToWeb();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            Thread.sleep(2000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        progressHandler.sendEmptyMessage(100);
-                    }
-                }).start();
-            } else {
-                progressHandler.sendEmptyMessage(newProgress);
-            }
-        }
-
-        @Override
-        public void onReceivedTitle(WebView view, String title) {
-            super.onReceivedTitle(view, title);
-            Log.i(TAG, "title  " + title);
-        }
-    }
-
-    private void setTokenToWeb() {
-        if (needToken && webviewFinished) {
-            setToken();
-            needToken = false;
-        }
-    }
 }

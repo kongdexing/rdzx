@@ -12,6 +12,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.ysl.mywps.R;
+import com.example.ysl.mywps.net.HttpUtl;
+import com.example.ysl.mywps.ui.activity.BaseWebActivity;
 import com.example.ysl.mywps.ui.activity.MembersActivity;
 import com.example.ysl.mywps.ui.activity.NewOAActivity;
 import com.example.ysl.mywps.ui.activity.ProposalActivity;
@@ -187,6 +189,7 @@ public class NewWorkFragment extends BaseFragment {
                 break;
             case R.id.llItem3://社情民意
                 intent = new Intent(getActivity(), WebviewActivity.class);
+                intent.putExtra(BaseWebActivity.WEB_URL, HttpUtl.HTTP_WEB_URL + "sqmy/");
                 break;
             case R.id.llItem4://委员之家
                 intent = new Intent(getActivity(), MembersActivity.class);
