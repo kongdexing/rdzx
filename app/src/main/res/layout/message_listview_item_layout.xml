@@ -5,24 +5,24 @@
     android:background="@drawable/mine_item_selector"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/dp_12"
+    android:paddingBottom="@dimen/dp_8"
     android:paddingLeft="@dimen/dp_10"
     android:paddingRight="@dimen/dp_10"
-    android:paddingTop="@dimen/dp_12">
+    android:paddingTop="@dimen/dp_8">
 
     <com.example.ysl.mywps.ui.view.CircularImageView
         android:id="@+id/imgHead"
-        android:layout_width="@dimen/dp_50"
-        android:layout_height="@dimen/dp_50"
+        android:layout_width="@dimen/dp_45"
+        android:layout_height="@dimen/dp_45"
         android:clickable="true"
         android:src="@drawable/abc" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_50"
-        android:layout_marginLeft="@dimen/dp_5"
-        android:paddingBottom="@dimen/dp_2"
-        android:paddingTop="@dimen/dp_2">
+        android:layout_marginLeft="@dimen/dp_8"
+        android:paddingBottom="@dimen/dp_3"
+        android:paddingTop="@dimen/dp_3">
 
         <TextView
             android:id="@+id/contact_tv_name"
@@ -31,7 +31,7 @@
             android:layout_alignParentTop="true"
             android:text="名称"
             android:textColor="#464646"
-            android:textSize="@dimen/sp_18" />
+            android:textSize="@dimen/sp_16" />
 
         <TextView
             android:id="@+id/contact_tv_phone"
@@ -40,7 +40,7 @@
             android:layout_alignParentBottom="true"
             android:text="[手机号]"
             android:textColor="#868686"
-            android:textSize="@dimen/sp_18" />
+            android:textSize="@dimen/sp_14" />
 
     </RelativeLayout>
 </LinearLayout>

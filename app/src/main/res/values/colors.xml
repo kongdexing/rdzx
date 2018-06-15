@@ -35,6 +35,8 @@
     <!--箭头颜色-->
     <color name="arrow">#C7C7CC</color>
     <color name="gray_0">#E4E4E4</color>
+    <color name="gray_1">#F5F5F5</color>
+
     <!--导航栏   #2B3136-->
     <color name="tool_bar">#2B3136</color>
     <!--按钮背景  #E62F2D-->

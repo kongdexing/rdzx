@@ -27,8 +27,6 @@ public class ContactPinnedAdapter extends ArrayAdapter<Item> implements PinnedSe
 
     public ContactPinnedAdapter(@NonNull Context context, int resource) {
         super(context, resource);
-
-
     }
 
     public void loadData(List<ContactBean> contactBeans) {
