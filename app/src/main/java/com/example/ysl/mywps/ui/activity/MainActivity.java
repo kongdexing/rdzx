@@ -10,7 +10,6 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -23,6 +22,7 @@ import android.widget.TextView;
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.ui.fragment.ContactFragment;
+import com.example.ysl.mywps.ui.fragment.MessageFragment;
 import com.example.ysl.mywps.ui.fragment.MineFragment;
 import com.example.ysl.mywps.ui.fragment.NewWorkFragment;
 import com.example.ysl.mywps.utils.CommonUtil;
@@ -107,7 +107,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         colorNomal = getResources().getColorStateList(R.color.bottom_normal);
         colorSelect = getResources().getColorStateList(R.color.bottom_selected);
         fragmentManager = getSupportFragmentManager();
-        showMessage(1);
+        showMessage(0);
 
     }
 
@@ -166,10 +166,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         fileTypeThread.start();
     }
 
-
     @Override
     public Resources getResources() {
-
         Resources res = super.getResources();
         Configuration config = new Configuration();
         config.setToDefaults();
@@ -179,8 +177,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void initView() {
-
-
 //        ArrayList<Fragment> fragments = new ArrayList<>();
 //        messageFragment = new MessageFragment();
 //        workFragment = new WorkFragment();
@@ -213,20 +209,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //
 //            }
 //        });
-
-
     }
-
 
     @Override
     public void initData() {
-
-
         final String token = SharedPreferenceUtils.loginValue(this, "token");
         saveFileTypes(token);
-
     }
-
 
     @Override
     protected void onResume() {
@@ -269,25 +258,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private int currentMyIndex = 1;
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    //    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void setTextBack(int index) {
         showTitle(true);
-
         switch (index) {
-//            case 0:
-//                tvMessage.setTextColor(colorSelect);
-//                tvConact.setTextColor(colorNomal);
-//                tvWork.setTextColor(colorNomal);
-//                tvMine.setTextColor(colorNomal);
-//
-//                setTitleText("消息");
-//                ibMessage.setBackground(getResources().getDrawable(R.mipmap.icon_message_selected));
-//                ibWork.setBackground(getResources().getDrawable(R.mipmap.icon_work_normal));
-//                ibContact.setBackground(getResources().getDrawable(R.mipmap.icon_contact_normal));
-//                ibMine.setBackground(getResources().getDrawable(R.mipmap.icon_mine_normal));
-//
-//                break;
-            case 1:
+            case 0:
                 setTitleText("工作");
                 showTitle(false);
                 tvMessage.setTextColor(colorNomal);
@@ -295,11 +270,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 tvWork.setTextColor(colorSelect);
                 tvMine.setTextColor(colorNomal);
 
-                ibMessage.setBackground(getResources().getDrawable(R.mipmap.icon_message_normal));
-                ibWork.setBackground(getResources().getDrawable(R.mipmap.icon_work_selected));
-                ibContact.setBackground(getResources().getDrawable(R.mipmap.icon_contact_normal));
-                ibMine.setBackground(getResources().getDrawable(R.mipmap.icon_mine_normal));
+                ibMessage.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_message_normal));
+                ibWork.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_work_selected));
+                ibContact.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_contact_normal));
+                ibMine.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_mine_normal));
 
+                currentMyIndex = 0;
+                break;
+            case 1:
+                tvMessage.setTextColor(colorSelect);
+                tvConact.setTextColor(colorNomal);
+                tvWork.setTextColor(colorNomal);
+                tvMine.setTextColor(colorNomal);
+
+                setTitleText("消息");
+                ibMessage.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_message_selected));
+                ibWork.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_work_normal));
+                ibContact.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_contact_normal));
+                ibMine.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_mine_normal));
                 currentMyIndex = 1;
                 break;
             case 2:
@@ -309,11 +297,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 tvWork.setTextColor(colorNomal);
                 tvMine.setTextColor(colorNomal);
 
-
-                ibMessage.setBackground(getResources().getDrawable(R.mipmap.icon_message_normal));
-                ibWork.setBackground(getResources().getDrawable(R.mipmap.icon_contact_normal));
-                ibContact.setBackground(getResources().getDrawable(R.mipmap.icon_contact_select));
-                ibMine.setBackground(getResources().getDrawable(R.mipmap.icon_mine_normal));
+                ibMessage.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_message_normal));
+                ibWork.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_contact_normal));
+                ibContact.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_contact_select));
+                ibMine.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_mine_normal));
                 currentMyIndex = 2;
 
                 break;
@@ -324,16 +311,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 tvWork.setTextColor(colorNomal);
                 tvMine.setTextColor(colorSelect);
 
-                ibMessage.setBackground(getResources().getDrawable(R.mipmap.icon_message_normal));
-                ibWork.setBackground(getResources().getDrawable(R.mipmap.icon_work_normal));
-                ibContact.setBackground(getResources().getDrawable(R.mipmap.icon_contact_normal));
-                ibMine.setBackground(getResources().getDrawable(R.mipmap.icon_mine_selected));
+                ibMessage.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_message_normal));
+                ibWork.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_work_normal));
+                ibContact.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_contact_normal));
+                ibMine.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_mine_selected));
                 currentMyIndex = 3;
                 break;
-
-
         }
-
     }
 
     /**
@@ -369,20 +353,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if (currentFragment != null && index != currentMyIndex)
             fragmentTransaction.hide(currentFragment);
         switch (index) {
-
-//            case 0:
-//                currentIndex = 0;
-//                if(messageFragment == null){
-//                    messageFragment = new MessageFragment();
-//                    fragmentTransaction.add(R.id.main_rl_container,messageFragment);
-//                }else {
-//                    fragmentTransaction.show(messageFragment);
-//                }
-//                setTextBack(0);
-//                currentFragment = messageFragment;
-//                break;
-            case 1:
-                currentIndex = 1;
+            case 0:
+                currentIndex = 0;
                 if (workFragment == null) {
                     workFragment = new NewWorkFragment();
                     fragmentTransaction.add(R.id.main_rl_container, workFragment);
@@ -391,10 +363,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     if (workFragment.isHidden()) fragmentTransaction.show(workFragment);
                 }
                 currentFragment = workFragment;
+                setTextBack(0);
+                break;
+            case 1:
+                currentIndex = 1;
+                if (messageFragment == null) {
+                    messageFragment = new MessageFragment();
+                    fragmentTransaction.add(R.id.main_rl_container, messageFragment);
+                } else {
+                    fragmentTransaction.show(messageFragment);
+                }
                 setTextBack(1);
+                currentFragment = messageFragment;
                 break;
             case 2:
-
                 currentIndex = 2;
                 if (contactFragment == null) {
                     contactFragment = new ContactFragment();
@@ -406,10 +388,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 setTextBack(2);
                 break;
             case 3:
-
                 currentIndex = 3;
                 if (mineFragment == null) {
-
                     mineFragment = new MineFragment();
                     fragmentTransaction.add(R.id.main_rl_container, mineFragment);
                 } else {
@@ -481,11 +461,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         int id = v.getId();
 
         if (id == R.id.main_ll_message || id == R.id.main_ib_message) {
-            showMessage(0);
+            showMessage(1);
 
         } else if (id == R.id.main_ll_work || id == R.id.main_ib_work) {
 
-            showMessage(1);
+            showMessage(0);
         } else if (id == R.id.main_ll_contact || id == R.id.main_ib_contact) {
 
             showMessage(2);
@@ -532,9 +512,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         if (requestCode == 11) {
-
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.i("CMCC", "权限被允许");
@@ -543,9 +521,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 ToastUtils.showShort(this, "请开启存储权限");
                 writePermission();
             }
-
         } else {
-
             writePermission();
 //            finish();
         }

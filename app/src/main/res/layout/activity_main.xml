@@ -31,32 +31,6 @@
         android:paddingTop="@dimen/main_small">
 
         <LinearLayout
-            android:id="@+id/main_ll_message"
-            android:layout_width="1dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <ImageButton
-                android:id="@+id/main_ib_message"
-                android:layout_width="@dimen/main_icon"
-                android:layout_height="@dimen/main_icon"
-                android:background="@mipmap/icon_message_normal"
-                android:clickable="false" />
-
-            <TextView
-                android:id="@+id/main_tv_message"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:text="消息"
-                android:textAlignment="center"
-                android:textSize="@dimen/main_text" />
-        </LinearLayout>
-
-        <LinearLayout
             android:id="@+id/main_ll_work"
             android:layout_width="1dp"
             android:layout_height="wrap_content"
@@ -80,6 +54,32 @@
                 android:layout_height="wrap_content"
                 android:clickable="false"
                 android:text="工作"
+                android:textAlignment="center"
+                android:textSize="@dimen/main_text" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/main_ll_message"
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <ImageButton
+                android:id="@+id/main_ib_message"
+                android:layout_width="@dimen/main_icon"
+                android:layout_height="@dimen/main_icon"
+                android:background="@mipmap/icon_message_normal"
+                android:clickable="false" />
+
+            <TextView
+                android:id="@+id/main_tv_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:text="消息"
                 android:textAlignment="center"
                 android:textSize="@dimen/main_text" />
         </LinearLayout>
