@@ -12,6 +12,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.ysl.mywps.R;
+import com.example.ysl.mywps.bean.BannerBean;
+import com.example.ysl.mywps.bean.ContactBean;
+import com.example.ysl.mywps.bean.HotBean;
 import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.ui.activity.BaseWebActivity;
 import com.example.ysl.mywps.ui.activity.MembersActivity;
@@ -21,10 +24,19 @@ import com.example.ysl.mywps.ui.activity.WebviewActivity;
 import com.example.ysl.mywps.ui.view.HomeNewsView;
 import com.example.ysl.mywps.ui.view.autoviewpager.GlideImageLoader;
 import com.example.ysl.mywps.utils.CommonUtil;
+import com.example.ysl.mywps.utils.PingYinUtils;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
+import com.example.ysl.mywps.utils.ToastUtils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.orhanobut.logger.Logger;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.youth.banner.Banner;
 import com.youth.banner.listener.OnBannerListener;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +45,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Administrator on 2017/12/23 0023.
@@ -52,6 +73,9 @@ public class NewWorkFragment extends BaseFragment {
 
     @BindView(R.id.llGroup)
     LinearLayout llGroup;
+
+    final List<String> listBannerImages = new ArrayList<>();
+    final List<String> listTitles = new ArrayList<>();
 
     List<String> advertList = new ArrayList<>();
     private String token = "";
@@ -116,26 +140,10 @@ public class NewWorkFragment extends BaseFragment {
     }
 
     private void loadData() {
-        final List<String> listBannerImages = new ArrayList<>();
-        final List<String> listTitles = new ArrayList<>();
-
-        listBannerImages.add("http://h.hiphotos.baidu.com/image/pic/item/d043ad4bd11373f0f5413134a80f4bfbfbed041a.jpg");
-        listBannerImages.add("http://d.hiphotos.baidu.com/image/pic/item/54fbb2fb43166d2234a291024a2309f79152d24b.jpg");
-        listBannerImages.add("http://a.hiphotos.baidu.com/image/pic/item/55e736d12f2eb9389b3e3860d9628535e4dd6fd4.jpg");
-        listBannerImages.add("http://f.hiphotos.baidu.com/image/pic/item/b812c8fcc3cec3fdf10120e3da88d43f8794276c.jpg");
-        listBannerImages.add("http://c.hiphotos.baidu.com/image/pic/item/f11f3a292df5e0fe43250e97506034a85edf7263.jpg");
-
-        listTitles.add("balabala0");
-        listTitles.add("balabala1");
-        listTitles.add("balabala2");
-        listTitles.add("balabala3");
-        listTitles.add("balabala4");
-        tipTitle.setText(listTitles.get(0));
-
         if (topBanner == null) {
             return;
         }
-        topBanner.update(listBannerImages);
+        getBannerData();
         topBanner.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -158,11 +166,7 @@ public class NewWorkFragment extends BaseFragment {
             }
         });
 
-        llGroup.removeAllViews();
-        for (int i = 0; i < 5; i++) {
-            HomeNewsView view = new HomeNewsView(this.getContext());
-            llGroup.addView(view);
-        }
+        getRecommendList();
     }
 
     @Override
@@ -189,6 +193,7 @@ public class NewWorkFragment extends BaseFragment {
                 break;
             case R.id.llItem3://社情民意
                 intent = new Intent(getActivity(), WebviewActivity.class);
+                intent.putExtra(BaseWebActivity.WEB_TITLE, "社情民意");
                 intent.putExtra(BaseWebActivity.WEB_URL, HttpUtl.HTTP_WEB_URL + "sqmy/");
                 break;
             case R.id.llItem4://委员之家
@@ -218,5 +223,154 @@ public class NewWorkFragment extends BaseFragment {
         unbinder.unbind();
     }
 
+    /**
+     * 获取通讯录联系人
+     */
+    private void getBannerData() {
+        try {
+            Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
+                @Override
+                public void subscribe(final ObservableEmitter<String> e) {
+
+                    String token = SharedPreferenceUtils.loginValue(getActivity(), "token");
+                    Call<String> call = HttpUtl.contact("User/Public/banner_list/", token);
+                    call.enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+                            if (!response.isSuccessful()) {
+                                e.onNext(response.message());
+                                return;
+                            }
+                            Log.i(TAG, "onResponse: " + response.body());
+                            String data = response.body().toString();
+                            String msg = null;
+                            try {
+                                JSONObject jsonObject = new JSONObject(data);
+                                int code = jsonObject.getInt("code");
+                                msg = jsonObject.getString("msg");
+
+                                JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                Gson gson = new Gson();
+                                List<BannerBean> bannerBeans = gson.fromJson(jsonArray.toString(), new TypeToken<List<BannerBean>>() {
+                                }.getType());
+
+                                listBannerImages.clear();
+                                listTitles.clear();
+
+                                for (int i = 0; i < bannerBeans.size(); i++) {
+                                    if (bannerBeans.get(i) != null) {
+                                        listBannerImages.add(bannerBeans.get(i).getBanner());
+                                        listTitles.add(bannerBeans.get(i).getTitle());
+                                    }
+                                }
+
+                                tipTitle.setText(listTitles.get(0));
+                                topBanner.update(listBannerImages);
+
+                                e.onNext("Y");
+                            } catch (JSONException e1) {
+                                e1.printStackTrace();
+                                e.onNext(msg);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+                            e.onNext(t.getMessage());
+                        }
+                    });
+
+                }
+            });
+
+            Consumer<String> consumer = new Consumer<String>() {
+                @Override
+                public void accept(String s) throws Exception {
+                    Log.i(TAG, "accept: " + s);
+//                if (s.equals("Y")) {
+//                    adapter.loadData(list);
+//                } else {
+//                    ToastUtils.showShort(getActivity(), s);
+//                }
+                }
+            };
+
+            observable.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(consumer);
+        } catch (Exception ex) {
+            Log.i(TAG, "getBannerData: " + ex.getMessage());
+        }
+    }
+
+    private void getRecommendList() {
+        try {
+            Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
+                @Override
+                public void subscribe(final ObservableEmitter<String> e) {
+
+                    String token = SharedPreferenceUtils.loginValue(getActivity(), "token");
+                    Call<String> call = HttpUtl.contact("User/Public/recommend_list/", token);
+                    call.enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+                            if (!response.isSuccessful()) {
+                                e.onNext(response.message());
+                                return;
+                            }
+                            Log.i(TAG, "onResponse: " + response.body());
+                            String data = response.body().toString();
+                            String msg = null;
+                            try {
+                                JSONObject jsonObject = new JSONObject(data);
+                                int code = jsonObject.getInt("code");
+                                msg = jsonObject.getString("msg");
+
+                                JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                Gson gson = new Gson();
+                                List<HotBean> hotBeans = gson.fromJson(jsonArray.toString(), new TypeToken<List<HotBean>>() {
+                                }.getType());
+                                llGroup.removeAllViews();
+                                for (int i = 0; i < hotBeans.size(); i++) {
+                                    HomeNewsView view = new HomeNewsView(getContext());
+                                    view.bindData(hotBeans.get(i));
+                                    llGroup.addView(view);
+                                }
+                                e.onNext("Y");
+                            } catch (JSONException e1) {
+                                e1.printStackTrace();
+                                e.onNext(msg);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+                            e.onNext(t.getMessage());
+                        }
+                    });
+
+                }
+            });
+
+            Consumer<String> consumer = new Consumer<String>() {
+                @Override
+                public void accept(String s) throws Exception {
+                    Log.i(TAG, "accept: " + s);
+//                if (s.equals("Y")) {
+//                    adapter.loadData(list);
+//                } else {
+//                    ToastUtils.showShort(getActivity(), s);
+//                }
+                }
+            };
+
+            observable.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(consumer);
+        } catch (Exception ex) {
+            Log.i(TAG, "getBannerData: " + ex.getMessage());
+        }
+
+    }
 
 }

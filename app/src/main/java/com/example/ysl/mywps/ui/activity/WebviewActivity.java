@@ -89,7 +89,13 @@ public class WebviewActivity extends BaseWebActivity implements JSCallBack {
 
         setContentView(R.layout.activity_webview_layout);
         ButterKnife.bind(this);
-        setTitleText("社情民意");
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            String title = bundle.getString(WEB_TITLE);
+            setTitleText(title);
+        }
+
     }
 
     /**

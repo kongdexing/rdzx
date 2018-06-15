@@ -78,6 +78,8 @@ public class LoginActivity extends BaseActivity {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             _finishType = bundle.getString(finishType);
+            if (_finishType == null)
+                _finishType = "";
         }
         rlConfirm.setOnClickListener(clik);
         getLogin();
@@ -93,10 +95,7 @@ public class LoginActivity extends BaseActivity {
 
     }
 
-
     private void saveLogin() {
-
-
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(SysytemSetting.USER_NAME, name);
         editor.putString(SysytemSetting.USER_PASSWORD, password);

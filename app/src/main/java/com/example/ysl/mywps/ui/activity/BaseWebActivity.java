@@ -55,6 +55,7 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
     private boolean needToken = true;
     private boolean webviewFinished = false;
     public static String WEB_URL = "web_url";
+    public static String WEB_TITLE = "web_title";
     String webUrl = "";
 
     @Override
@@ -64,6 +65,9 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             webUrl = bundle.getString(WEB_URL);
+            if (webUrl != null && !webUrl.isEmpty() && !webUrl.startsWith("http")) {
+                webUrl = "http://" + webUrl;
+            }
         }
     }
 
