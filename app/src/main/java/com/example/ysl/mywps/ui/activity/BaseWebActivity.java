@@ -51,7 +51,7 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
     public static final int FILECHOOSER_RESULTCODE = 5173;
     public static final int FILECHOOSER_RESULTCODE_FOR_ANDROID_5 = 5174;
 
-    public static final String TAG = ProposalActivity.class.getName();
+    public String TAG = getClass().getSimpleName();
     private boolean needToken = true;
     private boolean webviewFinished = false;
     public static String WEB_URL = "web_url";
@@ -61,7 +61,6 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             webUrl = bundle.getString(WEB_URL);

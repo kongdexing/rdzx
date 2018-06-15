@@ -68,7 +68,7 @@
         <activity android:name=".ui.activity.ThemeActivity" />
         <activity android:name=".ui.activity.MeettingActivity" />
         <activity android:name=".ui.activity.ReportActivity" />
-        <activity android:name=".ui.activity.ColleagueAcitivity" />
+        <activity android:name=".ui.activity.ColleagueActivity" />
         <activity android:name=".ui.activity.QuestionActivity" />
         <activity android:name=".ui.activity.MembersActivity" />
         <activity android:name=".ui.activity.WebviewActivity" />

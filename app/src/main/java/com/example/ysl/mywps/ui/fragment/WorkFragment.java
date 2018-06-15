@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.example.ysl.mywps.R;
-import com.example.ysl.mywps.ui.activity.ColleagueAcitivity;
+import com.example.ysl.mywps.ui.activity.ColleagueActivity;
 import com.example.ysl.mywps.ui.activity.DocumentTurnActivity;
 import com.example.ysl.mywps.ui.activity.MaterialActivity;
 import com.example.ysl.mywps.ui.activity.MeettingActivity;
@@ -150,7 +150,7 @@ public class WorkFragment extends BaseFragment {
                     intent = new Intent(getActivity(), ReportActivity.class);
                     break;
                 case R.id.work_ll_colleagues://同事吧
-                    intent = new Intent(getActivity(), ColleagueAcitivity.class);
+                    intent = new Intent(getActivity(), ColleagueActivity.class);
                     break;
                 case R.id.work_ll_quession://问卷调查
 

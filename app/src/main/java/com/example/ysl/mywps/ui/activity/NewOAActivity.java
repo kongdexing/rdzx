@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.NewOAItem;
+import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.ui.adapter.OAItemGridAdapter;
 import com.example.ysl.mywps.ui.view.MyGridView;
 
@@ -69,11 +70,15 @@ public class NewOAActivity extends BaseActivity {
         oaItems.add(new NewOAItem()
                 .setIconId(R.drawable.icon_oa_6)
                 .setTitle("同事吧")
-                .setIntent(new Intent(this, ColleagueAcitivity.class)));
+                .setIntent(new Intent(this, ColleagueActivity.class)
+                        .putExtra(BaseWebActivity.WEB_URL, HttpUtl.HTTP_WEB_URL + "topic/index.html")
+                        .putExtra(BaseWebActivity.WEB_TITLE,"同事吧")));
         oaItems.add(new NewOAItem()
                 .setIconId(R.drawable.icon_oa_7)
                 .setTitle("问卷调查")
-                .setIntent(new Intent(this, QuestionActivity.class)));
+                .setIntent(new Intent(this, QuestionActivity.class)
+                        .putExtra(BaseWebActivity.WEB_URL, HttpUtl.HTTP_WEB_URL + "question/index.html")
+                        .putExtra(BaseWebActivity.WEB_TITLE,"问卷调查")));
 
         oaItems.add(new NewOAItem()
                 .setIconId(R.drawable.icon_oa_8)

@@ -29,11 +29,11 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/gray_0"
-        android:horizontalSpacing="@dimen/dp_0.5"
+        android:horizontalSpacing="@dimen/dp_1"
         android:numColumns="3"
         android:scrollbars="none"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="@dimen/dp_0.5" />
+        android:verticalSpacing="@dimen/dp_1" />
 
     <View
         android:layout_width="match_parent"
