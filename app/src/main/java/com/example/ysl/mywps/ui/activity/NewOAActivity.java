@@ -58,11 +58,17 @@ public class NewOAActivity extends BaseActivity {
         oaItems.add(new NewOAItem()
                 .setIconId(R.drawable.icon_oa_3)
                 .setTitle("通知公告")
-                .setIntent(new Intent(this, ReportActivity.class)));
+                .setIntent(new Intent(this, ReportActivity.class)
+                        .putExtra(BaseWebActivity.WEB_URL, HttpUtl.HTTP_WEB_URL + "notice/index.html")
+                        .putExtra(BaseWebActivity.WEB_TITLE,"通知公告")));
+
         oaItems.add(new NewOAItem()
                 .setIconId(R.drawable.icon_oa_4)
                 .setTitle("会议助手")
-                .setIntent(new Intent(this, MeettingActivity.class)));
+                .setIntent(new Intent(this, MeettingActivity.class)
+                        .putExtra(BaseWebActivity.WEB_URL, HttpUtl.HTTP_WEB_URL + "meeting/index.html")
+                        .putExtra(BaseWebActivity.WEB_TITLE,"会议助手")));
+
         oaItems.add(new NewOAItem()
                 .setIconId(R.drawable.icon_oa_5)
                 .setTitle("主题活动")

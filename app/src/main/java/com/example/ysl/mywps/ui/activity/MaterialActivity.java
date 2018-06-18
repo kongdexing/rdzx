@@ -2,7 +2,6 @@ package com.example.ysl.mywps.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -12,8 +11,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -32,12 +29,8 @@ import android.widget.TextView;
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.FileListChildBean;
 import com.example.ysl.mywps.bean.FileType;
-import com.example.ysl.mywps.bean.TransportBean;
 import com.example.ysl.mywps.interfaces.PassFileChildList;
 import com.example.ysl.mywps.interfaces.PasssString;
-import com.example.ysl.mywps.net.HttpUtl;
-import com.example.ysl.mywps.net.ProgressListener;
-import com.example.ysl.mywps.provider.UploadProvider;
 import com.example.ysl.mywps.ui.fragment.DocumentFrageMent;
 import com.example.ysl.mywps.ui.fragment.TransportFragment;
 import com.example.ysl.mywps.utils.CommonUtil;
@@ -46,15 +39,11 @@ import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.example.ysl.mywps.utils.ToastUtils;
 import com.orhanobut.logger.Logger;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by Administrator on 2018/2/4 0004.
@@ -87,7 +76,6 @@ public class MaterialActivity extends BaseActivity implements View.OnClickListen
     private List<FileType> fileTypes;
     private String fileType = "";
     private PasssString passsString;
-
 
     private MyclickListener click = new MyclickListener();
 

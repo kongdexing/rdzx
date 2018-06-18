@@ -28,7 +28,6 @@ import android.widget.Toast;
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.interfaces.JSCallBack;
 import com.example.ysl.mywps.interfaces.JavascriptBridge;
-import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.example.ysl.mywps.utils.SysytemSetting;
 
@@ -299,10 +298,10 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
         @Override
         public void onReceivedTitle(WebView view, String title) {
             super.onReceivedTitle(view, title);
-            if (needToken) {
-                setToken();
-                needToken = false;
-            }
+//            if (needToken) {
+//                setToken();
+//                needToken = false;
+//            }
             Log.i(TAG, "title  " + title);
         }
     }
@@ -313,7 +312,6 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             Log.i(TAG, "shouldOverrideUrlLoading: " + url);
             view.loadUrl(url);
-
             return super.shouldOverrideUrlLoading(view, url);
         }
 
@@ -328,7 +326,7 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
             super.onPageFinished(view, url);
             Log.i(TAG, "onPageFinished " + url + "  needToken " + needToken);
             webviewFinished = true;
-//            setTokenToWeb();
+            setTokenToWeb();
         }
 
         @Override
@@ -339,7 +337,6 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
 
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-
             //super.onReceivedSslError(view, handler, error);注意一定要去除这行代码，否则设置无效。
             // handler.cancel();// Android默认的处理方式
             handler.proceed();// 接受所有网站的证书
@@ -348,6 +345,7 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
     }
 
     private void setTokenToWeb() {
+        Log.i(TAG, "setTokenToWeb needToken: " + needToken + " webviewFinished:" + webviewFinished);
         if (needToken && webviewFinished) {
             setToken();
             needToken = false;

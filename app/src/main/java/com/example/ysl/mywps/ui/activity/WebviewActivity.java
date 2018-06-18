@@ -8,10 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,31 +21,18 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.ProgressBar;
 
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.interfaces.JSCallBack;
-import com.example.ysl.mywps.interfaces.JavascriptBridge;
 import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.net.ProgressListener;
 import com.example.ysl.mywps.utils.CommonUtil;
-import com.example.ysl.mywps.utils.SharedPreferenceUtils;
-import com.example.ysl.mywps.utils.SysytemSetting;
 import com.example.ysl.mywps.utils.ToastUtils;
 import com.gc.materialdesign.views.ButtonRectangle;
 import com.iceteck.silicompressorr.VideoCompress;
@@ -59,7 +44,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -187,6 +171,7 @@ public class WebviewActivity extends BaseWebActivity implements JSCallBack {
 
     @Override
     public String jsCallBack(String method, String msg) {
+        Log.i(TAG, "jsCallBack: "+method);
         String message = "";
         switch (method) {
             case "callCamera":
