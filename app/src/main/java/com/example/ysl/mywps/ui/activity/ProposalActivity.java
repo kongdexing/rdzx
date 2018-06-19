@@ -50,9 +50,9 @@ public class ProposalActivity extends BaseActivity implements JSCallBack {
             @Override
             public void onClick(View view) {
 
-                if(webView.canGoBack()){
+                if (webView.canGoBack()) {
                     webView.goBack();
-                }else {
+                } else {
                     finish();
                 }
 
@@ -99,20 +99,18 @@ public class ProposalActivity extends BaseActivity implements JSCallBack {
     protected void onPause() {
         super.onPause();
         webView.onPause();
-    webView.pauseTimers();
+        webView.pauseTimers();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         webView.onResume();
-    webView.resumeTimers();
+        webView.resumeTimers();
     }
-
 
     @Override
     protected void onDestroy() {
-
         if (webView != null) {
             webView.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
             webView.clearHistory();
@@ -120,21 +118,17 @@ public class ProposalActivity extends BaseActivity implements JSCallBack {
             webView.destroy();
             webView = null;
         }
-
-
         super.onDestroy();
-
     }
 
     private void afterView() {
-
         MyWebChromeClient chromeClient = new MyWebChromeClient();
         MyWebviewClient client = new MyWebviewClient();
 //file:///android_asset/index.html
 //   http://www.haont.cn/CPPCC/sqmy/#!/submit/    http://www.haont.cn/TiAnPhone/
         webView.addJavascriptInterface(new JavascriptBridge(this), "javaBridge");
 //        http://www.haont.cn/TiAnPhone/
-        webView.loadUrl(HttpUtl.HTTP_WEB_URL+"TiAn/");
+        webView.loadUrl(HttpUtl.HTTP_WEB_URL + "TiAn/");
         webView.setWebChromeClient(chromeClient);
         webView.setWebViewClient(client);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -149,15 +143,13 @@ public class ProposalActivity extends BaseActivity implements JSCallBack {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         //这是一个监听用的按键的方法，keyCode 监听用户的动作，如果是按了返回键，同时Webview要返回的话，WebView执行回退操作，因为mWebView.canGoBack()返回的是一个Boolean类型，所以我们把它返回为true
-        if(keyCode==KeyEvent.KEYCODE_BACK && webView.canGoBack()){
+        if (keyCode == KeyEvent.KEYCODE_BACK && webView.canGoBack()) {
             webView.goBack();
             return true;
         }
 
         return super.onKeyDown(keyCode, event);
     }
-
-
 
 
     @Override
@@ -192,7 +184,7 @@ public class ProposalActivity extends BaseActivity implements JSCallBack {
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
 
-            Log.i(TAG,"finish");
+            Log.i(TAG, "finish");
         }
 
         @Override

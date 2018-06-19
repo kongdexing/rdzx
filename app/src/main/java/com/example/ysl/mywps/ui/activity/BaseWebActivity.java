@@ -366,7 +366,6 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
         webView.resumeTimers();
     }
 
-
     @Override
     protected void onDestroy() {
         if (webView != null) {

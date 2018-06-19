@@ -123,7 +123,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         finish();
     }
 
-
     /**
      * 获取文件类目
      */
@@ -260,95 +259,51 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     //    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private void setTextBack(int index) {
+        ibWork.setBackgroundDrawable(getResources().getDrawable(R.drawable.icon_work_normal));
+        ibMessage.setBackgroundDrawable(getResources().getDrawable(R.drawable.icon_message_normal));
+        ibContact.setBackgroundDrawable(getResources().getDrawable(R.drawable.icon_contact_normal));
+        ibMine.setBackgroundDrawable(getResources().getDrawable(R.drawable.icon_mine_normal));
+
+        tvWork.setTextColor(colorNomal);
+        tvMessage.setTextColor(colorNomal);
+        tvConact.setTextColor(colorNomal);
+        tvMine.setTextColor(colorNomal);
+
         showTitle(true);
         switch (index) {
             case 0:
-                setTitleText("工作");
+                setTitleText("首页");
                 showTitle(false);
-                tvMessage.setTextColor(colorNomal);
-                tvConact.setTextColor(colorNomal);
                 tvWork.setTextColor(colorSelect);
-                tvMine.setTextColor(colorNomal);
 
-                ibMessage.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_message_normal));
-                ibWork.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_work_selected));
-                ibContact.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_contact_normal));
-                ibMine.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_mine_normal));
+                ibWork.setBackgroundDrawable(getResources().getDrawable(R.drawable.icon_work_selected));
 
                 currentMyIndex = 0;
                 break;
             case 1:
                 tvMessage.setTextColor(colorSelect);
-                tvConact.setTextColor(colorNomal);
-                tvWork.setTextColor(colorNomal);
-                tvMine.setTextColor(colorNomal);
 
                 setTitleText("消息");
-                ibMessage.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_message_selected));
-                ibWork.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_work_normal));
-                ibContact.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_contact_normal));
-                ibMine.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_mine_normal));
+                ibMessage.setBackgroundDrawable(getResources().getDrawable(R.drawable.icon_message_selected));
                 currentMyIndex = 1;
                 break;
             case 2:
                 setTitleText("通讯录");
-                tvMessage.setTextColor(colorNomal);
                 tvConact.setTextColor(colorSelect);
-                tvWork.setTextColor(colorNomal);
-                tvMine.setTextColor(colorNomal);
 
-                ibMessage.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_message_normal));
-                ibWork.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_contact_normal));
-                ibContact.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_contact_select));
-                ibMine.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_mine_normal));
+                ibContact.setBackgroundDrawable(getResources().getDrawable(R.drawable.icon_contact_selected));
                 currentMyIndex = 2;
-
                 break;
             case 3:
                 setTitleText("我的");
-                tvMessage.setTextColor(colorNomal);
-                tvConact.setTextColor(colorNomal);
-                tvWork.setTextColor(colorNomal);
                 tvMine.setTextColor(colorSelect);
-
-                ibMessage.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_message_normal));
-                ibWork.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_work_normal));
-                ibContact.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_contact_normal));
-                ibMine.setBackgroundDrawable(getResources().getDrawable(R.mipmap.icon_mine_selected));
+                ibMine.setBackgroundDrawable(getResources().getDrawable(R.drawable.icon_mine_selected));
                 currentMyIndex = 3;
                 break;
         }
     }
 
-    /**
-     * viewpager下的
-     */
-//    private void showMessage(int index) {
-//
-//
-//        switch (index) {
-//
-//            case 0:
-//
-//                setTextBack(1);
-//
-//                break;
-//            case 1:
-//                setTextBack(2);
-//                break;
-//
-//            case 2:
-//                setTextBack(3);
-//
-//                break;
-//            case 3:
-//                setTextBack(4);
-//                break;
-//        }
-//
-//    }
     public void showMessage(int index) {
-
         fragmentTransaction = fragmentManager.beginTransaction();
         if (currentFragment != null && index != currentMyIndex)
             fragmentTransaction.hide(currentFragment);
@@ -359,7 +314,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     workFragment = new NewWorkFragment();
                     fragmentTransaction.add(R.id.main_rl_container, workFragment);
                 } else {
-
                     if (workFragment.isHidden()) fragmentTransaction.show(workFragment);
                 }
                 currentFragment = workFragment;
@@ -405,59 +359,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     }
 
-
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent ev) {
-//
-//        switch (ev.getAction()) {
-//
-//            case MotionEvent.ACTION_DOWN:
-//
-//                x1 = ev.getX();
-//                y1 = ev.getY();
-//                break;
-//            case MotionEvent.ACTION_UP:
-//
-//                x2 = ev.getX();
-//                y2 = ev.getY();
-//
-//
-//                float reduceX = x1 - x2;
-//                float reduceY = Math.abs(y1 - y2);
-//
-//                if (reduceY < 100) {
-//
-//                    if (Math.abs(reduceX) > 50) {
-//
-//                        if (reduceX < 0) {
-//                            if (currentIndex > 1) {
-//                                int movieIndex = currentIndex - 1;
-//                                showMessage(movieIndex);
-//                            }
-//
-//                        } else {
-//                            if (currentIndex < 3) {
-//                                int movieIndex = currentIndex + 1;
-//                                showMessage(movieIndex);
-//                            }
-//                        }
-//                    }
-//
-//                }
-//
-//                break;
-//
-//
-//        }
-//
-//
-//        return super.dispatchTouchEvent(ev);
-//    }
-
     @Override
     public void onClick(View v) {
-
-
         int id = v.getId();
 
         if (id == R.id.main_ll_message || id == R.id.main_ib_message) {

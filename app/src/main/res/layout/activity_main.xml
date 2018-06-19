@@ -24,11 +24,11 @@
         android:id="@+id/main_ll_id_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="@dimen/dp_5"
+        android:paddingBottom="@dimen/dp_5"
         android:layout_alignParentBottom="true"
         android:background="@color/stay_back"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/main_small"
-        android:paddingTop="@dimen/main_small">
+        android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/main_ll_work"
@@ -43,9 +43,9 @@
 
             <ImageButton
                 android:id="@+id/main_ib_work"
-                android:layout_width="@dimen/main_icon"
-                android:layout_height="@dimen/main_icon"
-                android:background="@mipmap/icon_work_normal"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/icon_work_normal"
                 android:clickable="false" />
 
             <TextView
@@ -53,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="false"
-                android:text="工作"
+                android:text="首页"
                 android:textAlignment="center"
                 android:textSize="@dimen/main_text" />
         </LinearLayout>
@@ -71,7 +71,7 @@
                 android:id="@+id/main_ib_message"
                 android:layout_width="@dimen/main_icon"
                 android:layout_height="@dimen/main_icon"
-                android:background="@mipmap/icon_message_normal"
+                android:background="@drawable/icon_message_normal"
                 android:clickable="false" />
 
             <TextView
@@ -96,7 +96,7 @@
                 android:id="@+id/main_ib_contact"
                 android:layout_width="@dimen/main_icon"
                 android:layout_height="@dimen/main_icon"
-                android:background="@mipmap/icon_contact_normal"
+                android:background="@drawable/icon_contact_normal"
                 android:clickable="false" />
 
             <TextView
@@ -121,7 +121,7 @@
                 android:id="@+id/main_ib_mine"
                 android:layout_width="@dimen/main_icon"
                 android:layout_height="@dimen/main_icon"
-                android:background="@mipmap/icon_mine_normal"
+                android:background="@drawable/icon_mine_normal"
                 android:clickable="false" />
 
             <TextView

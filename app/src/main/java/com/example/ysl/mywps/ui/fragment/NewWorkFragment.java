@@ -189,7 +189,9 @@ public class NewWorkFragment extends BaseFragment {
                 intent = new Intent(getActivity(), NewOAActivity.class);
                 break;
             case R.id.llItem2://提案系统
-                intent = new Intent(getActivity(), ProposalActivity.class);
+                intent = new Intent(getActivity(), WebviewActivity.class);
+                intent.putExtra(BaseWebActivity.WEB_TITLE, "提案系统");
+                intent.putExtra(BaseWebActivity.WEB_URL, HttpUtl.HTTP_WEB_URL + "TiAn/");
                 break;
             case R.id.llItem3://社情民意
                 intent = new Intent(getActivity(), WebviewActivity.class);
@@ -197,7 +199,9 @@ public class NewWorkFragment extends BaseFragment {
                 intent.putExtra(BaseWebActivity.WEB_URL, HttpUtl.HTTP_WEB_URL + "sqmy/");
                 break;
             case R.id.llItem4://委员之家
-                intent = new Intent(getActivity(), MembersActivity.class);
+                intent = new Intent(getActivity(), WebviewActivity.class);
+                intent.putExtra(BaseWebActivity.WEB_TITLE, "委员之家");
+                intent.putExtra(BaseWebActivity.WEB_URL, "http://oa.qupeiyi.cn/index.php/User/Weiyuan/index.html");
                 break;
         }
         if (intent != null) startActivity(intent);

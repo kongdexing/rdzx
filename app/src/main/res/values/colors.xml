@@ -9,7 +9,7 @@
     <color name="top_search_back">#F5F5F5</color>
     <color name="stay_back">#F1F2F5</color>
     <color name="white_back">#FFFFFF</color>
-    <color name="bottom_selected">#3879C9</color>
+    <color name="bottom_selected">@color/text_stay</color>
     <color name="bottom_normal">#C7C8CB</color>
     <color name="message_back">#EB5342</color>
     <color name="text_gray">#808080</color>
