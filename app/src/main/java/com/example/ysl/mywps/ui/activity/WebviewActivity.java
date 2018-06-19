@@ -62,10 +62,8 @@ public class WebviewActivity extends BaseWebActivity implements JSCallBack {
     private final int VIDEO_WITH_CAMERA = 333;
     private static final int WEBVIEW_LOADED = 444;
 
-    private String cameraPath = "";
-    private String token = "";
-    private String realname = "";
-    private boolean needToken = true;
+//    private String cameraPath = "";
+//    private boolean needToken = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -171,7 +169,7 @@ public class WebviewActivity extends BaseWebActivity implements JSCallBack {
 
     @Override
     public String jsCallBack(String method, String msg) {
-        Log.i(TAG, "jsCallBack: "+method);
+        Log.i(TAG, "jsCallBack: " + method);
         String message = "";
         switch (method) {
             case "callCamera":
@@ -225,7 +223,6 @@ public class WebviewActivity extends BaseWebActivity implements JSCallBack {
      * 压缩视频
      */
     private void comprossVideo(final String name) {
-
         final String outPutPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "wpsSign";
         File file = new File(outPutPath);
         if (!file.exists())
@@ -272,6 +269,7 @@ public class WebviewActivity extends BaseWebActivity implements JSCallBack {
      * 上传社情文件
      */
     private void uploadFile(final String filePath, final String name) {
+        Log.i(TAG, "uploadFile: " + filePath + "  name:" + name + " token:" + token);
         progressbar.setVisibility(View.VISIBLE);
 
         Thread thread = new Thread(new Runnable() {
@@ -283,7 +281,7 @@ public class WebviewActivity extends BaseWebActivity implements JSCallBack {
                     public void onProgress(long hasWrittenLen, long totalLen, boolean hasFinish) {
 
                         int percent = (int) (hasWrittenLen * 100 / totalLen);
-//                        Log.i(TAG, percent + "");
+                        Log.i(TAG, percent + "");
 
                         if (percent > 99) try {
                             Thread.sleep(2000);
@@ -311,7 +309,6 @@ public class WebviewActivity extends BaseWebActivity implements JSCallBack {
                                     WebviewActivity.this.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-
                                             fileHaveUpload(filePath, fileName);
                                         }
                                     });
@@ -324,7 +321,7 @@ public class WebviewActivity extends BaseWebActivity implements JSCallBack {
                                     msg.obj = "N";
                                     if (CommonUtil.isNotEmpty(message)) msg.obj = message;
                                 }
-                                Logger.i("文件上传成功 " + response.body());
+                                Log.i(TAG, "文件上传成功 " + response.body());
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -333,7 +330,7 @@ public class WebviewActivity extends BaseWebActivity implements JSCallBack {
                         }
 
                         handler.sendMessage(msg);
-                        Logger.i("data  " + response.body());
+                        Log.i(TAG, "data  " + response.body());
                     }
 
                     @Override
@@ -341,7 +338,7 @@ public class WebviewActivity extends BaseWebActivity implements JSCallBack {
                         Message msg = new Message();
                         msg.obj = "N";
                         handler.sendMessage(msg);
-                        Logger.i("data  " + t.getMessage());
+                        Log.i(TAG, "onFailure data  " + t.getMessage());
                     }
                 });
 
@@ -377,6 +374,7 @@ public class WebviewActivity extends BaseWebActivity implements JSCallBack {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == CAMERA_REQUEST_CODE) {
+                Log.i(TAG, "onActivityResult: CAMERA_REQUEST_CODE");
                 path = imgPath;
             } else {
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {//4.4以后
@@ -396,18 +394,15 @@ public class WebviewActivity extends BaseWebActivity implements JSCallBack {
             }
             final File file = new File(path);
             if (!file.exists()) {
-
                 ToastUtils.showShort(this, "文件不存在");
                 return;
             }
             final long size = file.length() / 1024 / 1024;
-
-
+            Log.i(TAG, "onActivityResult file " + path + " size: " + size);
             WebviewActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
 //                    loading.setVisibility(View.VISIBLE);
-
                     if (size > 5) {
                         if (CommonUtil.isVideo(file.getName()))
                             comprossVideo(file.getName());
@@ -419,7 +414,6 @@ public class WebviewActivity extends BaseWebActivity implements JSCallBack {
         }
         Log.i(TAG, "默认content地址：" + path);
     }
-
 
     /**
      * 调用随意拍选择拍照或拍视频

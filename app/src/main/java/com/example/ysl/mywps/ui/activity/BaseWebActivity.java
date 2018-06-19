@@ -143,6 +143,7 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
     public void initData() {
         token = SharedPreferenceUtils.loginValue(this, SysytemSetting.USER_TOKEN);
         realname = SharedPreferenceUtils.loginValue(this, SysytemSetting.REAL_NAME);
+        Log.i(TAG, "initData token: " + token + "  realname:" + realname);
     }
 
     //使用Webview的时候，返回键没有重写的时候会直接关闭程序，这时候其实我们要其执行的知识回退到上一步的操作

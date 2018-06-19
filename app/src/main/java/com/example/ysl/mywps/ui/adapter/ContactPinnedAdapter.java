@@ -15,7 +15,6 @@ import com.example.ysl.mywps.bean.ContactBean;
 import com.example.ysl.mywps.bean.Item;
 import com.example.ysl.mywps.ui.activity.ContactDetailActivity;
 import com.example.ysl.mywps.ui.view.CircularImageView;
-import com.example.ysl.mywps.ui.view.autoviewpager.GlideImageLoader;
 import com.example.ysl.mywps.utils.CommonUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
@@ -89,7 +88,7 @@ public class ContactPinnedAdapter extends ArrayAdapter<Item> implements PinnedSe
             CircularImageView headImg = (CircularImageView)view.findViewById(R.id.imgHead);
 
             final ContactBean contactBean = item.contactBean;
-            tvName.setText(contactBean.getUsername());
+            tvName.setText(contactBean.getRealname());
             tvPhone.setText(contactBean.getMobile());
 
             ImageLoader.getInstance().displayImage(contactBean.getAvatar(),

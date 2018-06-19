@@ -10,14 +10,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.ContactBean;
+import com.example.ysl.mywps.ui.view.CircularImageView;
 import com.example.ysl.mywps.utils.CommonUtil;
-import com.gc.materialdesign.views.ButtonRectangle;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,6 +27,8 @@ import butterknife.OnClick;
 
 public class ContactDetailActivity extends BaseActivity {
 
+    @BindView(R.id.imgHead)
+    CircularImageView imgHead;
 
     ContactBean contactBean;
 
