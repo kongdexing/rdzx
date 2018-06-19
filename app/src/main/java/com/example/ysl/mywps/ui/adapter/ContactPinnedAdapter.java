@@ -14,6 +14,11 @@ import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.ContactBean;
 import com.example.ysl.mywps.bean.Item;
 import com.example.ysl.mywps.ui.activity.ContactDetailActivity;
+import com.example.ysl.mywps.ui.view.CircularImageView;
+import com.example.ysl.mywps.ui.view.autoviewpager.GlideImageLoader;
+import com.example.ysl.mywps.utils.CommonUtil;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 
 import java.util.List;
 
@@ -30,7 +35,7 @@ public class ContactPinnedAdapter extends ArrayAdapter<Item> implements PinnedSe
     }
 
     public void loadData(List<ContactBean> contactBeans) {
-        generateDataSet(contactBeans);
+//        generateDataSet(contactBeans);
     }
 
     public void generateDataSet(List<ContactBean> contactBeans) {
@@ -68,9 +73,6 @@ public class ContactPinnedAdapter extends ArrayAdapter<Item> implements PinnedSe
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-//        TextView view = (TextView) super.getView(position, convertView, parent);
-//        view.setTextColor(Color.DKGRAY);
-//        view.setTag("" + position);
         Item item = getItem(position);
         if (item.type == Item.SECTION) {
             //组
@@ -84,9 +86,16 @@ public class ContactPinnedAdapter extends ArrayAdapter<Item> implements PinnedSe
 
             TextView tvName = (TextView) view.findViewById(R.id.contact_tv_name);
             TextView tvPhone = (TextView) view.findViewById(R.id.contact_tv_phone);
+            CircularImageView headImg = (CircularImageView)view.findViewById(R.id.imgHead);
+
             final ContactBean contactBean = item.contactBean;
             tvName.setText(contactBean.getUsername());
             tvPhone.setText(contactBean.getMobile());
+
+            ImageLoader.getInstance().displayImage(contactBean.getAvatar(),
+                    new ImageViewAware(headImg), CommonUtil.getDefaultUserImageLoaderOption());
+
+//            (new GlideImageLoader()).displayImage(this.getContext(), contactBean.getAvatar(), headImg);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override

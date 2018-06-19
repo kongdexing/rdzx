@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.ContactBean;
+import com.example.ysl.mywps.bean.Item;
 import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.ui.activity.ContactDetailActivity;
 import com.example.ysl.mywps.ui.adapter.ContactAdapter;
@@ -103,16 +104,30 @@ public class ContactFragment extends BaseFragment {
                             msg = jsonObject.getString("msg");
 
                             JSONArray jsonArray = jsonObject.getJSONArray("data");
-
                             Gson gson = new Gson();
+                            int sectionPosition = 0, listPosition = 0;
                             for (int i = 0; i < jsonArray.length(); ++i) {
                                 JSONObject object = jsonArray.getJSONObject(i);
+                                String title = object.getString("title");
                                 JSONArray jsonArray1 = object.getJSONArray("contact");
+                                Item section = new Item(Item.SECTION, title);
+                                section.sectionPosition = sectionPosition;
+                                section.listPosition = listPosition++;
+//                                adapter.onSectionAdded(section, sectionPosition);
+                                //头
+                                adapter.add(section);
+
                                 for (int j = 0; j < jsonArray1.length(); ++j) {
                                     JSONObject childObject = jsonArray1.getJSONObject(j);
                                     ContactBean bean = gson.fromJson(childObject.toString(), ContactBean.class);
                                     bean.setCapital(PingYinUtils.getPinYinHeadChar(bean.getUsername()));
-                                    list.add(bean);
+
+                                    Item item = new Item(Item.ITEM, bean);
+                                    item.sectionPosition = sectionPosition;
+                                    item.listPosition = listPosition++;
+                                    //子分组
+                                    adapter.add(item);
+//                                    list.add(bean);
                                 }
                             }
                             e.onNext("Y");

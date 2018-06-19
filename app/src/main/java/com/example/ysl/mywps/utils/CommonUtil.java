@@ -1,11 +1,15 @@
 package com.example.ysl.mywps.utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.provider.Settings;
 import android.view.Display;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.example.ysl.mywps.R;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.orhanobut.logger.Logger;
 
 import java.lang.reflect.Method;
@@ -155,6 +159,18 @@ public class CommonUtil {
             size = size.substring(0, startIndex + 2) + size.substring(size.length() - 2, size.length());
         }
         return size;
+    }
+
+    public static DisplayImageOptions getDefaultUserImageLoaderOption() {
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .showImageForEmptyUri(R.drawable.tip_ad_def)
+                .showImageOnFail(R.drawable.tip_ad_def)
+                .showImageOnLoading(R.drawable.tip_ad_def)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .displayer(new SimpleBitmapDisplayer()).build();
+        return options;
     }
 
 

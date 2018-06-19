@@ -161,14 +161,14 @@ public class MyApplication extends MultiDexApplication implements Thread.Uncaugh
 
         JPushInterface.getAlias(this, myALias);
 
-/**
- * 初始化common库
- * 参数1:上下文，不能为空
- * 参数2:友盟 app key
- * 参数3:友盟 channel
- * 参数4:设备类型，UMConfigure.DEVICE_TYPE_PHONE为手机、UMConfigure.DEVICE_TYPE_BOX为盒子，默认为手机
- * 参数5:Push推送业务的secret
- */
+        /**
+         * 初始化common库
+         * 参数1:上下文，不能为空
+         * 参数2:友盟 app key
+         * 参数3:友盟 channel
+         * 参数4:设备类型，UMConfigure.DEVICE_TYPE_PHONE为手机、UMConfigure.DEVICE_TYPE_BOX为盒子，默认为手机
+         * 参数5:Push推送业务的secret
+         */
         UMConfigure.init(this, "5abcde498f4a9d29b700004b", "comyslexample", UMConfigure.DEVICE_TYPE_PHONE, null);
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
         UMConfigure.setLogEnabled(true);
@@ -177,15 +177,12 @@ public class MyApplication extends MultiDexApplication implements Thread.Uncaugh
         Thread.setDefaultUncaughtExceptionHandler(this);
     }
 
-
     public static Context getMyContext() {
         return context;
     }
 
-
     @Override
     public void uncaughtException(Thread thread, Throwable throwable) {
-
         String result = getStackTrace(throwable);
         Log.i("aaa", "crash " + result);
         SharedPreferenceUtils.loginSave(this, "token", "");

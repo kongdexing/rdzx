@@ -24,32 +24,11 @@ public class ContactBean implements Parcelable {
     private String realname;
     private String dept;
     private String dept_name;
+    private String avatar;
 
     public ContactBean() {
 
     }
-
-    protected ContactBean(Parcel in) {
-        capital = in.readString();
-        uid = in.readString();
-        username = in.readString();
-        mobile = in.readString();
-        realname = in.readString();
-        dept = in.readString();
-        dept_name = in.readString();
-    }
-
-    public static final Creator<ContactBean> CREATOR = new Creator<ContactBean>() {
-        @Override
-        public ContactBean createFromParcel(Parcel in) {
-            return new ContactBean(in);
-        }
-
-        @Override
-        public ContactBean[] newArray(int size) {
-            return new ContactBean[size];
-        }
-    };
 
     public String getCapital() {
         return capital;
@@ -107,20 +86,52 @@ public class ContactBean implements Parcelable {
         this.dept_name = dept_name;
     }
 
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(capital);
-        parcel.writeString(uid);
-        parcel.writeString(username);
-        parcel.writeString(mobile);
-        parcel.writeString(realname);
-        parcel.writeString(dept);
-        parcel.writeString(dept_name);
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.capital);
+        dest.writeString(this.uid);
+        dest.writeString(this.username);
+        dest.writeString(this.mobile);
+        dest.writeString(this.realname);
+        dest.writeString(this.dept);
+        dest.writeString(this.dept_name);
+        dest.writeString(this.avatar);
     }
 
+    protected ContactBean(Parcel in) {
+        this.capital = in.readString();
+        this.uid = in.readString();
+        this.username = in.readString();
+        this.mobile = in.readString();
+        this.realname = in.readString();
+        this.dept = in.readString();
+        this.dept_name = in.readString();
+        this.avatar = in.readString();
+    }
+
+    public static final Creator<ContactBean> CREATOR = new Creator<ContactBean>() {
+        @Override
+        public ContactBean createFromParcel(Parcel source) {
+            return new ContactBean(source);
+        }
+
+        @Override
+        public ContactBean[] newArray(int size) {
+            return new ContactBean[size];
+        }
+    };
 }
