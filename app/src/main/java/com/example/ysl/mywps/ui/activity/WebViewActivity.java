@@ -54,16 +54,13 @@ import retrofit2.Response;
  * 介绍: 社情民意
  */
 
-public class WebviewActivity extends BaseWebActivity implements JSCallBack {
+public class WebViewActivity extends BaseWebActivity implements JSCallBack {
 
     private String path = "";
     private final int CAMERA_REQUEST_CODE = 111;
     private final int DOCUMENT_REQUEST_CODE = 222;
     private final int VIDEO_WITH_CAMERA = 333;
     private static final int WEBVIEW_LOADED = 444;
-
-//    private String cameraPath = "";
-//    private boolean needToken = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -127,8 +124,10 @@ public class WebviewActivity extends BaseWebActivity implements JSCallBack {
         writePermission();
     }
 
-    // Android版本变量
-    final int version = Build.VERSION.SDK_INT;
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 
     /**
      * 检查存储权限，如果没有就请求
@@ -198,6 +197,7 @@ public class WebviewActivity extends BaseWebActivity implements JSCallBack {
     }
 
     private void fileHaveUpload(final String filePath, final String fileName) {
+        Log.i(TAG, "fileHaveUpload version: " + version);
         webView.post(new Runnable() {
             @Override
             public void run() {
@@ -208,7 +208,7 @@ public class WebviewActivity extends BaseWebActivity implements JSCallBack {
                         webView.evaluateJavascript("javascript:setFile('" + filePath + "','" + fileName + "')", new ValueCallback<String>() {
                             @Override
                             public void onReceiveValue(String s) {
-                                Log.i(TAG, "return  " + s);
+                                Log.i(TAG, "javascript:setFile return  " + s);
                             }
                         });
                     } else {
@@ -230,19 +230,19 @@ public class WebviewActivity extends BaseWebActivity implements JSCallBack {
         final String myPath = outPutPath + File.separator + name;
         Logger.i("outputPath " + outPutPath);
 
-        WebviewActivity.this.runOnUiThread(new Runnable() {
+        WebViewActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 VideoCompress.compressVideoLow(path, myPath, new VideoCompress.CompressListener() {
                     @Override
                     public void onStart() {
-                        ToastUtils.showShort(WebviewActivity.this, "正在压缩");
+                        ToastUtils.showShort(WebViewActivity.this, "正在压缩");
                         showProgress("正在压缩");
                     }
 
                     @Override
                     public void onSuccess() {
-                        ToastUtils.showShort(WebviewActivity.this, "压缩完成");
+                        ToastUtils.showShort(WebViewActivity.this, "压缩完成");
                         hideProgress();
                         Logger.i("success");
                         uploadFile(myPath, name);
@@ -250,7 +250,7 @@ public class WebviewActivity extends BaseWebActivity implements JSCallBack {
 
                     @Override
                     public void onFail() {
-                        ToastUtils.showShort(WebviewActivity.this, "压缩完成");
+                        ToastUtils.showShort(WebViewActivity.this, "压缩完成");
                         hideProgress();
                         Logger.i("fail");
                         uploadFile(path, name);
@@ -306,7 +306,7 @@ public class WebviewActivity extends BaseWebActivity implements JSCallBack {
                                     final String filePath = child.getString("file_full_path");
                                     final String fileName = child.getString("file_name");
 
-                                    WebviewActivity.this.runOnUiThread(new Runnable() {
+                                    WebViewActivity.this.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
                                             fileHaveUpload(filePath, fileName);
@@ -341,13 +341,10 @@ public class WebviewActivity extends BaseWebActivity implements JSCallBack {
                         Log.i(TAG, "onFailure data  " + t.getMessage());
                     }
                 });
-
-
             }
         });
         thread.start();
     }
-
 
     private final Handler handler = new Handler() {
 
@@ -358,11 +355,11 @@ public class WebviewActivity extends BaseWebActivity implements JSCallBack {
                 if (msg.obj.toString().equals("Y")) {
 
                     if (msg.obj.equals("Y")) {
-                        ToastUtils.showShort(WebviewActivity.this, "上传成功");
+                        ToastUtils.showShort(WebViewActivity.this, "上传成功");
                     } else if (msg.obj.equals("N")) {
-                        ToastUtils.showShort(WebviewActivity.this, "上传失败");
+                        ToastUtils.showShort(WebViewActivity.this, "上传失败");
                     } else {
-                        ToastUtils.showShort(WebviewActivity.this, msg.obj.toString());
+                        ToastUtils.showShort(WebViewActivity.this, msg.obj.toString());
                     }
                 }
             }
@@ -399,7 +396,7 @@ public class WebviewActivity extends BaseWebActivity implements JSCallBack {
             }
             final long size = file.length() / 1024 / 1024;
             Log.i(TAG, "onActivityResult file " + path + " size: " + size);
-            WebviewActivity.this.runOnUiThread(new Runnable() {
+            WebViewActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
 //                    loading.setVisibility(View.VISIBLE);
@@ -534,7 +531,6 @@ public class WebviewActivity extends BaseWebActivity implements JSCallBack {
         getWindow().setAttributes(lp);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
     }
-
 
     public String getRealPathFromURI(Uri contentUri) {
         String res = null;

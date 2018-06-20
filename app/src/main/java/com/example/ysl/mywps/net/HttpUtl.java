@@ -81,6 +81,12 @@ public class HttpUtl {
         return api.contact(token);
     }
 
+    public static Call<String> contactDetail(String url, String token,String uid) {
+        String httpUrl = HTTP_URL + url;
+        NetApi api = getRetrofit(httpUrl).create(NetApi.class);
+        return api.contactDetail(token,uid);
+    }
+
     public static Call<String> commitAudit(String url, String docId, String toUid, String token, String docName, String path) {
 
         String httpUrl = HTTP_URL + url;

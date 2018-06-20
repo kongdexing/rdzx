@@ -202,6 +202,7 @@ public class LoginActivity extends BaseActivity {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    ToastUtils.showShort( LoginActivity.this,"数据解析错误");
 //                    CommonUtil.showLong(getApplicationContext(), s);
                 }
 

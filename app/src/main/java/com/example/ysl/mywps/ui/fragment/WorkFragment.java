@@ -18,7 +18,7 @@ import com.example.ysl.mywps.ui.activity.ProposalActivity;
 import com.example.ysl.mywps.ui.activity.QuestionActivity;
 import com.example.ysl.mywps.ui.activity.ReportActivity;
 import com.example.ysl.mywps.ui.activity.ThemeActivity;
-import com.example.ysl.mywps.ui.activity.WebviewActivity;
+import com.example.ysl.mywps.ui.activity.WebViewActivity;
 import com.example.ysl.mywps.utils.NoDoubleClickListener;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.example.ysl.mywps.utils.ToastUtils;
@@ -127,7 +127,7 @@ public class WorkFragment extends BaseFragment {
                     intent = new Intent(getActivity(), MaterialActivity.class);
                     break;
                 case R.id.work_rl_social_condition:
-                    intent = new Intent(getActivity(), WebviewActivity.class);
+                    intent = new Intent(getActivity(), WebViewActivity.class);
                     break;
                 case R.id.fragment_work_ll_kefu:
                     try {

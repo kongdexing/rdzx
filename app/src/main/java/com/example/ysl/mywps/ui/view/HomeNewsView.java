@@ -11,9 +11,8 @@ import android.widget.TextView;
 
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.HotBean;
-import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.ui.activity.BaseWebActivity;
-import com.example.ysl.mywps.ui.activity.WebviewActivity;
+import com.example.ysl.mywps.ui.activity.WebViewActivity;
 import com.example.ysl.mywps.ui.view.autoviewpager.GlideImageLoader;
 
 import butterknife.BindView;
@@ -54,7 +53,7 @@ public class HomeNewsView extends LinearLayout {
         rlNewsItem.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), WebviewActivity.class);
+                Intent intent = new Intent(getContext(), WebViewActivity.class);
                 intent.putExtra(BaseWebActivity.WEB_URL, hots.getBurl());
                 intent.putExtra(BaseWebActivity.WEB_TITLE, "热门推荐");
                 getContext().startActivity(intent);

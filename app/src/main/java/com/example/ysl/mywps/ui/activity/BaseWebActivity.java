@@ -80,7 +80,6 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
                 } else {
                     finish();
                 }
-
             }
         });
 
@@ -95,7 +94,7 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
         webSettings.setBuiltInZoomControls(true);///设置内置的缩放控件。若为false，则该WebView不可缩放
         webSettings.setDisplayZoomControls(false);//隐藏内置的原生缩放控件
 
-        webSettings.setPluginState(WebSettings.PluginState.ON);
+//        webSettings.setPluginState(WebSettings.PluginState.ON);
         webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE); //缓存模式如下：
         //LOAD_CACHE_ONLY: 不使用网络，只读取本地缓存数据
         //LOAD_DEFAULT: （默认）根据cache-control决定是否从网络上取数据。
@@ -126,16 +125,15 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
         webView.loadUrl(webUrl);
         webView.setWebChromeClient(chromeClient);
         webView.setWebViewClient(client);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            webView.setWebContentsDebuggingEnabled(true);
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-
-            webView.setWebContentsDebuggingEnabled(true);
-
-        }
 //        // 设置是否允许 WebView 使用 File 协议,默认设置为true，即允许在 File 域下执行任意 JavaScript 代码
-//        webView.getSettings().setAllowFileAccess(true);
+        webView.getSettings().setAllowFileAccess(true);
         webView.getSettings().setDomStorageEnabled(true);
     }
 
@@ -327,7 +325,7 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
             super.onPageFinished(view, url);
             Log.i(TAG, "onPageFinished " + url + "  needToken " + needToken);
             webviewFinished = true;
-            setTokenToWeb();
+//            setTokenToWeb();
         }
 
         @Override

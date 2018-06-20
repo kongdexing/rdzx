@@ -71,7 +71,8 @@
         <activity android:name=".ui.activity.ColleagueActivity" />
         <activity android:name=".ui.activity.QuestionActivity" />
         <activity android:name=".ui.activity.MembersActivity" />
-        <activity android:name=".ui.activity.WebviewActivity" />
+        <activity android:name=".ui.activity.WebViewActivity" />
+        <activity android:name=".ui.activity.WebActivity" />
         <activity android:name=".ui.activity.ProposalActivity" />
         <activity android:name=".ui.activity.HandleActivity" />
         <activity android:name=".ui.activity.LoginActivity">

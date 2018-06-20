@@ -47,6 +47,12 @@ public interface NetApi {
     Call<String> contact(@Query("token") String token);
 
     /**
+     * 获取通讯录联系人详情
+     * */
+    @POST("query")
+    Call<String> contactDetail(@Query("token") String token,@Query(("uid")) String uid);
+
+    /**
      * 文档返回拟稿人
      */
     @Multipart

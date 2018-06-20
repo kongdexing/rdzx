@@ -13,23 +13,18 @@ import android.widget.TextView;
 
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.BannerBean;
-import com.example.ysl.mywps.bean.ContactBean;
 import com.example.ysl.mywps.bean.HotBean;
 import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.ui.activity.BaseWebActivity;
-import com.example.ysl.mywps.ui.activity.MembersActivity;
 import com.example.ysl.mywps.ui.activity.NewOAActivity;
-import com.example.ysl.mywps.ui.activity.ProposalActivity;
-import com.example.ysl.mywps.ui.activity.WebviewActivity;
+import com.example.ysl.mywps.ui.activity.WebActivity;
+import com.example.ysl.mywps.ui.activity.WebViewActivity;
 import com.example.ysl.mywps.ui.view.HomeNewsView;
 import com.example.ysl.mywps.ui.view.autoviewpager.GlideImageLoader;
 import com.example.ysl.mywps.utils.CommonUtil;
-import com.example.ysl.mywps.utils.PingYinUtils;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
-import com.example.ysl.mywps.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.orhanobut.logger.Logger;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.youth.banner.Banner;
 import com.youth.banner.listener.OnBannerListener;
@@ -189,17 +184,17 @@ public class NewWorkFragment extends BaseFragment {
                 intent = new Intent(getActivity(), NewOAActivity.class);
                 break;
             case R.id.llItem2://提案系统
-                intent = new Intent(getActivity(), WebviewActivity.class);
+                intent = new Intent(getActivity(), WebViewActivity.class);
                 intent.putExtra(BaseWebActivity.WEB_TITLE, "提案系统");
                 intent.putExtra(BaseWebActivity.WEB_URL, HttpUtl.HTTP_WEB_URL + "TiAn/");
                 break;
             case R.id.llItem3://社情民意
-                intent = new Intent(getActivity(), WebviewActivity.class);
-                intent.putExtra(BaseWebActivity.WEB_TITLE, "社情民意");
-                intent.putExtra(BaseWebActivity.WEB_URL, HttpUtl.HTTP_WEB_URL + "sqmy/");
+                intent = new Intent(getActivity(), WebActivity.class);
+//                intent.putExtra(BaseWebActivity.WEB_TITLE, "社情民意");
+//                intent.putExtra(BaseWebActivity.WEB_URL, HttpUtl.HTTP_WEB_URL + "sqmy/");
                 break;
             case R.id.llItem4://委员之家
-                intent = new Intent(getActivity(), WebviewActivity.class);
+                intent = new Intent(getActivity(), WebViewActivity.class);
                 intent.putExtra(BaseWebActivity.WEB_TITLE, "委员之家");
                 intent.putExtra(BaseWebActivity.WEB_URL, "http://oa.qupeiyi.cn/index.php/User/Weiyuan/index.html");
                 break;
@@ -228,7 +223,7 @@ public class NewWorkFragment extends BaseFragment {
     }
 
     /**
-     * 获取通讯录联系人
+     * 获取Banner滚动图
      */
     private void getBannerData() {
         try {

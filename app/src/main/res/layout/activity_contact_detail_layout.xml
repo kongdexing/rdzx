@@ -18,13 +18,14 @@
             android:layout_height="@dimen/dp_80"
             android:layout_marginTop="@dimen/dp_30"
             android:clickable="true"
-            android:src="@drawable/abc" />
+            android:src="@drawable/tip_ad_def" />
 
         <TextView
+            android:id="@+id/txtUserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_15"
-            android:text="崔小花"
+            android:text=""
             android:textSize="@dimen/sp_16"
             android:textColor="@color/white_back" />
 
@@ -52,7 +53,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dp_10"
-            android:text="14658718598"
+            android:text=""
             android:textSize="@dimen/sp_16" />
 
     </RelativeLayout>
@@ -79,7 +80,61 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dp_10"
-            android:text="14658718598"
+            android:text=""
+            android:textSize="@dimen/sp_16" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_10"
+        android:background="@drawable/bg_contact_item"
+        android:clickable="true">
+
+        <TextView
+            style="@style/mineText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="界别" />
+
+        <TextView
+            android:id="@+id/txtJieBie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp_10"
+            android:text=""
+            android:textSize="@dimen/sp_16" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_10"
+        android:background="@drawable/bg_contact_item"
+        android:clickable="true">
+
+        <TextView
+            style="@style/mineText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="政治面貌" />
+
+        <TextView
+            android:id="@+id/txtPoliticsStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp_10"
+            android:text=""
             android:textSize="@dimen/sp_16" />
 
     </RelativeLayout>
@@ -124,15 +179,43 @@
             style="@style/mineText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="公位" />
+            android:text="职务" />
 
         <TextView
+            android:id="@+id/txtDuty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dp_10"
-            android:text="23"
+            android:text=""
+            android:textSize="@dimen/sp_16" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_10"
+        android:background="@drawable/bg_contact_item"
+        android:clickable="true">
+
+        <TextView
+            style="@style/mineText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="公位" />
+
+        <TextView
+            android:id="@+id/txtUID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp_10"
+            android:text=""
             android:textSize="@dimen/sp_16" />
 
     </RelativeLayout>
