@@ -233,7 +233,7 @@ public class WebActivity extends BaseActivity implements JSCallBack {
 
         token = SharedPreferenceUtils.loginValue(this, SysytemSetting.USER_TOKEN);
         realname = SharedPreferenceUtils.loginValue(this, SysytemSetting.REAL_NAME);
-        saveFileTypes(token);
+//        saveFileTypes(token);
     }
 
 
@@ -274,12 +274,10 @@ public class WebActivity extends BaseActivity implements JSCallBack {
                 if (version < 18) {
                     webView.loadUrl("javascript:setToken('" + token + "','" + realname + "')");
                 } else {
-
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                         webView.evaluateJavascript("javascript:setToken('" + token + "','" + realname + "')", new ValueCallback<String>() {
                             @Override
                             public void onReceiveValue(String s) {
-
                                 Log.i(TAG, "return  " + s);
                             }
                         });
@@ -570,16 +568,10 @@ public class WebActivity extends BaseActivity implements JSCallBack {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (resultCode == RESULT_OK) {
-
             if (requestCode == CAMERA_REQUEST_CODE) {
-
                 path = imgPath;
-
-
             } else {
-
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {//4.4以后
                     try {
                         path = getPath(this, data.getData());
@@ -612,17 +604,12 @@ public class WebActivity extends BaseActivity implements JSCallBack {
                     if (size > 5) {
                         if (CommonUtil.isVideo(file.getName()))
                             comprossVideo(file.getName());
-
                     } else {
-
                         uploadFile(path, file.getName());
                     }
                 }
             });
-
-
         }
-
         Log.i(TAG, "默认content地址：" + path);
     }
 
@@ -631,9 +618,7 @@ public class WebActivity extends BaseActivity implements JSCallBack {
      * 调用随意拍选择拍照或拍视频
      */
     private void callCamera() {
-
         showBottomWindow();
-
     }
 
     String imgPath = "";
@@ -673,12 +658,9 @@ public class WebActivity extends BaseActivity implements JSCallBack {
 //设置视频录制的画质
         intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
         startActivityForResult(intent, VIDEO_WITH_CAMERA);
-
     }
 
-
     private void findDocuments() {
-
         /***
          *打开文件管理器
          */
@@ -693,8 +675,6 @@ public class WebActivity extends BaseActivity implements JSCallBack {
     float alpha = 1;
 
     private void showBottomWindow() {
-
-
         if (bottomWindow == null) {
             View view = LayoutInflater.from(this).inflate(R.layout.choose_photo_or_video, null);
             bottomWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
@@ -733,18 +713,12 @@ public class WebActivity extends BaseActivity implements JSCallBack {
             bottomWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 @Override
                 public void onDismiss() {
-
-
                     bottomWindow.dismiss();
-
-
                 }
             });
 
             bottomWindow.showAtLocation(webView, Gravity.BOTTOM, 0, 0);
-
         } else {
-
             bottomWindow.showAtLocation(webView, Gravity.BOTTOM, 0, 0);
         }
     }
@@ -760,7 +734,6 @@ public class WebActivity extends BaseActivity implements JSCallBack {
         getWindow().setAttributes(lp);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
     }
-
 
     public String getRealPathFromURI(Uri contentUri) {
         String res = null;
@@ -883,11 +856,9 @@ public class WebActivity extends BaseActivity implements JSCallBack {
 
     private class MyWebviewClient extends WebViewClient {
 
-
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             view.loadUrl(url);
-
             return super.shouldOverrideUrlLoading(view, url);
         }
 
@@ -911,17 +882,13 @@ public class WebActivity extends BaseActivity implements JSCallBack {
 
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-
             //super.onReceivedSslError(view, handler, error);注意一定要去除这行代码，否则设置无效。
             // handler.cancel();// Android默认的处理方式
             handler.proceed();// 接受所有网站的证书
             // handleMessage(Message msg);// 进行其他处理
-
-
         }
 
     }
-
 
     private class MyWebChromeClient extends WebChromeClient {
 
@@ -951,10 +918,6 @@ public class WebActivity extends BaseActivity implements JSCallBack {
         @Override
         public void onReceivedTitle(WebView view, String title) {
             super.onReceivedTitle(view, title);
-//            if (needToken) {
-//                setToken();
-//                needToken = false;
-//            }
             Log.i(TAG, "title  " + title);
         }
     }

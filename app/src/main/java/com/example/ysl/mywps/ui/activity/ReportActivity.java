@@ -27,13 +27,11 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.ysl.mywps.R;
-import com.example.ysl.mywps.client.UploadWebChromeClient;
 import com.example.ysl.mywps.interfaces.JSCallBack;
 import com.example.ysl.mywps.interfaces.JavascriptBridge;
 import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.example.ysl.mywps.utils.SysytemSetting;
-import com.example.ysl.mywps.utils.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,6 +58,7 @@ public class ReportActivity extends BaseActivity implements JSCallBack {
 
     private static final String TAG = ProposalActivity.class.getName();
     private boolean needToken = true;
+    private boolean webviewFinished = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -224,7 +223,7 @@ public class ReportActivity extends BaseActivity implements JSCallBack {
         }
     }
 
-    private static class MyWebviewClient extends WebViewClient {
+    private class MyWebviewClient extends WebViewClient {
 
 
         @Override
@@ -243,8 +242,9 @@ public class ReportActivity extends BaseActivity implements JSCallBack {
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-
+            webviewFinished = true;
             Log.i(TAG, "finish");
+            setTokenToWeb();
         }
 
         @Override
@@ -257,6 +257,14 @@ public class ReportActivity extends BaseActivity implements JSCallBack {
             super.onReceivedSslError(view, handler, error);
         }
 
+    }
+
+    private void setTokenToWeb() {
+        Log.i(TAG, "setTokenToWeb needToken: " + needToken + " webviewFinished:" + webviewFinished);
+        if (needToken && webviewFinished) {
+            setToken();
+            needToken = false;
+        }
     }
 
     // Android版本变量
@@ -312,6 +320,7 @@ public class ReportActivity extends BaseActivity implements JSCallBack {
             super.onProgressChanged(view, newProgress);
             Log.i(TAG, "progress  " + newProgress);
             if (newProgress >= 100) {
+                setTokenToWeb();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -326,30 +335,7 @@ public class ReportActivity extends BaseActivity implements JSCallBack {
             } else {
                 progressHandler.sendEmptyMessage(newProgress);
             }
-//            Log.i(TAG, "progress  " + newProgress);
-//            progressbar.setProgress(newProgress);
-//            if (newProgress == 100) {
-//                progressbar.setVisibility(View.GONE);
-//                webView.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//
-//
-//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//                            webView.evaluateJavascript("javascript:getToken('" + token + "')", new ValueCallback<String>() {
-//                                @Override
-//                                public void onReceiveValue(String s) {
-//                                    Log.i("aaa", "return  " + s);
-//                                }
-//                            });
-//                        } else {
-//                            webView.loadUrl("javascript:getToken('" + token + "')");
-//                        }
-//                    }
-//                });
-//            }
         }
-
 
         // For Android < 3.0
         public void openFileChooser(ValueCallback<Uri> uploadMsg) {
