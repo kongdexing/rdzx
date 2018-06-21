@@ -118,7 +118,7 @@ dependencies {
     compile 'de.halfbit:pinned-section-listview:1.0.0'
     //        compile 'com.android.support:support-v4:24.2.0'
     //        compile 'com.android.support:design:24.2.0'
-            provided 'com.android.support:appcompat-v7:24.2.1'
+//            provided 'com.android.support:appcompat-v7:24.2.1'
     //    //    provided 'com.android.support:support-v13:24.2.1'
     //        provided 'com.android.support:recyclerview-v7:24.2.0'
     compile 'com.android.support:recyclerview-v7:24.2.1'

@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +31,7 @@ public class LoadMoreRecyclerView extends RecyclerView {
     public final static int TYPE_FOOTER = 2;//底部--往往是loading_more
     public final static int TYPE_LIST = 3;//代表item展示的模式是list模式
     public final static int TYPE_STAGGER = 4;//代码item展示模式是网格模式
-    private String TAG = LoadMoreRecyclerView.class.getSimpleName();
+
     private boolean mIsFooterEnable = false;//是否允许加载更多
 
     /**
@@ -82,13 +81,12 @@ public class LoadMoreRecyclerView extends RecyclerView {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                Log.i(TAG, "onScrollStateChanged newState: " + newState);
             }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (null != mListener && mIsFooterEnable && !mIsLoadingMore) {
+                if (null != mListener && mIsFooterEnable && !mIsLoadingMore && dy > 0) {
                     int lastVisiblePosition = getLastVisiblePosition();
                     if (lastVisiblePosition + 1 == mAutoLoadAdapter.getItemCount()) {
                         setLoadingMore(true);
@@ -215,6 +213,7 @@ public class LoadMoreRecyclerView extends RecyclerView {
             int count = mInternalAdapter.getItemCount();
             if (mIsFooterEnable) count++;
             if (mIsHeaderEnable) count++;
+
             return count;
         }
 
@@ -361,24 +360,8 @@ public class LoadMoreRecyclerView extends RecyclerView {
      */
     public void notifyMoreFinish(boolean hasMore) {
         setAutoLoadMoreEnable(hasMore);
-        if (mLoadMorePosition == 0) {
-            mLoadMorePosition = getAdapter().getItemCount();
-        }
         getAdapter().notifyItemRemoved(mLoadMorePosition);
         mIsLoadingMore = false;
-    }
-
-    public void deleteByPosition(int position) {
-        getAdapter().notifyItemRemoved(position);
-        getAdapter().notifyItemRangeChanged(position, getAdapter().getItemCount() - position);
-    }
-
-    public void updateItem(int position) {
-        getAdapter().notifyItemChanged(position);
-    }
-
-    public void insertItem() {
-//        getAdapter().notifyItemInserted();
     }
 
 }

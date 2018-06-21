@@ -27,7 +27,7 @@ public class MessageBean {
     }
 
     public String getPic() {
-        return pic;
+        return pic == null ? "" : pic;
     }
 
     public void setPic(String pic) {

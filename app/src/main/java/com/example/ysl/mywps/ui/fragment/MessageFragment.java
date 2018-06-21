@@ -1,30 +1,26 @@
 package com.example.ysl.mywps.ui.fragment;
 
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.example.ysl.mywps.R;
-import com.example.ysl.mywps.bean.BannerBean;
 import com.example.ysl.mywps.bean.MessageBean;
 import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.net.ResultPage;
 import com.example.ysl.mywps.ui.adapter.MessageAdapter;
-import com.example.ysl.mywps.ui.view.CardDividerItemDecoration;
 import com.example.ysl.mywps.ui.view.LoadMoreRecyclerView;
 import com.example.ysl.mywps.ui.view.WrapContentLinearLayoutManager;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
+import com.example.ysl.mywps.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -55,7 +51,7 @@ public class MessageFragment extends BaseFragment {
     @BindView(R.id.swipe_refresh_widget)
     SwipeRefreshLayout swipeRefresh;
     private WrapContentLinearLayoutManager mLayoutManager;
-
+    List<MessageBean> bannerBeans = new ArrayList<>();
     private MessageAdapter adapter;
 
     @Override
@@ -72,14 +68,14 @@ public class MessageFragment extends BaseFragment {
         initRecyclerView(recyclerview, swipeRefresh);
     }
 
-    public void initRecyclerView(LoadMoreRecyclerView recyclerView, SwipeRefreshLayout swipeRefreshLayout) {
+    public void initRecyclerView(LoadMoreRecyclerView recyclerView, final SwipeRefreshLayout swipeRefreshLayout) {
         Log.i(TAG, "initRecyclerView: ");
         if (recyclerView != null) {
             recyclerView.setHasFixedSize(true);
             mLayoutManager = new WrapContentLinearLayoutManager(this.getContext());
             recyclerView.setLayoutManager(mLayoutManager);
-            recyclerView.addItemDecoration(new CardDividerItemDecoration(this.getContext(),
-                    LinearLayoutManager.VERTICAL));
+//            recyclerView.addItemDecoration(new CardDividerItemDecoration(this.getContext(),
+//                    LinearLayoutManager.VERTICAL));
         }
         if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.google_colors));
@@ -94,6 +90,7 @@ public class MessageFragment extends BaseFragment {
                 public void onRefresh() {
                     resultPage.setPage(1);
                     adapter.refreshData(new ArrayList<MessageBean>());
+                    swipeRefreshLayout.setRefreshing(true);
                     getMessageData();
                 }
             });
@@ -102,23 +99,22 @@ public class MessageFragment extends BaseFragment {
         recyclerView.setLoadMoreListener(new LoadMoreRecyclerView.LoadMoreListener() {
             @Override
             public void onLoadMore() {
-//                if (resultPage.getPage() < resultPage.getTotal_page()) {
-//                    resultPage.setPage(resultPage.getPage() + 1);
-//                    getCheckinList();
-//                }
+                resultPage.setPage(resultPage.getPage() + 1);
+                getMessageData();
             }
         });
 
         recyclerview.setAdapter(adapter);
-
+//        recyclerView.setAutoLoadMoreEnable(true);
+        resultPage.setPage(1);
+        getMessageData();
     }
 
     @Override
     public void initData() {
         Log.i(TAG, "initData: ");
         adapter = new MessageAdapter(this.getContext());
-        resultPage.setPage(1);
-        getMessageData();
+
     }
 
     /**
@@ -137,6 +133,7 @@ public class MessageFragment extends BaseFragment {
                     call.enqueue(new Callback<String>() {
                         @Override
                         public void onResponse(Call<String> call, Response<String> response) {
+                            swipeRefresh.setRefreshing(false);
                             if (!response.isSuccessful()) {
                                 e.onNext(response.message());
                                 return;
@@ -151,16 +148,11 @@ public class MessageFragment extends BaseFragment {
 
                                 JSONArray jsonArray = jsonObject.getJSONArray("data");
                                 Gson gson = new Gson();
-                                List<MessageBean> bannerBeans = gson.fromJson(jsonArray.toString(), new TypeToken<List<MessageBean>>() {
+                                bannerBeans = gson.fromJson(jsonArray.toString(), new TypeToken<List<MessageBean>>() {
                                 }.getType());
-                                if (resultPage.getPage() == 1) {
-                                    adapter.refreshData(bannerBeans);
-                                } else {
-                                    adapter.appendData(bannerBeans);
-                                }
-                                recyclerview.notifyMoreFinish(bannerBeans.size() == 20);
                                 e.onNext("Y");
-                            } catch (JSONException e1) {
+                            } catch (Exception e1) {
+                                Log.i(TAG, "onResponse: " + e1.getMessage());
                                 e1.printStackTrace();
                                 e.onNext(msg);
                             }
@@ -168,10 +160,10 @@ public class MessageFragment extends BaseFragment {
 
                         @Override
                         public void onFailure(Call<String> call, Throwable t) {
+                            swipeRefresh.setRefreshing(false);
                             e.onNext(t.getMessage());
                         }
                     });
-
                 }
             });
 
@@ -179,6 +171,12 @@ public class MessageFragment extends BaseFragment {
                 @Override
                 public void accept(String s) throws Exception {
                     Log.i(TAG, "accept: " + s);
+                    if (s.equals("Y")) {
+                        handler.sendEmptyMessage(1);
+//                        adapter.notifyDataSetChanged();
+                    } else {
+                        ToastUtils.showShort(getActivity(), s);
+                    }
                 }
             };
 
@@ -186,9 +184,34 @@ public class MessageFragment extends BaseFragment {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(consumer);
         } catch (Exception ex) {
+            swipeRefresh.setRefreshing(false);
             Log.i(TAG, "getBannerData: " + ex.getMessage());
         }
     }
+
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    if (resultPage.getPage() == 1) {
+                        //第一页数据
+                        recyclerview.removeAllViews();
+                        adapter.refreshData(bannerBeans);
+                    } else {
+                        adapter.appendData(bannerBeans);
+                    }
+                    if (bannerBeans.size() == 20) {
+                        recyclerview.setAutoLoadMoreEnable(true);
+                        recyclerview.notifyMoreFinish(true);
+                    } else {
+                        adapter.notifyDataSetChanged();
+                    }
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     @Override
     public void setKindFlag(int kindFlag) {
