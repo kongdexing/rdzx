@@ -289,4 +289,19 @@ public class HttpUtl {
         return netApi.roimToken(token);
     }
 
+    /**
+     * 获取消息列表
+     * @param url
+     * @param token
+     * @param page
+     * @param pagelimit
+     * @return
+     */
+    public static Call<String> getMessageList(String url,String token,String page,String pagelimit){
+        String httpUrl = HTTP_URL + url;
+        NetApi netApi = getRetrofit(httpUrl).create(NetApi.class);
+
+        return netApi.getMessageList(token,page,pagelimit);
+    }
+
 }

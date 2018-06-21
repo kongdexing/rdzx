@@ -108,9 +108,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         colorSelect = getResources().getColorStateList(R.color.bottom_selected);
         fragmentManager = getSupportFragmentManager();
         showMessage(0);
-
     }
-
 
     /**
      * 当token过期后跳转到登陆界面
@@ -146,7 +144,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
                             if (CommonUtil.isNotEmpty(msg) && msg.contains("登陆信息有误") || code == 1) {
                                 jumpToLogin();
-
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -155,7 +152,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-
                         Logger.i("fileType   " + t.getMessage());
                     }
                 });
@@ -176,38 +172,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void initView() {
-//        ArrayList<Fragment> fragments = new ArrayList<>();
-//        messageFragment = new MessageFragment();
-//        workFragment = new WorkFragment();
-//        contactFragment = new ContactFragment();
-//        mineFragment = new MineFragment();
-
-
-//        fragments.add(messageFragment);
-//        fragments.add(workFragment);
-//        fragments.add(contactFragment);
-//        fragments.add(mineFragment);
-//
-//        pagerAdapter = new PagerAdapter(getSupportFragmentManager(), fragments);
-//        viewPager.setAdapter(pagerAdapter);
-//
-//        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//                Log.i("aaa", "position  " + position);
-//                showMessage(position);
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//
-//            }
-//        });
     }
 
     @Override
@@ -219,36 +183,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
-//        viewPager.setCurrentItem(1);
         writePermission();
-
-//        ContentResolver resolver = this.getContentResolver();
-//        TransportBean bean = new TransportBean();
-//        bean.setPath("222");
-//        bean.setSize("1111");
-//        bean.setName("3333");
-//        ContentValues values = bean.toContentValues();
-//
-//        resolver.insert(UploadProvider.CONTENT_URI,values);
-//
-//
-//
-//        Cursor cursor = resolver.query(UploadProvider.CONTENT_URI,TransportBean.TRANSPORTBEANS,null,null,null);
-//        if(cursor != null){
-//
-//            ArrayList<TransportBean> list = TransportBean.getTransportBeans(cursor);
-//
-//            Logger.i("uploadSize  "+list.size());
-//        }
-
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-
     }
-
 
     @Override
     protected void onPause() {
@@ -275,14 +216,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 setTitleText("首页");
                 showTitle(false);
                 tvWork.setTextColor(colorSelect);
-
                 ibWork.setBackgroundDrawable(getResources().getDrawable(R.drawable.icon_work_selected));
-
                 currentMyIndex = 0;
                 break;
             case 1:
                 tvMessage.setTextColor(colorSelect);
-
                 setTitleText("消息");
                 ibMessage.setBackgroundDrawable(getResources().getDrawable(R.drawable.icon_message_selected));
                 currentMyIndex = 1;
@@ -290,7 +228,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case 2:
                 setTitleText("通讯录");
                 tvConact.setTextColor(colorSelect);
-
                 ibContact.setBackgroundDrawable(getResources().getDrawable(R.drawable.icon_contact_selected));
                 currentMyIndex = 2;
                 break;
@@ -356,28 +293,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         fragmentTransaction.setCustomAnimations(R.anim.fragment_out, R.anim.fragment_back, R.anim.fragment_out, R.anim.fragment_back);
         fragmentTransaction.commit();
-
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
-
         if (id == R.id.main_ll_message || id == R.id.main_ib_message) {
             showMessage(1);
-
         } else if (id == R.id.main_ll_work || id == R.id.main_ib_work) {
-
             showMessage(0);
         } else if (id == R.id.main_ll_contact || id == R.id.main_ib_contact) {
-
             showMessage(2);
         } else if (id == R.id.main_ll_mine || id == R.id.main_ib_mine) {
-
             showMessage(3);
         }
-
-
     }
 
     private class MyclickListener extends NoDoubleClickListener {
@@ -385,7 +314,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         public void click(View v) {
             int id = v.getId();
             if (id == R.id.main_ll_message || id == R.id.main_ib_message) {
-
 
             } else if (id == R.id.main_ll_work || id == R.id.main_ib_work) {
 
@@ -397,7 +325,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         }
     }
-
 
     /**
      * 检查存储权限，如果没有就请求

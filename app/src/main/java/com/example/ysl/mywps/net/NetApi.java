@@ -21,11 +21,12 @@ import retrofit2.http.Url;
  */
 
 public interface NetApi {
+
     @POST("query")
     Call<String> login(@Query("username") String username, @Query("password") String password, @Query("regid") String regId);
 
     @POST("query")
-    Call<String> doucmentList(@Query("token") String token, @Query("page") String page, @Query("pagelimit") String pagemilit,@Query("proce_type") String type);
+    Call<String> doucmentList(@Query("token") String token, @Query("page") String page, @Query("pagelimit") String pagemilit, @Query("proce_type") String type);
 
     /**
      * 提交审核
@@ -42,15 +43,15 @@ public interface NetApi {
 
     /**
      * 获取通讯录联系人
-     * */
+     */
     @POST("query")
     Call<String> contact(@Query("token") String token);
 
     /**
      * 获取通讯录联系人详情
-     * */
+     */
     @POST("query")
-    Call<String> contactDetail(@Query("token") String token,@Query(("uid")) String uid);
+    Call<String> contactDetail(@Query("token") String token, @Query(("uid")) String uid);
 
     /**
      * 文档返回拟稿人
@@ -74,66 +75,72 @@ public interface NetApi {
     Call<String> signedCommit(@Query("proce_id") String proceId, @Query("doc_id") String docId, @Query("opinion") String opinion, @Query("is_signed") String signed, @Query("token") String token, @Part MultipartBody.Part file);
 
     /***
-    * 获取流程
-    * */
+     * 获取流程
+     * */
     @POST("query")
-    Call<String>  getFlow(@Query("doc_id") String docId,@Query("token") String token);
+    Call<String> getFlow(@Query("doc_id") String docId, @Query("token") String token);
 
     /**
      * 转发进入反馈流程
-     * */
- @POST("query")
- Call<String> doc_forward(@Query("doc_id") String docId,@Query("uids") String uids,@Query("token") String token);
+     */
+    @POST("query")
+    Call<String> doc_forward(@Query("doc_id") String docId, @Query("uids") String uids, @Query("token") String token);
 
     /**
      * 反馈
-     * */
+     */
     @POST("query")
-    Call<String> feed_back(@Query("doc_id") String docId,@Query("opinion") String opinion,@Query("token") String token);
+    Call<String> feed_back(@Query("doc_id") String docId, @Query("opinion") String opinion, @Query("token") String token);
 
     /**
      * 上传文件
-     * */
+     */
     @Multipart
     @POST("query")
-    Call<String>  sharedUpload(@Query("file_type") String fileType,@Query("token")String token,@PartMap Map<String, RequestBody> file);
+    Call<String> sharedUpload(@Query("file_type") String fileType, @Query("token") String token, @PartMap Map<String, RequestBody> file);
 
     /**
      * 文件类目
-     * */
+     */
     @POST("query")
     Call<String> getFileType(@Query("token") String token);
 
     /**
      * 文件列表
-     * */
+     */
     @POST("query")
-    Call<String> fileList(@Query("token") String token,@Query("file_type") String fileType,@Query("page") String page,@Query("pagelimit") String pagelimit);
+    Call<String> fileList(@Query("token") String token, @Query("file_type") String fileType, @Query("page") String page, @Query("pagelimit") String pagelimit);
 
     /**
-     *删除文件
-     * */
+     * 删除文件
+     */
     @POST("query")
-    Call<String> deleteDocument (@Query("file_id") String id,@Query("token") String token);
+    Call<String> deleteDocument(@Query("file_id") String id, @Query("token") String token);
 
     /**
      * 社情民意上传文件
-     * */
+     */
     @Multipart
     @POST("query")
-    Call<String>  socialUpload(@Query("name") String name,@Query("token")String token,@PartMap Map<String, RequestBody> file);
+    Call<String> socialUpload(@Query("name") String name, @Query("token") String token, @PartMap Map<String, RequestBody> file);
 
     /**
-     *获取自己上传的文件
-     * */
+     * 获取自己上传的文件
+     */
     @POST("query")
-    Call<String> selfUpload (@Query("token") String token);
+    Call<String> selfUpload(@Query("token") String token);
 
     /**
      * 获取融云token
-     * */
+     */
     @POST("query")
     Call<String> roimToken(@Query("token") String token);
+
+    /**
+     * 获取消息列表
+     */
+    @POST("query")
+    Call<String> getMessageList(@Query("token") String token, @Query("page") String page, @Query("pagelimit") String pagelimit);
 
 
 }

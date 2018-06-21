@@ -81,7 +81,7 @@ public class ContactPinnedAdapter extends ArrayAdapter<Item> implements PinnedSe
             txtGroup.setText(item.group);
             return view;
         } else {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_listview_item_layout, null);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_listview_item_layout, null);
 
             TextView tvName = (TextView) view.findViewById(R.id.contact_tv_name);
             TextView tvPhone = (TextView) view.findViewById(R.id.contact_tv_phone);
