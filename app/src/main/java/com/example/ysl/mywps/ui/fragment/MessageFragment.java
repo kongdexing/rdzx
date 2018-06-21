@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -50,6 +51,7 @@ public class MessageFragment extends BaseFragment {
     public ResultPage resultPage = new ResultPage();
     @BindView(R.id.recyclerview)
     LoadMoreRecyclerView recyclerview;
+
     @BindView(R.id.swipe_refresh_widget)
     SwipeRefreshLayout swipeRefresh;
     private WrapContentLinearLayoutManager mLayoutManager;
@@ -58,13 +60,20 @@ public class MessageFragment extends BaseFragment {
 
     @Override
     public View setView(LayoutInflater inflater, ViewGroup container) {
+        Log.i(TAG, "setView: ");
         View view = inflater.inflate(R.layout.fragment_message_layout, container, false);
-        initRecyclerView(recyclerview, null);
-
+        ButterKnife.bind(this, view);
         return view;
     }
 
+    @Override
+    public void afterView(View view) {
+        Log.i(TAG, "afterView: ");
+        initRecyclerView(recyclerview, swipeRefresh);
+    }
+
     public void initRecyclerView(LoadMoreRecyclerView recyclerView, SwipeRefreshLayout swipeRefreshLayout) {
+        Log.i(TAG, "initRecyclerView: ");
         if (recyclerView != null) {
             recyclerView.setHasFixedSize(true);
             mLayoutManager = new WrapContentLinearLayoutManager(this.getContext());
@@ -79,14 +88,17 @@ public class MessageFragment extends BaseFragment {
 //                .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources()
 //                        .getDisplayMetrics()));
 
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                resultPage.setPage(1);
-                adapter.refreshData(new ArrayList<MessageBean>());
-                getMessageData();
-            }
-        });
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    resultPage.setPage(1);
+                    adapter.refreshData(new ArrayList<MessageBean>());
+                    getMessageData();
+                }
+            });
+        }
+
         recyclerView.setLoadMoreListener(new LoadMoreRecyclerView.LoadMoreListener() {
             @Override
             public void onLoadMore() {
@@ -97,18 +109,15 @@ public class MessageFragment extends BaseFragment {
             }
         });
 
-        adapter = new MessageAdapter(this.getContext());
-        recyclerView.setAdapter(adapter);
-
-    }
-
-    @Override
-    public void afterView(View view) {
+        recyclerview.setAdapter(adapter);
 
     }
 
     @Override
     public void initData() {
+        Log.i(TAG, "initData: ");
+        adapter = new MessageAdapter(this.getContext());
+        resultPage.setPage(1);
         getMessageData();
     }
 
@@ -116,6 +125,7 @@ public class MessageFragment extends BaseFragment {
      * 获取消息接口
      */
     private void getMessageData() {
+        Log.i(TAG, "getMessageData: ");
         try {
             Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
                 @Override
@@ -182,7 +192,7 @@ public class MessageFragment extends BaseFragment {
 
     @Override
     public void setKindFlag(int kindFlag) {
-
+        Log.i(TAG, "setKindFlag: ");
     }
 
 }

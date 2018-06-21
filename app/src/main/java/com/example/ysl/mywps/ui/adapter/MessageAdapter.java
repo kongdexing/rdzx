@@ -57,7 +57,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+        View view = LayoutInflater.from(parent.getContext()).inflate(
+                R.layout.item_checkin, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
@@ -67,7 +69,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemCount() {
-        return messageBeans.size();
+        return 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
