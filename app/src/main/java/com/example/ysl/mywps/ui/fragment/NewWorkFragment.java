@@ -189,9 +189,9 @@ public class NewWorkFragment extends BaseFragment {
                 intent.putExtra(BaseWebActivity.WEB_URL, HttpUtl.HTTP_WEB_URL + "TiAn/");
                 break;
             case R.id.llItem3://社情民意
-                intent = new Intent(getActivity(), WebActivity.class);
-//                intent.putExtra(BaseWebActivity.WEB_TITLE, "社情民意");
-//                intent.putExtra(BaseWebActivity.WEB_URL, HttpUtl.HTTP_WEB_URL + "sqmy/");
+                intent = new Intent(getActivity(), WebViewActivity.class);
+                intent.putExtra(BaseWebActivity.WEB_TITLE, "社情民意");
+                intent.putExtra(BaseWebActivity.WEB_URL, HttpUtl.HTTP_WEB_URL + "sqmy/");
                 break;
             case R.id.llItem4://委员之家
                 intent = new Intent(getActivity(), WebViewActivity.class);
@@ -310,6 +310,7 @@ public class NewWorkFragment extends BaseFragment {
 
                     String token = SharedPreferenceUtils.loginValue(getActivity(), "token");
                     Call<String> call = HttpUtl.contact("User/Public/recommend_list/", token);
+
                     call.enqueue(new Callback<String>() {
                         @Override
                         public void onResponse(Call<String> call, Response<String> response) {

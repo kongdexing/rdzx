@@ -70,22 +70,17 @@ public class QuestionActivity extends BaseActivity implements JSCallBack {
         showLeftButton(true, "", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (webView.canGoBack()) {
                     webView.goBack();
                 } else {
                     finish();
                 }
-
             }
         });
-        initView();
-        afterView();
-
+        intiWebView();
     }
 
-    @Override
-    public void initView() {
+    private void intiWebView() {
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);//设置js交互
 //        webSettings.setUseWideViewPort(true);//设置图片调整到适合webview的大小
@@ -119,6 +114,30 @@ public class QuestionActivity extends BaseActivity implements JSCallBack {
             //mWebView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
 
+        MyWebChromeClient chromeClient = new MyWebChromeClient();
+        MyWebviewClient client = new MyWebviewClient();
+//file:///android_asset/index.html
+//   http://www.haont.cn/CPPCC/sqmy/#!/submit/    http://www.haont.cn/TiAnPhone/
+//        http://www.haont.cn/TiAnPhone/
+        webView.addJavascriptInterface(new JavascriptBridge(this), "javaBridge");
+        webView.loadUrl(HttpUtl.HTTP_WEB_URL + "question/index.html");
+        webView.setWebChromeClient(chromeClient);
+        webView.setWebViewClient(client);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
+            webView.setWebContentsDebuggingEnabled(true);
+
+        }
+//        // 设置是否允许 WebView 使用 File 协议,默认设置为true，即允许在 File 域下执行任意 JavaScript 代码
+//        webView.getSettings().setAllowFileAccess(true);
+        webView.getSettings().setDomStorageEnabled(true);
+    }
+
+    @Override
+    public void initView() {
 
     }
 
@@ -151,30 +170,6 @@ public class QuestionActivity extends BaseActivity implements JSCallBack {
 
         super.onDestroy();
 
-    }
-
-    private void afterView() {
-
-        MyWebChromeClient chromeClient = new MyWebChromeClient();
-        MyWebviewClient client = new MyWebviewClient();
-//file:///android_asset/index.html
-//   http://www.haont.cn/CPPCC/sqmy/#!/submit/    http://www.haont.cn/TiAnPhone/
-//        http://www.haont.cn/TiAnPhone/
-        webView.addJavascriptInterface(new JavascriptBridge(this), "javaBridge");
-        webView.loadUrl(HttpUtl.HTTP_WEB_URL + "question/index.html");
-        webView.setWebChromeClient(chromeClient);
-        webView.setWebViewClient(client);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-
-            webView.setWebContentsDebuggingEnabled(true);
-
-        }
-//        // 设置是否允许 WebView 使用 File 协议,默认设置为true，即允许在 File 域下执行任意 JavaScript 代码
-//        webView.getSettings().setAllowFileAccess(true);
-        webView.getSettings().setDomStorageEnabled(true);
     }
 
     //使用Webview的时候，返回键没有重写的时候会直接关闭程序，这时候其实我们要其执行的知识回退到上一步的操作

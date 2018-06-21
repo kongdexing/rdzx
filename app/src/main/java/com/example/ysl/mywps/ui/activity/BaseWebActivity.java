@@ -69,8 +69,7 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
         }
     }
 
-    @Override
-    public void initView() {
+    public void initWebView() {
         showLeftButton(true, "", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,6 +137,11 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
     }
 
     @Override
+    public void initView() {
+
+    }
+
+    @Override
     public void initData() {
         token = SharedPreferenceUtils.loginValue(this, SysytemSetting.USER_TOKEN);
         realname = SharedPreferenceUtils.loginValue(this, SysytemSetting.REAL_NAME);
@@ -161,7 +165,7 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
 
     public void setToken() {
 //        webView.loadUrl("javascript:setFile('" + filePath + "','"+fileName+"')");
-        Log.i(TAG, "mytoken   " + token);
+        Log.i(TAG, "setToken mytoken   " + token);
 //        ToastUtils.showLong(MeettingActivity.this, "setToken:" + token);
         webView.post(new Runnable() {
             @Override
@@ -249,7 +253,6 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
             }
         }
 
-
         // For Android < 3.0
         public void openFileChooser(ValueCallback<Uri> uploadMsg) {
             this.openFileChooser(uploadMsg, "*/*");
@@ -297,10 +300,6 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
         @Override
         public void onReceivedTitle(WebView view, String title) {
             super.onReceivedTitle(view, title);
-//            if (needToken) {
-//                setToken();
-//                needToken = false;
-//            }
             Log.i(TAG, "title  " + title);
         }
     }
@@ -325,7 +324,7 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
             super.onPageFinished(view, url);
             Log.i(TAG, "onPageFinished " + url + "  needToken " + needToken);
             webviewFinished = true;
-//            setTokenToWeb();
+            setTokenToWeb();
         }
 
         @Override

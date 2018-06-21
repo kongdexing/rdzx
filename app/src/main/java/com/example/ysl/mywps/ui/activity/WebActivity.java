@@ -3,6 +3,7 @@ package com.example.ysl.mywps.ui.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.ActivityNotFoundException;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -39,6 +40,7 @@ import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.interfaces.JSCallBack;
@@ -64,6 +66,8 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW;
 
 /**
  * Created by ysl on 2018/2/28.
@@ -91,8 +95,10 @@ public class WebActivity extends BaseActivity implements JSCallBack {
     private String realname = "";
     private boolean webviewFinished = false;
     private boolean needToken = true;
-
-//   private
+    public ValueCallback<Uri> mUploadMessage;
+    public ValueCallback<Uri[]> mUploadMessage5;
+    public static final int FILECHOOSER_RESULTCODE = 5173;
+    public static final int FILECHOOSER_RESULTCODE_FOR_ANDROID_5 = 5174;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,20 +107,7 @@ public class WebActivity extends BaseActivity implements JSCallBack {
         setContentView(R.layout.activity_webview_layout);
         ButterKnife.bind(this);
         setTitleText("社情民意");
-        showLeftButton(true, null, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (webView.canGoBack()) {
-                    webView.goBack();
-                } else {
-                    finish();
-                }
-            }
-        });
-        initView();
-        afterView();
-
+        initWebView();
     }
 
     /**
@@ -131,7 +124,7 @@ public class WebActivity extends BaseActivity implements JSCallBack {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
                         String data = response.body();
-                        Logger.i("fileType  " + data);
+                        Log.i(TAG,"fileType  " + data);
                         if (CommonUtil.isEmpty(data))
                             return;
                         try {
@@ -151,7 +144,7 @@ public class WebActivity extends BaseActivity implements JSCallBack {
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
 
-                        Logger.i("fileType   " + t.getMessage());
+                        Log.i(TAG,"fileType   " + t.getMessage());
                     }
                 });
             }
@@ -170,14 +163,22 @@ public class WebActivity extends BaseActivity implements JSCallBack {
         startActivity(intent);
     }
 
-    @Override
-    public void initView() {
-
+    private void initWebView(){
+        showLeftButton(true, null, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (webView.canGoBack()) {
+                    webView.goBack();
+                } else {
+                    finish();
+                }
+            }
+        });
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);//设置js交互
 //        webSettings.setUseWideViewPort(true);//设置图片调整到适合webview的大小
         webSettings.setLoadWithOverviewMode(true);//缩放至屏幕的大小
-
+        webSettings.setAllowFileAccess(true);// 设置允许访问文件数据
         //缩放操作
         webSettings.setSupportZoom(true);//支持缩放
         webSettings.setBuiltInZoomControls(true);///设置内置的缩放控件。若为false，则该WebView不可缩放
@@ -199,45 +200,11 @@ public class WebActivity extends BaseActivity implements JSCallBack {
         webView.getSettings().setDomStorageEnabled(true);
         webView.clearCache(true);
 
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        webView.onPause();
-        webView.pauseTimers();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        webView.onResume();
-        webView.resumeTimers();
-        writePermission();
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (webView != null) {
-            webView.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
-            webView.clearHistory();
-            ((ViewGroup) webView.getParent()).removeView(webView);
-            webView.destroy();
-            webView = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            //两者都可以
+            webSettings.setMixedContentMode(MIXED_CONTENT_ALWAYS_ALLOW);
+            //mWebView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
-        super.onDestroy();
-    }
-
-    @Override
-    public void initData() {
-
-        token = SharedPreferenceUtils.loginValue(this, SysytemSetting.USER_TOKEN);
-        realname = SharedPreferenceUtils.loginValue(this, SysytemSetting.REAL_NAME);
-        saveFileTypes(token);
-    }
-
-
-    private void afterView() {
 
         MyWebChromeClient chromeClient = new MyWebChromeClient();
         MyWebviewClient client = new MyWebviewClient();
@@ -245,20 +212,31 @@ public class WebActivity extends BaseActivity implements JSCallBack {
 //     http://www.haont.cn/OAPhone/sqmy/
         webView.addJavascriptInterface(new JavascriptBridge(this), "javaBridge");
 //        webView.loadUrl("http://www.haont.cn/OAPhone/sqmy/");
-        webView.loadUrl("http://www.haont.cn/OA/sqmy/");
-
+        webView.loadUrl(HttpUtl.HTTP_WEB_URL + "sqmy/");
         webView.setWebChromeClient(chromeClient);
         webView.setWebViewClient(client);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-
             webView.setWebContentsDebuggingEnabled(true);
-
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
 // 设置是否允许 WebView 使用 File 协议,默认设置为true，即允许在 File 域下执行任意 JavaScript 代码
         webView.getSettings().setAllowFileAccess(true);
+        webView.getSettings().setDomStorageEnabled(true);
+    }
+
+    @Override
+    public void initView() {
+
+    }
+
+    @Override
+    public void initData() {
+        token = SharedPreferenceUtils.loginValue(this, SysytemSetting.USER_TOKEN);
+        realname = SharedPreferenceUtils.loginValue(this, SysytemSetting.REAL_NAME);
+//        saveFileTypes(token);
     }
 
     // Android版本变量
@@ -274,7 +252,6 @@ public class WebActivity extends BaseActivity implements JSCallBack {
                 if (version < 18) {
                     webView.loadUrl("javascript:setToken('" + token + "','" + realname + "')");
                 } else {
-
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                         webView.evaluateJavascript("javascript:setToken('" + token + "','" + realname + "')", new ValueCallback<String>() {
                             @Override
@@ -308,9 +285,7 @@ public class WebActivity extends BaseActivity implements JSCallBack {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         if (requestCode == 11) {
-
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.i(TAG, "权限被允许");
@@ -348,7 +323,7 @@ public class WebActivity extends BaseActivity implements JSCallBack {
             case "callToken":
                 setToken();
 //                saveFileTypes(token);
-                Logger.i("CALLtOKEN");
+                Log.i(TAG,"CALLtOKEN");
                 message = realname + "," + token;
                 break;
             case "invalidToken":
@@ -372,7 +347,6 @@ public class WebActivity extends BaseActivity implements JSCallBack {
     }
 
     private void fileHaveUpload(final String filePath, final String fileName) {
-
         webView.post(new Runnable() {
             @Override
             public void run() {
@@ -384,7 +358,6 @@ public class WebActivity extends BaseActivity implements JSCallBack {
                         webView.evaluateJavascript("javascript:setFile('" + filePath + "','" + fileName + "')", new ValueCallback<String>() {
                             @Override
                             public void onReceiveValue(String s) {
-
                                 Log.i(TAG, "return  " + s);
                             }
                         });
@@ -396,7 +369,6 @@ public class WebActivity extends BaseActivity implements JSCallBack {
         });
     }
 
-
     /**
      * 压缩视频
      */
@@ -407,7 +379,7 @@ public class WebActivity extends BaseActivity implements JSCallBack {
         if (!file.exists())
             file.mkdirs();
         final String myPath = outPutPath + File.separator + name;
-        Logger.i("outputPath " + outPutPath);
+        Log.i(TAG,"outputPath " + outPutPath);
 
         WebActivity.this.runOnUiThread(new Runnable() {
             @Override
@@ -421,14 +393,14 @@ public class WebActivity extends BaseActivity implements JSCallBack {
                     @Override
                     public void onSuccess() {
                         ToastUtils.showShort(WebActivity.this, "压缩完成");
-                        Logger.i("success");
+                        Log.i(TAG,"success");
                         uploadFile(myPath, name);
                     }
 
                     @Override
                     public void onFail() {
                         ToastUtils.showShort(WebActivity.this, "压缩完成");
-                        Logger.i("fail");
+                        Log.i(TAG,"fail");
                         uploadFile(path, name);
                     }
 
@@ -496,7 +468,6 @@ public class WebActivity extends BaseActivity implements JSCallBack {
                                     WebActivity.this.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-
                                             fileHaveUpload(filePath, fileName);
                                         }
                                     });
@@ -508,20 +479,16 @@ public class WebActivity extends BaseActivity implements JSCallBack {
                                 } else {
                                     msg.obj = "N";
                                     if (CommonUtil.isNotEmpty(message)) msg.obj = message;
-
                                 }
-
-                                Logger.i("文件上传成功 " + response.body());
+                                Log.i(TAG,"文件上传成功 " + response.body());
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-
                         } else {
                             msg.obj = "N";
                         }
-
                         handler.sendMessage(msg);
-                        Logger.i("data  " + response.body());
+                        Log.i(TAG,"data  " + response.body());
                     }
 
                     @Override
@@ -529,16 +496,14 @@ public class WebActivity extends BaseActivity implements JSCallBack {
                         Message msg = new Message();
                         msg.obj = "N";
                         handler.sendMessage(msg);
-                        Logger.i("data  " + t.getMessage());
+                        Log.i(TAG,"data  " + t.getMessage());
                     }
                 });
-
 
             }
         });
         thread.start();
     }
-
 
     private final Handler handler = new Handler() {
 
@@ -546,11 +511,8 @@ public class WebActivity extends BaseActivity implements JSCallBack {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
 //            loading.setVisibility(View.GONE);
-
             if (msg.obj != null) {
-
                 if (msg.obj.toString().equals("Y")) {
-
                     if (msg.obj.equals("Y")) {
                         ToastUtils.showShort(WebActivity.this, "上传成功");
                     } else if (msg.obj.equals("N")) {
@@ -558,28 +520,18 @@ public class WebActivity extends BaseActivity implements JSCallBack {
                     } else {
                         ToastUtils.showShort(WebActivity.this, msg.obj.toString());
                     }
-
                 }
-
             }
-
         }
     };
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (resultCode == RESULT_OK) {
-
             if (requestCode == CAMERA_REQUEST_CODE) {
-
                 path = imgPath;
-
-
             } else {
-
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {//4.4以后
                     try {
                         path = getPath(this, data.getData());
@@ -597,35 +549,25 @@ public class WebActivity extends BaseActivity implements JSCallBack {
             }
             final File file = new File(path);
             if (!file.exists()) {
-
                 ToastUtils.showShort(this, "文件不存在");
                 return;
             }
             final long size = file.length() / 1024 / 1024;
 
-
             WebActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-//                    loading.setVisibility(View.VISIBLE);
-
                     if (size > 5) {
                         if (CommonUtil.isVideo(file.getName()))
                             comprossVideo(file.getName());
-
                     } else {
-
                         uploadFile(path, file.getName());
                     }
                 }
             });
-
-
         }
-
         Log.i(TAG, "默认content地址：" + path);
     }
-
 
     /**
      * 调用随意拍选择拍照或拍视频
@@ -693,8 +635,6 @@ public class WebActivity extends BaseActivity implements JSCallBack {
     float alpha = 1;
 
     private void showBottomWindow() {
-
-
         if (bottomWindow == null) {
             View view = LayoutInflater.from(this).inflate(R.layout.choose_photo_or_video, null);
             bottomWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
@@ -713,7 +653,6 @@ public class WebActivity extends BaseActivity implements JSCallBack {
             btVideo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     takeVideo();
                     bottomWindow.dismiss();
                 }
@@ -733,18 +672,12 @@ public class WebActivity extends BaseActivity implements JSCallBack {
             bottomWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 @Override
                 public void onDismiss() {
-
-
                     bottomWindow.dismiss();
-
-
                 }
             });
 
             bottomWindow.showAtLocation(webView, Gravity.BOTTOM, 0, 0);
-
         } else {
-
             bottomWindow.showAtLocation(webView, Gravity.BOTTOM, 0, 0);
         }
     }
@@ -760,7 +693,6 @@ public class WebActivity extends BaseActivity implements JSCallBack {
         getWindow().setAttributes(lp);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
     }
-
 
     public String getRealPathFromURI(Uri contentUri) {
         String res = null;
@@ -835,10 +767,8 @@ public class WebActivity extends BaseActivity implements JSCallBack {
         return null;
     }
 
-
     public String getDataColumn(Context context, Uri uri, String selection,
                                 String[] selectionArgs) {
-
         Cursor cursor = null;
         final String column = "_data";
         final String[] projection = {column};
@@ -881,6 +811,33 @@ public class WebActivity extends BaseActivity implements JSCallBack {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        webView.onPause();
+        webView.pauseTimers();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        webView.onResume();
+        webView.resumeTimers();
+        writePermission();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (webView != null) {
+            webView.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
+            webView.clearHistory();
+            ((ViewGroup) webView.getParent()).removeView(webView);
+            webView.destroy();
+            webView = null;
+        }
+        super.onDestroy();
+    }
+
     private class MyWebviewClient extends WebViewClient {
 
 
@@ -900,7 +857,7 @@ public class WebActivity extends BaseActivity implements JSCallBack {
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             webviewFinished = true;
-            setTokenToWeb();
+//            setTokenToWeb();
             Log.i(TAG, "finish" + url);
         }
 
@@ -916,12 +873,8 @@ public class WebActivity extends BaseActivity implements JSCallBack {
             // handler.cancel();// Android默认的处理方式
             handler.proceed();// 接受所有网站的证书
             // handleMessage(Message msg);// 进行其他处理
-
-
         }
-
     }
-
 
     private class MyWebChromeClient extends WebChromeClient {
 
@@ -946,6 +899,50 @@ public class WebActivity extends BaseActivity implements JSCallBack {
             } else {
                 progressHandler.sendEmptyMessage(newProgress);
             }
+        }
+
+        // For Android < 3.0
+        public void openFileChooser(ValueCallback<Uri> uploadMsg) {
+            this.openFileChooser(uploadMsg, "*/*");
+        }
+
+        // For Android >= 3.0
+        public void openFileChooser(ValueCallback<Uri> uploadMsg,
+                                    String acceptType) {
+            this.openFileChooser(uploadMsg, acceptType, null);
+        }
+
+        // For Android >= 4.1
+        public void openFileChooser(ValueCallback<Uri> uploadMsg,
+                                    String acceptType, String capture) {
+            mUploadMessage = uploadMsg;
+            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+            i.addCategory(Intent.CATEGORY_OPENABLE);
+            i.setType("*/*");
+            startActivityForResult(Intent.createChooser(i, "File Browser"),
+                    FILECHOOSER_RESULTCODE);
+        }
+
+        // For Lollipop 5.0+ Devices
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        public boolean onShowFileChooser(WebView mWebView,
+                                         ValueCallback<Uri[]> filePathCallback,
+                                         WebChromeClient.FileChooserParams fileChooserParams) {
+            if (mUploadMessage5 != null) {
+                mUploadMessage5.onReceiveValue(null);
+                mUploadMessage5 = null;
+            }
+            mUploadMessage5 = filePathCallback;
+            Intent intent = fileChooserParams.createIntent();
+            try {
+                startActivityForResult(intent,
+                        FILECHOOSER_RESULTCODE_FOR_ANDROID_5);
+            } catch (ActivityNotFoundException e) {
+                mUploadMessage5 = null;
+                Toast.makeText(getBaseContext(), "Cannot Open File Chooser", Toast.LENGTH_LONG).show();
+                return false;
+            }
+            return true;
         }
 
         @Override

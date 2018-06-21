@@ -25,13 +25,12 @@ public class MeettingActivity extends BaseWebActivity {
         ButterKnife.bind(this);
         setTitleText("会议助手");
 
-        initView();
+        initWebView();
 
     }
 
     @Override
     public void initView() {
-        super.initView();
     }
 
     @Override

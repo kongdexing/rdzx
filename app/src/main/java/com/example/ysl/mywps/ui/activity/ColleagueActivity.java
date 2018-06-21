@@ -62,6 +62,7 @@ public class ColleagueActivity extends BaseWebActivity {
             String title = bundle.getString(WEB_TITLE);
             setTitleText(title);
         }
+        initWebView();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {

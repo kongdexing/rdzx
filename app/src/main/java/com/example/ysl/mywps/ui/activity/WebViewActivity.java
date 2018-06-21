@@ -74,7 +74,7 @@ public class WebViewActivity extends BaseWebActivity implements JSCallBack {
             String title = bundle.getString(WEB_TITLE);
             setTitleText(title);
         }
-
+        initWebView();
     }
 
     /**
@@ -605,10 +605,8 @@ public class WebViewActivity extends BaseWebActivity implements JSCallBack {
         return null;
     }
 
-
     public String getDataColumn(Context context, Uri uri, String selection,
                                 String[] selectionArgs) {
-
         Cursor cursor = null;
         final String column = "_data";
         final String[] projection = {column};
