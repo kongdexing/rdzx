@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.ysl.mywps"
     android:versionCode="3"
     android:versionName="3.1">
@@ -65,15 +64,8 @@
         <activity android:name=".ui.activity.SearchActivity" />
         <activity android:name=".ui.activity.ContactDetailActivity" />
         <activity android:name=".ui.activity.DocumentDetailActivity" />
-        <activity android:name=".ui.activity.ThemeActivity" />
-        <activity android:name=".ui.activity.MeetingActivity" />
-        <activity android:name=".ui.activity.ReportActivity" />
         <activity android:name=".ui.activity.ColleagueActivity" />
-        <activity android:name=".ui.activity.QuestionActivity" />
-        <activity android:name=".ui.activity.MembersActivity" />
         <activity android:name=".ui.activity.WebViewActivity" />
-        <activity android:name=".ui.activity.WebActivity" />
-        <activity android:name=".ui.activity.ProposalActivity" />
         <activity android:name=".ui.activity.HandleActivity" />
         <activity android:name=".ui.activity.LoginActivity">
             <intent-filter>
@@ -120,7 +112,6 @@
                     android:scheme="rong" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.ProposalActivity" />
 
         <service android:name=".agent.AgentMessageService">
             <intent-filter>

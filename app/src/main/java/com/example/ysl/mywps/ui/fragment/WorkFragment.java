@@ -9,15 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.example.ysl.mywps.R;
-import com.example.ysl.mywps.ui.activity.ColleagueActivity;
 import com.example.ysl.mywps.ui.activity.DocumentTurnActivity;
 import com.example.ysl.mywps.ui.activity.MaterialActivity;
-import com.example.ysl.mywps.ui.activity.MeetingActivity;
-import com.example.ysl.mywps.ui.activity.MembersActivity;
-import com.example.ysl.mywps.ui.activity.ProposalActivity;
-import com.example.ysl.mywps.ui.activity.QuestionActivity;
-import com.example.ysl.mywps.ui.activity.ReportActivity;
-import com.example.ysl.mywps.ui.activity.ThemeActivity;
 import com.example.ysl.mywps.ui.activity.WebViewActivity;
 import com.example.ysl.mywps.utils.NoDoubleClickListener;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
@@ -137,30 +130,30 @@ public class WorkFragment extends BaseFragment {
                         ToastUtils.showShort(getActivity(), "融云登陆异常，请回到登陆界面重新登陆!");
                     }
                     break;
-                case R.id.work_ll_proposal:
-                    intent = new Intent(getActivity(), ProposalActivity.class);
-                    break;
-                case R.id.work_ll_theme_activity: //主题活动
-                    intent = new Intent(getActivity(), ThemeActivity.class);
-                    break;
-                case R.id.work_ll_meetting: //会议助手
-                    intent = new Intent(getActivity(), MeetingActivity.class);
-                    break;
-                case R.id.work_ll_report://通知公告
-                    intent = new Intent(getActivity(), ReportActivity.class);
-                    break;
-                case R.id.work_ll_colleagues://同事吧
-                    intent = new Intent(getActivity(), ColleagueActivity.class);
-                    break;
-                case R.id.work_ll_quession://问卷调查
-
-                    intent = new Intent(getActivity(), QuestionActivity.class);
-                    break;
-                case R.id.work_ll_members://委员之家
-
-                    intent = new Intent(getActivity(), MembersActivity.class);
-
-                    break;
+//                case R.id.work_ll_proposal:
+//                    intent = new Intent(getActivity(), ProposalActivity.class);
+//                    break;
+//                case R.id.work_ll_theme_activity: //主题活动
+//                    intent = new Intent(getActivity(), ThemeActivity.class);
+//                    break;
+//                case R.id.work_ll_meetting: //会议助手
+//                    intent = new Intent(getActivity(), MeetingActivity.class);
+//                    break;
+//                case R.id.work_ll_report://通知公告
+//                    intent = new Intent(getActivity(), ReportActivity.class);
+//                    break;
+//                case R.id.work_ll_colleagues://同事吧
+//                    intent = new Intent(getActivity(), ColleagueActivity.class);
+//                    break;
+//                case R.id.work_ll_quession://问卷调查
+//
+//                    intent = new Intent(getActivity(), QuestionActivity.class);
+//                    break;
+//                case R.id.work_ll_members://委员之家
+//
+//                    intent = new Intent(getActivity(), MembersActivity.class);
+//
+//                    break;
 //        @BindView(R.id.work_ll_theme_activity)
 //        LinearLayout llTheme;
 //        @BindView(R.id.work_ll_meetting)

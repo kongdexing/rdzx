@@ -72,7 +72,10 @@ public class NewOAActivity extends BaseActivity {
         oaItems.add(new NewOAItem()
                 .setIconId(R.drawable.icon_oa_5)
                 .setTitle("主题活动")
-                .setIntent(new Intent(this, ThemeActivity.class)));
+                .setIntent(new Intent(this, WebViewActivity.class)
+                        .putExtra(BaseWebActivity.WEB_URL, HttpUtl.HTTP_WEB_URL + "activity/index.html")
+                        .putExtra(BaseWebActivity.WEB_TITLE, "主题活动")));
+        //HttpUtl.HTTP_WEB_URL + "activity/index.html"
 
         oaItems.add(new NewOAItem()
                 .setIconId(R.drawable.icon_oa_6)
