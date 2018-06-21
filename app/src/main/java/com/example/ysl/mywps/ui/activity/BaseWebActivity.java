@@ -166,7 +166,7 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
     public void setToken() {
 //        webView.loadUrl("javascript:setFile('" + filePath + "','"+fileName+"')");
         Log.i(TAG, "setToken mytoken   " + token);
-//        ToastUtils.showLong(MeettingActivity.this, "setToken:" + token);
+//        ToastUtils.showLong(MeetingActivity.this, "setToken:" + token);
         webView.post(new Runnable() {
             @Override
             public void run() {

@@ -3,6 +3,7 @@ package com.example.ysl.mywps.ui.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
@@ -369,45 +371,64 @@ public class WebViewActivity extends BaseWebActivity implements JSCallBack {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == CAMERA_REQUEST_CODE) {
-                Log.i(TAG, "onActivityResult: CAMERA_REQUEST_CODE");
-                path = imgPath;
-            } else {
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {//4.4以后
-                    try {
-                        path = getPath(this, data.getData());
-                    } catch (Exception e) {
+        if (requestCode == FILECHOOSER_RESULTCODE) {
+            if (null == mUploadMessage) {
+                return;
+            }
+            Uri result = data == null || resultCode != Activity.RESULT_OK ? null
+                    : data.getData();
+            mUploadMessage.onReceiveValue(result);
+            mUploadMessage = null;
+        } else if (requestCode == FILECHOOSER_RESULTCODE_FOR_ANDROID_5) {
+            if (null == mUploadMessage5) {
+                return;
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mUploadMessage5.onReceiveValue(WebChromeClient.FileChooserParams
+                        .parseResult(resultCode, data));
+            }
+            mUploadMessage5 = null;
+        } else {
+            if (resultCode == RESULT_OK) {
+                if (requestCode == CAMERA_REQUEST_CODE) {
+                    Log.i(TAG, "onActivityResult: CAMERA_REQUEST_CODE");
+                    path = imgPath;
+                } else {
+                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {//4.4以后
+                        try {
+                            path = getPath(this, data.getData());
+                        } catch (Exception e) {
 
+                        }
+                    } else {//4.4以下下系统调用方法
+                        path = getRealPathFromURI(data.getData());
                     }
-                } else {//4.4以下下系统调用方法
-                    path = getRealPathFromURI(data.getData());
                 }
-            }
 
-            if (CommonUtil.isEmpty(path)) {
-                ToastUtils.showShort(this, "请选择要上传的文件");
-                return;
-            }
-            final File file = new File(path);
-            if (!file.exists()) {
-                ToastUtils.showShort(this, "文件不存在");
-                return;
-            }
-            final long size = file.length() / 1024 / 1024;
-            Log.i(TAG, "onActivityResult file " + path + " size: " + size);
-            WebViewActivity.this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+                if (CommonUtil.isEmpty(path)) {
+                    ToastUtils.showShort(this, "请选择要上传的文件");
+                    return;
+                }
+                final File file = new File(path);
+                if (!file.exists()) {
+                    ToastUtils.showShort(this, "文件不存在");
+                    return;
+                }
+                final long size = file.length() / 1024 / 1024;
+                Log.i(TAG, "onActivityResult file " + path + " size: " + size);
+                WebViewActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
 //                    loading.setVisibility(View.VISIBLE);
-                    if (size > 5) {
-                        if (CommonUtil.isVideo(file.getName()))
-                            comprossVideo(file.getName());
-                    } else {
-                        uploadFile(path, file.getName());
+                        if (size > 5) {
+                            if (CommonUtil.isVideo(file.getName()))
+                                comprossVideo(file.getName());
+                        } else {
+                            uploadFile(path, file.getName());
+                        }
                     }
-                }
-            });
+                });
+            }
         }
         Log.i(TAG, "默认content地址：" + path);
     }

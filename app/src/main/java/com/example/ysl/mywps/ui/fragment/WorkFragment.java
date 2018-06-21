@@ -12,7 +12,7 @@ import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.ui.activity.ColleagueActivity;
 import com.example.ysl.mywps.ui.activity.DocumentTurnActivity;
 import com.example.ysl.mywps.ui.activity.MaterialActivity;
-import com.example.ysl.mywps.ui.activity.MeettingActivity;
+import com.example.ysl.mywps.ui.activity.MeetingActivity;
 import com.example.ysl.mywps.ui.activity.MembersActivity;
 import com.example.ysl.mywps.ui.activity.ProposalActivity;
 import com.example.ysl.mywps.ui.activity.QuestionActivity;
@@ -144,7 +144,7 @@ public class WorkFragment extends BaseFragment {
                     intent = new Intent(getActivity(), ThemeActivity.class);
                     break;
                 case R.id.work_ll_meetting: //会议助手
-                    intent = new Intent(getActivity(), MeettingActivity.class);
+                    intent = new Intent(getActivity(), MeetingActivity.class);
                     break;
                 case R.id.work_ll_report://通知公告
                     intent = new Intent(getActivity(), ReportActivity.class);

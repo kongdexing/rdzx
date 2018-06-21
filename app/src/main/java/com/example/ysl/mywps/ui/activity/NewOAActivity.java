@@ -58,14 +58,14 @@ public class NewOAActivity extends BaseActivity {
         oaItems.add(new NewOAItem()
                 .setIconId(R.drawable.icon_oa_3)
                 .setTitle("通知公告")
-                .setIntent(new Intent(this, ReportActivity.class)
+                .setIntent(new Intent(this, WebViewActivity.class)
                         .putExtra(BaseWebActivity.WEB_URL, HttpUtl.HTTP_WEB_URL + "notice/index.html")
                         .putExtra(BaseWebActivity.WEB_TITLE, "通知公告")));
 
         oaItems.add(new NewOAItem()
                 .setIconId(R.drawable.icon_oa_4)
                 .setTitle("会议助手")
-                .setIntent(new Intent(this, MeettingActivity.class)
+                .setIntent(new Intent(this, WebViewActivity.class)
                         .putExtra(BaseWebActivity.WEB_URL, HttpUtl.HTTP_WEB_URL + "meeting/index.html")
                         .putExtra(BaseWebActivity.WEB_TITLE, "会议助手")));
 
@@ -73,16 +73,18 @@ public class NewOAActivity extends BaseActivity {
                 .setIconId(R.drawable.icon_oa_5)
                 .setTitle("主题活动")
                 .setIntent(new Intent(this, ThemeActivity.class)));
+
         oaItems.add(new NewOAItem()
                 .setIconId(R.drawable.icon_oa_6)
                 .setTitle("同事吧")
-                .setIntent(new Intent(this, ColleagueActivity.class)
+                .setIntent(new Intent(this, WebViewActivity.class)
                         .putExtra(BaseWebActivity.WEB_URL, HttpUtl.HTTP_WEB_URL + "topic/index.html")
                         .putExtra(BaseWebActivity.WEB_TITLE, "同事吧")));
+
         oaItems.add(new NewOAItem()
                 .setIconId(R.drawable.icon_oa_7)
                 .setTitle("问卷调查")
-                .setIntent(new Intent(this, QuestionActivity.class)
+                .setIntent(new Intent(this, WebViewActivity.class)
                         .putExtra(BaseWebActivity.WEB_URL, HttpUtl.HTTP_WEB_URL + "question/index.html")
                         .putExtra(BaseWebActivity.WEB_TITLE, "问卷调查")));
 

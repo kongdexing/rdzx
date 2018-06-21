@@ -42,7 +42,7 @@ import static android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW;
  * Created by Administrator on 2018/5/14 0014.
  */
 
-public class MeettingActivity extends BaseWebActivity implements JSCallBack {
+public class MeetingActivity extends BaseWebActivity implements JSCallBack {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
