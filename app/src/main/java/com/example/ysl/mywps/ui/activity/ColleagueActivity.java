@@ -32,7 +32,6 @@ import com.example.ysl.mywps.interfaces.JavascriptBridge;
 import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.example.ysl.mywps.utils.SysytemSetting;
-import com.example.ysl.mywps.utils.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,27 +40,16 @@ import static android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW;
 
 /**
  * Created by Administrator on 2018/5/14 0014.
- * 同事吧
  */
-public class ColleagueActivity extends BaseWebActivity {
 
-
-    private ValueCallback<Uri> mUploadMessage;
-    private ValueCallback<Uri[]> mUploadMessage5;
-    public static final int FILECHOOSER_RESULTCODE = 5173;
-    public static final int FILECHOOSER_RESULTCODE_FOR_ANDROID_5 = 5174;
+public class ColleagueActivity extends BaseWebActivity implements JSCallBack {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview_layout);
         ButterKnife.bind(this);
-
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            String title = bundle.getString(WEB_TITLE);
-            setTitleText(title);
-        }
+        setTitleText("同事吧");
         initWebView();
     }
 
@@ -85,8 +73,5 @@ public class ColleagueActivity extends BaseWebActivity {
             mUploadMessage5 = null;
         }
     }
-
-    // Android版本变量
-    final int version = Build.VERSION.SDK_INT;
 
 }

@@ -17,7 +17,6 @@ import com.example.ysl.mywps.bean.HotBean;
 import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.ui.activity.BaseWebActivity;
 import com.example.ysl.mywps.ui.activity.NewOAActivity;
-import com.example.ysl.mywps.ui.activity.WebActivity;
 import com.example.ysl.mywps.ui.activity.WebViewActivity;
 import com.example.ysl.mywps.ui.view.HomeNewsView;
 import com.example.ysl.mywps.ui.view.autoviewpager.GlideImageLoader;

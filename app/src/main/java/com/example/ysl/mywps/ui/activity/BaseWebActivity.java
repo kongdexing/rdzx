@@ -93,7 +93,7 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
         webSettings.setBuiltInZoomControls(true);///设置内置的缩放控件。若为false，则该WebView不可缩放
         webSettings.setDisplayZoomControls(false);//隐藏内置的原生缩放控件
 
-//        webSettings.setPluginState(WebSettings.PluginState.ON);
+        webSettings.setPluginState(WebSettings.PluginState.ON);
         webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE); //缓存模式如下：
         //LOAD_CACHE_ONLY: 不使用网络，只读取本地缓存数据
         //LOAD_DEFAULT: （默认）根据cache-control决定是否从网络上取数据。
