@@ -3,6 +3,7 @@
     android:id="@+id/rlNewsItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/message_item_selector"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -52,7 +53,7 @@
                 android:ellipsize="end"
                 android:lineSpacingExtra="@dimen/dp_2"
                 android:lines="2"
-                android:text="！"
+                android:text=""
                 android:textColor="@color/txt_oa"
                 android:textSize="@dimen/sp_16" />
 

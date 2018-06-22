@@ -3,17 +3,18 @@
     android:id="@+id/rlNewsItem"
     android:layout_width="match_parent"
     android:layout_height="@dimen/dp_95"
+    android:background="@drawable/mine_item_selector"
     android:gravity="center"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/dp_1"
+        android:paddingBottom="@dimen/dp_10"
         android:paddingLeft="@dimen/dp_15"
         android:paddingRight="@dimen/dp_15"
-        android:paddingTop="@dimen/dp_10"
-        android:paddingBottom="@dimen/dp_10"
-        android:layout_marginBottom="@dimen/dp_1">
+        android:paddingTop="@dimen/dp_10">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -29,8 +30,8 @@
                 android:layout_marginTop="@dimen/dp_1"
                 android:clickable="false"
                 android:ellipsize="end"
-                android:lines="2"
                 android:lineSpacingExtra="@dimen/dp_2"
+                android:lines="2"
                 android:text="！"
                 android:textColor="@color/txt_oa"
                 android:textSize="@dimen/sp_16" />

@@ -1,6 +1,7 @@
 package com.example.ysl.mywps.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
@@ -8,10 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.MessageBean;
+import com.example.ysl.mywps.net.HttpUtl;
+import com.example.ysl.mywps.ui.activity.BaseWebActivity;
+import com.example.ysl.mywps.ui.activity.WebViewActivity;
 import com.example.ysl.mywps.utils.CommonUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
@@ -74,7 +79,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         try {
             mHolder.txtTitle.setText(message.getTitle());
             mHolder.txtTime.setText(message.getCtime());
-            String code = message.getModel_code().toUpperCase();
+            final String code = message.getModel_code().toUpperCase();
             if (code.equals("ODC")) {
                 //公文流转
                 mHolder.imgMsgLogo.setBackgroundResource(R.drawable.icon_oa_1);
@@ -111,6 +116,17 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
             ImageLoader.getInstance().displayImage(message.getPic(),
                     new ImageViewAware(mHolder.optionImg), CommonUtil.getDefaultUserImageLoaderOption());
+
+            mHolder.rlNewsItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mContext, WebViewActivity.class);
+                    intent.putExtra(BaseWebActivity.WEB_TITLE, message.getModel_name());
+                    intent.putExtra(BaseWebActivity.WEB_URL, message.getBurl());
+                    mContext.startActivity(intent);
+                }
+            });
+
         } catch (Exception ex) {
             Log.i(TAG, "onBindViewHolder: " + ex.getMessage());
         }
@@ -124,9 +140,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder {
         private Unbinder unbinder;
 
-        //        @BindView(R.id.llCheckInItem)
-//        LinearLayout llCheckInItem;
-//
+        @BindView(R.id.rlNewsItem)
+        LinearLayout rlNewsItem;
+
         @BindView(R.id.txtTime)
         TextView txtTime;
 
