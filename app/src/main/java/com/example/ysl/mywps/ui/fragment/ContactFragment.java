@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.nio.charset.MalformedInputException;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,8 +64,6 @@ public class ContactFragment extends BaseFragment {
     @BindView(R.id.list)
     PinnedSectionListView listView;
 
-    @BindView(R.id.contact_itv_search)
-    IconTextView tvSearch;
     @BindView(R.id.contact_et_search)
     EditText etSearch;
 
@@ -110,24 +111,13 @@ public class ContactFragment extends BaseFragment {
                                 JSONObject object = jsonArray.getJSONObject(i);
                                 String title = object.getString("title");
                                 JSONArray jsonArray1 = object.getJSONArray("contact");
-                                Item section = new Item(Item.SECTION, title);
-                                section.sectionPosition = sectionPosition;
-                                section.listPosition = listPosition++;
-//                                adapter.onSectionAdded(section, sectionPosition);
-                                //头
-                                adapter.add(section);
 
                                 for (int j = 0; j < jsonArray1.length(); ++j) {
                                     JSONObject childObject = jsonArray1.getJSONObject(j);
                                     ContactBean bean = gson.fromJson(childObject.toString(), ContactBean.class);
                                     bean.setCapital(PingYinUtils.getPinYinHeadChar(bean.getUsername()));
-
-                                    Item item = new Item(Item.ITEM, bean);
-                                    item.sectionPosition = sectionPosition;
-                                    item.listPosition = listPosition++;
-                                    //子分组
-                                    adapter.add(item);
-//                                    list.add(bean);
+                                    bean.setTitle(title);
+                                    list.add(bean);
                                 }
                             }
                             e.onNext("Y");
@@ -151,7 +141,7 @@ public class ContactFragment extends BaseFragment {
             @Override
             public void accept(String s) throws Exception {
                 if (s.equals("Y")) {
-                    adapter.loadData(list);
+                    loadingContact("");
                 } else {
                     ToastUtils.showShort(getActivity(), s);
                 }
@@ -181,52 +171,15 @@ public class ContactFragment extends BaseFragment {
             }
         });
 
-        tvSearch.setOnClickListener(new View.OnClickListener() {
+        etSearch.setOnKeyListener(new View.OnKeyListener() {
             @Override
-            public void onClick(View v) {
-
-                final String value = etSearch.getText().toString();
-
-                if (CommonUtil.isEmpty(value)) {
-                    ToastUtils.showShort(getActivity(), "请输入姓名或电话号码");
-                    return;
+            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                if (keyCode == keyEvent.KEYCODE_ENTER) {
+                    // do some your things
+                    final String value = etSearch.getText().toString();
+                    loadingContact(value.trim());
                 }
-                final boolean isNumber = MatchesUtil.isInteger(value);
-                searchList.clear();
-
-                Thread searchThread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (ContactBean bean : list) {
-
-                            if (isNumber && bean.getMobile().contains(value)) {
-
-                                searchList.add(bean);
-                            } else {
-
-                                if (bean.getUsername().contains(value) || PingYinUtils.getPingYin(bean.getUsername()).contains(value)) {
-                                    searchList.add(bean);
-                                }
-
-                            }
-
-                        }
-
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                if (adapter != null) {
-                                    adapter.loadData(searchList);
-                                }
-                            }
-                        });
-                    }
-                });
-
-                searchThread.setDaemon(true);
-                searchThread.start();
-
+                return false;
             }
         });
 
@@ -245,12 +198,63 @@ public class ContactFragment extends BaseFragment {
             public void afterTextChanged(Editable s) {
 
                 if (CommonUtil.isEmpty(s.toString())) {
-
-                    if (adapter != null) adapter.loadData(list);
+                    final String value = etSearch.getText().toString();
+                    loadingContact(value.trim());
                 }
 
             }
         });
+
+    }
+
+    private void loadingContact(String target) {
+
+        List<String> groups = new ArrayList<>();
+        int sectionPosition = 0, listPosition = 0;
+
+        searchList.clear();
+        adapter.clear();
+
+        if (target == null || target.isEmpty()) {
+            searchList.addAll(list);
+        } else {
+            for (int i = 0; i < list.size(); i++) {
+                ContactBean bean = list.get(i);
+                if (bean.getMobile().contains(target)) {
+                    searchList.add(bean);
+                } else {
+                    if (bean.getUsername().contains(target) || PingYinUtils.getPingYin(bean.getUsername()).contains(target)) {
+                        searchList.add(bean);
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < searchList.size(); i++) {
+            ContactBean contactBean = searchList.get(i);
+
+            if (!groups.contains(contactBean.getTitle())) {
+                groups.add(contactBean.getTitle());
+
+                //添加组头
+                Item section = new Item(Item.SECTION, contactBean.getTitle());
+                section.sectionPosition = sectionPosition;
+                section.listPosition = listPosition++;
+                adapter.add(section);
+                //添加子分组
+                Item child = new Item(Item.ITEM, contactBean);
+                child.sectionPosition = sectionPosition;
+                child.listPosition = listPosition++;
+                adapter.add(child);
+            } else {
+                //添加子分组
+                Item child = new Item(Item.ITEM, contactBean);
+                child.sectionPosition = sectionPosition;
+                child.listPosition = listPosition++;
+                adapter.add(child);
+            }
+
+        }
 
     }
 

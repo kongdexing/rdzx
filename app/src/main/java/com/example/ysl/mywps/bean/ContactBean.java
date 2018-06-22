@@ -25,6 +25,7 @@ public class ContactBean implements Parcelable {
     private String dept;
     private String dept_name;
     private String avatar;
+    private String title;   //首字母
 
     public ContactBean() {
 
@@ -94,6 +95,13 @@ public class ContactBean implements Parcelable {
         this.avatar = avatar;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     @Override
     public int describeContents() {
@@ -110,6 +118,7 @@ public class ContactBean implements Parcelable {
         dest.writeString(this.dept);
         dest.writeString(this.dept_name);
         dest.writeString(this.avatar);
+        dest.writeString(this.title);
     }
 
     protected ContactBean(Parcel in) {
@@ -121,6 +130,7 @@ public class ContactBean implements Parcelable {
         this.dept = in.readString();
         this.dept_name = in.readString();
         this.avatar = in.readString();
+        this.title = in.readString();
     }
 
     public static final Creator<ContactBean> CREATOR = new Creator<ContactBean>() {
