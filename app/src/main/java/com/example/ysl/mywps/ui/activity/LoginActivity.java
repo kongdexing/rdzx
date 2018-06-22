@@ -192,11 +192,16 @@ public class LoginActivity extends BaseActivity {
                     if (childObject.has("token")) {
                         String token = childObject.getString("token");
                         String realName = childObject.getString("realname");
+                        String avatar = childObject.getString("avatar");
+                        String uid = childObject.getString("uid");
+
                         saveFileTypes(token);
                         getRomiToken(token);
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.putString(SysytemSetting.USER_TOKEN, token);
                         editor.putString(SysytemSetting.REAL_NAME, realName);
+                        editor.putString(SysytemSetting.AVATAR, avatar);
+                        editor.putString(SysytemSetting.UID, uid);
                         editor.commit();
                         loginSuccess();
                     }

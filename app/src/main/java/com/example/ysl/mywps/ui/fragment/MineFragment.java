@@ -4,14 +4,19 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.ui.activity.LoginActivity;
 import com.example.ysl.mywps.ui.activity.MainActivity;
+import com.example.ysl.mywps.utils.CommonUtil;
 import com.example.ysl.mywps.utils.DataCleanManager;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
+import com.example.ysl.mywps.utils.SysytemSetting;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 
 import java.io.File;
 
@@ -25,10 +30,13 @@ import butterknife.OnClick;
 
 public class MineFragment extends BaseFragment {
 
+    @BindView(R.id.imgHead)
+    ImageView imgHead;
+
     @BindView(R.id.mine_rl_loginout)
     RelativeLayout rlLoginOut;
-    @BindView(R.id.mine_tv_name)
-    TextView mineTvName;
+    @BindView(R.id.txtName)
+    TextView txtName;
     @BindView(R.id.txtCache)
     TextView txtCache;
 
@@ -39,17 +47,18 @@ public class MineFragment extends BaseFragment {
 
     @Override
     public View setView(LayoutInflater inflater, ViewGroup container) {
-
         View view = inflater.inflate(R.layout.fragment_mine_layout, container, false);
-
         ButterKnife.bind(this, view);
         return view;
     }
 
     @Override
     public void afterView(View view) {
-        String name = SharedPreferenceUtils.loginValue(getActivity(), "name");
-        mineTvName.setText(name);
+        String name = SharedPreferenceUtils.loginValue(getActivity(), SysytemSetting.REAL_NAME);
+        txtName.setText(name);
+
+        String avatar = SharedPreferenceUtils.loginValue(getContext(), SysytemSetting.AVATAR);
+        ImageLoader.getInstance().displayImage(avatar, new ImageViewAware(imgHead), CommonUtil.getDefaultUserImageLoaderOption());
 
         calculateCache();
 
@@ -70,7 +79,7 @@ public class MineFragment extends BaseFragment {
 
     }
 
-    @OnClick({R.id.rlClearCache, R.id.mine_rl_loginout})
+    @OnClick({R.id.rlClearCache, R.id.mine_rl_loginout, R.id.rlChangePwd, R.id.rlFeedback})
     void viewClick(View view) {
         switch (view.getId()) {
             case R.id.mine_rl_loginout:
@@ -82,6 +91,7 @@ public class MineFragment extends BaseFragment {
             case R.id.rlClearCache:
                 ((MainActivity) this.getContext()).showProgress("清理中...");
                 try {
+                    Thread.sleep(1000);
 //                    DataCleanManager.cleanInternalCache(getContext());
                     DataCleanManager.deleteFolderFile(this.getContext().getCacheDir().getPath(), false);
                     calculateCache();
@@ -90,6 +100,12 @@ public class MineFragment extends BaseFragment {
                     e.printStackTrace();
                     ((MainActivity) this.getContext()).hideProgress();
                 }
+                break;
+            case R.id.rlChangePwd:
+
+                break;
+            case R.id.rlFeedback:
+
                 break;
 
         }

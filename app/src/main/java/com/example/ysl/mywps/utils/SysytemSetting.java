@@ -20,5 +20,7 @@ public class SysytemSetting {
     public static final String USER_TOKEN = "token";
     public static final String ROIM_TOKEN = "roim_token";
     public static final String REAL_NAME = "real_name";
+    public static final String AVATAR = "avatar";
+    public static final String UID = "uid";
 
 }
