@@ -1,14 +1,12 @@
 package com.example.ysl.mywps.ui.activity;
 
-import android.Manifest;
-import android.annotation.TargetApi;
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -20,7 +18,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PagerSnapHelper;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -29,7 +30,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -41,8 +41,7 @@ import com.example.ysl.mywps.bean.DocumentListBean;
 import com.example.ysl.mywps.bean.WpsdetailFinish;
 import com.example.ysl.mywps.interfaces.HttpFileCallBack;
 import com.example.ysl.mywps.net.HttpUtl;
-import com.example.ysl.mywps.ui.adapter.WpsDetailAdapter;
-import com.example.ysl.mywps.ui.view.BaseDragZoomImageView;
+import com.example.ysl.mywps.ui.adapter.PreviewAdapter;
 import com.example.ysl.mywps.ui.view.MoviewImage;
 import com.example.ysl.mywps.ui.view.WritingPadView;
 import com.example.ysl.mywps.utils.CommonUtil;
@@ -56,6 +55,7 @@ import com.example.ysl.mywps.utils.WpsUtils;
 import com.lx.fit7.Fit7Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.orhanobut.logger.Logger;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -108,18 +108,31 @@ public class WpsDetailActivity extends BaseActivity {
     MoviewImage ivIcon;
     @BindView(R.id.wpcdetal_pb_top)
     ProgressBar progressBar;
-    @BindView(R.id.wpcdetail_listview)
-    ListView listView;
+//    @BindView(R.id.wpcdetail_listview)
+//    ListView listView;
+
+//    @BindView(R.id.preview_viewpager)
+//    MyViewPager previewViewPager;
+
+    @BindView(R.id.previewList)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.textPager)
+    AppCompatTextView textPager;
+
     @BindView(R.id.wpcdetail_rl_loading)
     RelativeLayout rlLoading;
     @BindView(R.id.wpcdetail_rl_content)
     RelativeLayout rlContent;
+    @BindView(R.id.av_loading)
+    AVLoadingIndicatorView loading;
+
 
     private MyclickListener click = new MyclickListener();
     private WpsBroadCast reciver = new WpsBroadCast();
     private int screenH = 0;
     private DocumentListBean documentInfo = null;
-    private WpsDetailAdapter adapter;
+    //    private WpsDetailAdapter adapter;
+    private PreviewAdapter adapter;
     private float x1, x2, y1, y2;
     private String uploadImagePath = "";
     private String downloadWpsPath = "";
@@ -208,8 +221,11 @@ public class WpsDetailActivity extends BaseActivity {
         setRightSize(16);
         if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
+        loading.setVisibility(View.GONE);
+
 
         if (wpsMode.equals(SysytemSetting.HANDLE_WPS) || wpsMode.equals(SysytemSetting.ISSUE_WPS) || wpsMode.equals(SysytemSetting.OUT_WPS)) {
+
             llMessage.setVisibility(View.INVISIBLE);
             llSign.setVisibility(View.INVISIBLE);
             llSend.setVisibility(View.INVISIBLE);
@@ -226,17 +242,21 @@ public class WpsDetailActivity extends BaseActivity {
     @Override
     public void initData() {
 
+
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void afterData() {
+
         mAccount = SharedPreferenceUtils.loginValue(this, "name");
+
         Bundle bundle = getIntent().getExtras();
         documentInfo = bundle.getParcelable("documentben");
         setTitleText(documentInfo.getDoc_name());
 
 //        http:\/\/p2c152618.bkt.clouddn.com\/1_测试中文.docx_2.png?v=1517064503"
 
-        adapter = new WpsDetailAdapter(documentInfo.getDoc_imgs(), this);
+        adapter = new PreviewAdapter(documentInfo.getDoc_imgs(), this);
         if (documentInfo.getDoc_imgs() != null && documentInfo.getDoc_imgs().size() > 0) {
             String imagePath = documentInfo.getDoc_imgs().get(0).getImg();
             int nameStartIndex = imagePath.lastIndexOf("/") + 1;
@@ -244,18 +264,44 @@ public class WpsDetailActivity extends BaseActivity {
 
             uploadImageName = imagePath.substring(nameStartIndex, nameEndIndex);
             Logger.i("   " + uploadImageName);
-        }
 
-        listView.setAdapter(adapter);
+
+            textPager.setText( "1/" + documentInfo.getDoc_imgs().size());
+        }
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                //判断是当前layoutManager是否为LinearLayoutManager
+                // 只有LinearLayoutManager才有查找第一个和最后一个可见view位置的方法
+                if (layoutManager instanceof LinearLayoutManager) {
+                    LinearLayoutManager linearManager = (LinearLayoutManager) layoutManager;
+                    //获取第一个可见view的位置
+                    int firstItemPosition = linearManager.findFirstVisibleItemPosition();
+                    textPager.setText((firstItemPosition+1) + "/" + documentInfo.getDoc_imgs().size());
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+        new PagerSnapHelper().attachToRecyclerView(mRecyclerView);
 
         //只有处理人才会下载文件
         if (mAccount.equals(documentInfo.getNow_nickname()) || mAccount.equals(documentInfo.getNow_username()))
             downLoadWps(false);
 
-        listView.setOnTouchListener(new View.OnTouchListener() {
+        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+
 
                 float clickx = event.getX();
 
@@ -309,7 +355,7 @@ public class WpsDetailActivity extends BaseActivity {
 
         rlLoading.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
-        showProgress();
+        loading.setVisibility(View.VISIBLE);
 
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
@@ -367,8 +413,9 @@ public class WpsDetailActivity extends BaseActivity {
         Consumer<String> observer = new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
-                hideProgress();
+                loading.setVisibility(View.GONE);
                 if (s.equals("Y")) {
+
                     if (shouldOpen) openWps(downloadWpsPath);
                     SharedPreferences.Editor editor = wpsPreference.edit();
                     editor.putString(documentInfo.getDoc_name(), documentInfo.getStatus());
@@ -427,7 +474,7 @@ public class WpsDetailActivity extends BaseActivity {
         bundle.putBoolean(WpsModel.CLEAR_TRACE, true);// 清除打开记录
         // bundle.putBoolean(CLEAR_FILE, true); //关闭后删除打开文件
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setAction(android.content.Intent.ACTION_VIEW);
+        intent.setAction(Intent.ACTION_VIEW);
         intent.setClassName(WpsModel.PackageName.NORMAL, WpsModel.ClassName.NORMAL);
 
         File file = new File(myPath);
@@ -474,7 +521,7 @@ public class WpsDetailActivity extends BaseActivity {
         if (!newFile.exists()) {
             newFile.mkdirs();
         }
-        showProgress();
+        loading.setVisibility(View.VISIBLE);
         ivIcon.setDrawingCacheEnabled(true);
 
         final Bitmap backBitmap = adapter.getImgBitmap();
@@ -518,7 +565,7 @@ public class WpsDetailActivity extends BaseActivity {
         Consumer<String> oberver = new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
-                hideProgress();
+                loading.setVisibility(View.GONE);
                 if (s.equals("Y")) {
                     signCompleted();
                 }
@@ -530,16 +577,20 @@ public class WpsDetailActivity extends BaseActivity {
                 .subscribe(oberver);
     }
 
+
     /**
      * 签署成功完成返回给拟稿人
      */
     private void signCompleted() {
-        showProgress();
+
+
+        loading.setVisibility(View.VISIBLE);
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(@io.reactivex.annotations.NonNull final ObservableEmitter<String> emitter) throws Exception {
 //
                 Call<String> call = HttpUtl.signedCommit("User/Oa/back_signed_doc/", documentInfo.getProce_id(), documentInfo.getId(), "签署成功", "2", uploadImageName, uploadImagePath, token);
+
 
                 call.enqueue(new Callback<String>() {
                     @Override
@@ -571,7 +622,10 @@ public class WpsDetailActivity extends BaseActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                             emitter.onNext(e.getMessage());
+
                         }
+
+
                     }
 
                     @Override
@@ -589,8 +643,10 @@ public class WpsDetailActivity extends BaseActivity {
         Consumer<String> observer = new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
-                hideProgress();
+                loading.setVisibility(View.GONE);
                 if (s.equals("Y") || s.equals("N")) {
+
+
                     if (s.equals("Y")) {
                         File file = new File(uploadImagePath);
                         if (file.exists()) {
@@ -601,6 +657,7 @@ public class WpsDetailActivity extends BaseActivity {
                 } else {
                     ToastUtils.showLong(getApplicationContext(), s);
                 }
+
             }
         };
 
@@ -837,6 +894,7 @@ public class WpsDetailActivity extends BaseActivity {
     }
 
 
+
     private class WpsBroadCast extends BroadcastReceiver {
 
         @Override
@@ -845,6 +903,8 @@ public class WpsDetailActivity extends BaseActivity {
             Logger.i("static  " + CommonUtil.myPath);
 
         }
+
+
     }
 
     @Subscribe
@@ -854,6 +914,7 @@ public class WpsDetailActivity extends BaseActivity {
         Intent intent = new Intent(this, StayToDoActivity.class);
         startActivity(intent);
         finish();
+
     }
 
     @Override

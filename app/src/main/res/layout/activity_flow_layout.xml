@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white_back"
-    android:orientation="vertical">
+    android:orientation="vertical"
+
+    >
 
     <ListView
         android:id="@+id/flow_listview"
@@ -13,4 +15,11 @@
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"></ListView>
 
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/av_loading"
+        android:layout_width="@dimen/loading_size"
+        android:layout_height="@dimen/loading_size"
+        android:layout_centerInParent="true"
+        app:indicatorColor="@color/title"
+        app:indicatorName="LineSpinFadeLoaderIndicator" />
 </RelativeLayout>

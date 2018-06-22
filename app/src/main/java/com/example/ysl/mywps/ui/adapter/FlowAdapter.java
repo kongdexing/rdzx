@@ -1,8 +1,6 @@
 package com.example.ysl.mywps.ui.adapter;
 
 import android.content.Context;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,7 +81,7 @@ public class FlowAdapter extends BaseAdapter {
 
 
         holder.tvStage.setText(bean.getStatus());
-      if(CommonUtil.isEmpty(bean.getMonth()))  holder.tvDate.setText(bean.getCtime());
+        if(CommonUtil.isEmpty(bean.getMonth()))  holder.tvDate.setText(bean.getCtime());
         else holder.tvDate.setText("  "+bean.getMonth()+"\n  "+bean.getTime());
         holder.tvLeader.setText(bean.getUsername());
         holder.tvOpinion.setText(bean.getOpinion());

@@ -369,6 +369,8 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
         if (webView != null) {
             webView.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
             webView.clearHistory();
+            webView.clearCache(true);
+            webView.clearFormData();
             ((ViewGroup) webView.getParent()).removeView(webView);
             webView.destroy();
             webView = null;
