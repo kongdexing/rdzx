@@ -45,4 +45,15 @@
         <item name="android:windowBackground">@color/transparent_gray</item>
         <item name="colorAccent">@color/white_back</item>
     </style>
+
+    <!--带有二级页面的右侧箭头-->
+    <style name="arrow_right">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/dp_10</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginRight">@dimen/dp_10</item>
+        <item name="android:src">@drawable/iav</item>
+    </style>
+
 </resources>
