@@ -19,6 +19,7 @@ import com.example.ysl.mywps.ui.activity.BaseWebActivity;
 import com.example.ysl.mywps.ui.activity.NewOAActivity;
 import com.example.ysl.mywps.ui.activity.WebViewActivity;
 import com.example.ysl.mywps.ui.view.HomeNewsView;
+import com.example.ysl.mywps.ui.view.LoadmoreScrollView;
 import com.example.ysl.mywps.ui.view.autoviewpager.GlideImageLoader;
 import com.example.ysl.mywps.utils.CommonUtil;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
@@ -56,6 +57,10 @@ import retrofit2.Response;
 public class NewWorkFragment extends BaseFragment {
 
     Unbinder unbinder;
+
+    @BindView(R.id.scrollView)
+    LoadmoreScrollView scrollView;
+
     @BindView(R.id.rlTipAD)
     RelativeLayout rlTipAD;
     @BindView(R.id.topBanner)
@@ -130,6 +135,12 @@ public class NewWorkFragment extends BaseFragment {
             }
         });
 
+        scrollView.setOnScrollToBottomListener(new LoadmoreScrollView.OnScrollToBottomListener() {
+            @Override
+            public void onScrollBottomListener(boolean isBottom) {
+                Log.i(TAG, "onScrollBottomListener isBottom: " + isBottom);
+            }
+        });
         loadData();
     }
 
