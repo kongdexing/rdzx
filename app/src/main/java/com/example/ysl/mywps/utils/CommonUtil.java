@@ -5,9 +5,11 @@ import android.graphics.Bitmap;
 import android.provider.Settings;
 import android.view.Display;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.example.ysl.mywps.R;
+import com.example.ysl.mywps.application.MyApplication;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.orhanobut.logger.Logger;
@@ -26,8 +28,6 @@ public class CommonUtil {
     public static String myPath;
 
     public static void showShort(Context context, String msg) {
-
-
         if (isEmpty(msg)) {
             return;
         }
@@ -35,7 +35,6 @@ public class CommonUtil {
     }
 
     public static void showLong(Context context, String msg) {
-
         if (isEmpty(msg)) {
             return;
         }
@@ -43,7 +42,6 @@ public class CommonUtil {
     }
 
     public static boolean isNotEmpty(String msg) {
-
         if (msg == null)
             return false;
         else {
@@ -55,11 +53,9 @@ public class CommonUtil {
     }
 
     public static boolean isEmpty(String msg) {
-
         if (msg == null)
             return true;
         else {
-
             if (msg.trim().isEmpty())
                 return true;
             else
@@ -68,16 +64,12 @@ public class CommonUtil {
     }
 
     public static String y_m_d(Date date) {
-
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINESE);
-
         return dateFormat.format(date);
     }
 
     public static int[] getScreenWH(Context context) {
-
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-
         Display display = wm.getDefaultDisplay();
         int[] wh = new int[2];
 
@@ -87,18 +79,12 @@ public class CommonUtil {
     }
 
     public static String getAndroidId(Context context) {
-
         String serialnum = null;
         try {
-
             Class<?> c = Class.forName("android.os.SystemProperties");
-
             Method get = c.getMethod("get", String.class, String.class);
-
             serialnum = (String) (get.invoke(c, "ro.serialno", "unknown"));
-
         } catch (Exception ignored) {
-
             Logger.i(" " + ignored.toString());
         }
         serialnum = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -110,7 +96,6 @@ public class CommonUtil {
      */
     public static String getFileSize(long length) {
         DecimalFormat df = new DecimalFormat("######0.00");
-
         double kb = length / 1024;
         double mb = 0;
         double gb = 0;
@@ -123,7 +108,6 @@ public class CommonUtil {
 
         if (gb > 0) {
             df.format(gb);
-
             return gb + " G";
         } else if (mb > 0) {
             df.format(mb);
@@ -150,7 +134,6 @@ public class CommonUtil {
         else return false;
     }
 
-
     public static String subsSize(String size) {
         if (CommonUtil.isEmpty(size)) return size;
         int startIndex = size.indexOf(".");
@@ -173,5 +156,9 @@ public class CommonUtil {
         return options;
     }
 
+    public static void hideSoftInput() {
+        InputMethodManager imm = (InputMethodManager) MyApplication.getMyContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+    }
 
 }

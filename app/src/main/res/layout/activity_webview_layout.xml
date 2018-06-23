@@ -9,7 +9,7 @@
         android:id="@+id/webview_progerss"
         style="@style/myprogress"
         android:layout_width="match_parent"
-        android:layout_height="5dp" />
+        android:layout_height="2dp" />
 
     <WebView
         android:id="@+id/webview_webview"

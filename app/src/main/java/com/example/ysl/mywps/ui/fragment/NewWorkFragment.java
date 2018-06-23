@@ -328,7 +328,7 @@ public class NewWorkFragment extends BaseFragment {
                                 e.onNext(response.message());
                                 return;
                             }
-                            Log.i(TAG, "onResponse: " + response.body());
+                            Log.i(TAG, "getRecommendList onResponse: " + response.body());
                             String data = response.body().toString();
                             String msg = null;
                             try {
@@ -365,7 +365,7 @@ public class NewWorkFragment extends BaseFragment {
             Consumer<String> consumer = new Consumer<String>() {
                 @Override
                 public void accept(String s) throws Exception {
-                    Log.i(TAG, "accept: " + s);
+                    Log.i(TAG, "getRecommendList accept: " + s);
 //                if (s.equals("Y")) {
 //                    adapter.loadData(list);
 //                } else {

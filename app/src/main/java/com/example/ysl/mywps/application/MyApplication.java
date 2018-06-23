@@ -9,6 +9,7 @@ import android.util.Log;
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.ui.activity.LoginActivity;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
+import com.example.ysl.mywps.utils.ToastUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.orhanobut.logger.AndroidLogAdapter;
@@ -184,8 +185,9 @@ public class MyApplication extends MultiDexApplication implements Thread.Uncaugh
     public void uncaughtException(Thread thread, Throwable throwable) {
         String result = getStackTrace(throwable);
         Log.i("aaa", "crash " + result);
+        ToastUtils.showLong(this, result);
         SharedPreferenceUtils.loginSave(this, "token", "");
-//        stopActivity();
+        stopActivity();
     }
 
     private void stopActivity() {

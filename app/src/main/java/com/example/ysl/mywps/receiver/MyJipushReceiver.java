@@ -43,7 +43,6 @@ public class MyJipushReceiver extends BroadcastReceiver {
 
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
             Logger.d("用户点击打开了通知");
-
             openNotification(context,bundle);
 
         } else {

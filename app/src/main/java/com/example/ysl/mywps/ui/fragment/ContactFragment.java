@@ -2,10 +2,8 @@ package com.example.ysl.mywps.ui.fragment;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -22,12 +20,8 @@ import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.ContactBean;
 import com.example.ysl.mywps.bean.Item;
 import com.example.ysl.mywps.net.HttpUtl;
-import com.example.ysl.mywps.ui.activity.ContactDetailActivity;
-import com.example.ysl.mywps.ui.adapter.ContactAdapter;
 import com.example.ysl.mywps.ui.adapter.ContactPinnedAdapter;
-import com.example.ysl.mywps.ui.view.IconTextView;
 import com.example.ysl.mywps.utils.CommonUtil;
-import com.example.ysl.mywps.utils.MatchesUtil;
 import com.example.ysl.mywps.utils.PingYinUtils;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.example.ysl.mywps.utils.ToastUtils;
@@ -38,7 +32,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.nio.charset.MalformedInputException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -178,6 +171,7 @@ public class ContactFragment extends BaseFragment {
                     // do some your things
                     final String value = etSearch.getText().toString();
                     loadingContact(value.trim());
+                    CommonUtil.hideSoftInput();
                 }
                 return false;
             }
@@ -220,12 +214,9 @@ public class ContactFragment extends BaseFragment {
         } else {
             for (int i = 0; i < list.size(); i++) {
                 ContactBean bean = list.get(i);
-                if (bean.getMobile().contains(target)) {
+                if (bean.getMobile().contains(target) ||
+                        bean.getRealname().contains(target)) {
                     searchList.add(bean);
-                } else {
-                    if (bean.getUsername().contains(target) || PingYinUtils.getPingYin(bean.getUsername()).contains(target)) {
-                        searchList.add(bean);
-                    }
                 }
             }
         }

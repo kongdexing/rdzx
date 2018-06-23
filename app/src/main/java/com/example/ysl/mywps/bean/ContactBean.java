@@ -64,7 +64,7 @@ public class ContactBean implements Parcelable {
     }
 
     public String getRealname() {
-        return realname;
+        return realname == null ? "" : realname;
     }
 
     public void setRealname(String realname) {
