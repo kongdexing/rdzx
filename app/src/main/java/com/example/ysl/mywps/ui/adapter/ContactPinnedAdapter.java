@@ -84,11 +84,13 @@ public class ContactPinnedAdapter extends ArrayAdapter<Item> implements PinnedSe
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_listview_item_layout, null);
 
             TextView tvName = (TextView) view.findViewById(R.id.contact_tv_name);
+            TextView dpName = (TextView)view.findViewById(R.id.dept_name);
             TextView tvPhone = (TextView) view.findViewById(R.id.contact_tv_phone);
             CircularImageView headImg = (CircularImageView)view.findViewById(R.id.imgHead);
 
             final ContactBean contactBean = item.contactBean;
             tvName.setText(contactBean.getRealname());
+            dpName.setText(contactBean.getDept_name());
             tvPhone.setText(contactBean.getMobile());
 
             ImageLoader.getInstance().displayImage(contactBean.getAvatar(),

@@ -77,7 +77,6 @@ public class ContactActivity extends BaseActivity implements PasssString {
     @BindView(R.id.contact_tv_all)
     TextView tvAll;
 
-
     private ContactMyAdapter adapter;
     private ArrayList<ContactBean> list = new ArrayList<>();
     private ArrayList<ContactBean> searchList = new ArrayList<>();
@@ -120,7 +119,6 @@ public class ContactActivity extends BaseActivity implements PasssString {
                 } else if (documentInfo.getStatus().equals("5")) {
                     commitSign(list.get((int) id).getUid());
                 }
-
             }
         });
         token = SharedPreferenceUtils.loginValue(this, "token");
