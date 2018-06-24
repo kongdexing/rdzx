@@ -51,6 +51,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     ImageButton ibMessage;
     @BindView(R.id.main_ll_message)
     LinearLayout llMessage;
+    @BindView(R.id.badgeView)
+    View badgeView;
 
     @BindView(R.id.main_tv_work)
     TextView tvWork;

@@ -24,11 +24,11 @@
         android:id="@+id/main_ll_id_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/dp_5"
-        android:paddingBottom="@dimen/dp_5"
         android:layout_alignParentBottom="true"
         android:background="@color/stay_back"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/dp_5"
+        android:paddingTop="@dimen/dp_5">
 
         <LinearLayout
             android:id="@+id/main_ll_work"
@@ -67,12 +67,25 @@
             android:orientation="vertical"
             android:visibility="visible">
 
-            <ImageButton
-                android:id="@+id/main_ib_message"
+            <RelativeLayout
                 android:layout_width="@dimen/main_icon"
-                android:layout_height="@dimen/main_icon"
-                android:background="@drawable/icon_message_normal"
-                android:clickable="false" />
+                android:layout_height="@dimen/main_icon">
+
+                <ImageButton
+                    android:id="@+id/main_ib_message"
+                    android:layout_width="@dimen/main_icon"
+                    android:layout_height="@dimen/main_icon"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/icon_message_normal"
+                    android:clickable="false" />
+
+                <View
+                    android:id="@+id/badgeView"
+                    android:layout_width="@dimen/dp_10"
+                    android:layout_height="@dimen/dp_10"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/bg_unread_cirl" />
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/main_tv_message"
@@ -82,6 +95,8 @@
                 android:text="消息"
                 android:textAlignment="center"
                 android:textSize="@dimen/main_text" />
+
+
         </LinearLayout>
 
         <LinearLayout
