@@ -1,7 +1,5 @@
 package com.example.ysl.mywps.net;
 
-import com.example.ysl.mywps.bean.PostQueryInfo;
-
 import java.util.Map;
 
 import okhttp3.MultipartBody;
@@ -142,5 +140,10 @@ public interface NetApi {
     @POST("query")
     Call<String> getMessageList(@Query("token") String token, @Query("page") String page, @Query("pagelimit") String pagelimit);
 
+    /**
+     * 获取热门列表
+     */
+    @POST("query")
+    Call<String> getRecommendList(@Query("token") String token, @Query("p") String page, @Query("pagelimit") String pagelimit);
 
 }

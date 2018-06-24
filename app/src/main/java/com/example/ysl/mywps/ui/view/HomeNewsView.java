@@ -53,6 +53,11 @@ public class HomeNewsView extends LinearLayout {
         rlNewsItem.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (hots.getModel_code().equals("ODC")){
+
+                }
+
                 Intent intent = new Intent(getContext(), WebViewActivity.class);
                 intent.putExtra(BaseWebActivity.WEB_URL, hots.getBurl());
                 intent.putExtra(BaseWebActivity.WEB_TITLE, "热门推荐");

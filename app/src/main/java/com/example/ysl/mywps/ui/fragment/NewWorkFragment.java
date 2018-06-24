@@ -15,6 +15,7 @@ import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.BannerBean;
 import com.example.ysl.mywps.bean.HotBean;
 import com.example.ysl.mywps.net.HttpUtl;
+import com.example.ysl.mywps.net.ResultPage;
 import com.example.ysl.mywps.ui.activity.BaseWebActivity;
 import com.example.ysl.mywps.ui.activity.NewOAActivity;
 import com.example.ysl.mywps.ui.activity.WebViewActivity;
@@ -75,9 +76,10 @@ public class NewWorkFragment extends BaseFragment {
 
     final List<String> listBannerImages = new ArrayList<>();
     final List<String> listTitles = new ArrayList<>();
-
+    public ResultPage resultPage = new ResultPage();
     List<String> advertList = new ArrayList<>();
     private String token = "";
+    private boolean requesting = false;
 
     @Override
     public void initData() {
@@ -139,6 +141,10 @@ public class NewWorkFragment extends BaseFragment {
             @Override
             public void onScrollBottomListener(boolean isBottom) {
                 Log.i(TAG, "onScrollBottomListener isBottom: " + isBottom);
+                if (isBottom && !requesting) {
+                    resultPage.setPage(resultPage.getPage() + 1);
+                    getRecommendList();
+                }
             }
         });
         loadData();
@@ -170,7 +176,7 @@ public class NewWorkFragment extends BaseFragment {
 
             }
         });
-
+        resultPage.setPage(1);
         getRecommendList();
     }
 
@@ -313,17 +319,18 @@ public class NewWorkFragment extends BaseFragment {
     }
 
     private void getRecommendList() {
+        requesting = true;
         try {
             Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
                 @Override
                 public void subscribe(final ObservableEmitter<String> e) {
 
                     String token = SharedPreferenceUtils.loginValue(getActivity(), "token");
-                    Call<String> call = HttpUtl.contact("User/Public/recommend_list/", token);
-
+                    Call<String> call = HttpUtl.getRecommendList("User/Public/recommend_list/", token, resultPage.getPage() + "", "5");
                     call.enqueue(new Callback<String>() {
                         @Override
                         public void onResponse(Call<String> call, Response<String> response) {
+                            requesting = false;
                             if (!response.isSuccessful()) {
                                 e.onNext(response.message());
                                 return;
@@ -340,7 +347,10 @@ public class NewWorkFragment extends BaseFragment {
                                 Gson gson = new Gson();
                                 List<HotBean> hotBeans = gson.fromJson(jsonArray.toString(), new TypeToken<List<HotBean>>() {
                                 }.getType());
-                                llGroup.removeAllViews();
+                                Log.i(TAG, "onResponse hotBeans size: " + hotBeans.size());
+                                if (resultPage.getPage() == 1) {
+                                    llGroup.removeAllViews();
+                                }
                                 for (int i = 0; i < hotBeans.size(); i++) {
                                     HomeNewsView view = new HomeNewsView(getContext());
                                     view.bindData(hotBeans.get(i));
@@ -355,6 +365,7 @@ public class NewWorkFragment extends BaseFragment {
 
                         @Override
                         public void onFailure(Call<String> call, Throwable t) {
+                            requesting = false;
                             e.onNext(t.getMessage());
                         }
                     });
@@ -366,6 +377,7 @@ public class NewWorkFragment extends BaseFragment {
                 @Override
                 public void accept(String s) throws Exception {
                     Log.i(TAG, "getRecommendList accept: " + s);
+                    requesting = false;
 //                if (s.equals("Y")) {
 //                    adapter.loadData(list);
 //                } else {
@@ -378,6 +390,7 @@ public class NewWorkFragment extends BaseFragment {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(consumer);
         } catch (Exception ex) {
+            requesting = false;
             Log.i(TAG, "getBannerData: " + ex.getMessage());
         }
 

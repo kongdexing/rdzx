@@ -1,15 +1,11 @@
 package com.example.ysl.mywps.net;
 
 
-import android.os.Handler;
-import android.util.Log;
-
 import com.example.ysl.mywps.application.MyApplication;
 import com.example.ysl.mywps.utils.ToastUtils;
 import com.orhanobut.logger.Logger;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -302,6 +298,20 @@ public class HttpUtl {
         NetApi netApi = getRetrofit(httpUrl).create(NetApi.class);
 
         return netApi.getMessageList(token,page,pagelimit);
+    }
+
+    /**
+     * 获取热门列表
+     * @param url
+     * @param token
+     * @param page
+     * @param pagelimit
+     * @return
+     */
+    public static Call<String> getRecommendList(String url,String token,String page,String pagelimit){
+        String httpUrl = HTTP_URL + url;
+        NetApi netApi = getRetrofit(httpUrl).create(NetApi.class);
+        return netApi.getRecommendList(token,page,pagelimit);
     }
 
 }
