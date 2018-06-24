@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.MessageBean;
-import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.ui.activity.BaseWebActivity;
 import com.example.ysl.mywps.ui.activity.WebViewActivity;
 import com.example.ysl.mywps.utils.CommonUtil;
@@ -61,6 +60,12 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void appendData(List<MessageBean> messages) {
         Log.i(TAG, "appendData: ");
         messageBeans.addAll(messages);
+    }
+
+    public void appendTop(MessageBean messageBean) {
+        Log.i(TAG, "appendTop before size: " + messageBeans.size());
+        messageBeans.add(0, messageBean);
+        Log.i(TAG, "appendTop after size: " + messageBeans.size());
     }
 
     @Override

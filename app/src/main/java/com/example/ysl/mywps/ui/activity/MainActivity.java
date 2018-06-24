@@ -2,7 +2,10 @@ package com.example.ysl.mywps.ui.activity;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
@@ -21,12 +24,12 @@ import android.widget.TextView;
 
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.net.HttpUtl;
+import com.example.ysl.mywps.receiver.MyJipushReceiver;
 import com.example.ysl.mywps.ui.fragment.ContactFragment;
 import com.example.ysl.mywps.ui.fragment.MessageFragment;
 import com.example.ysl.mywps.ui.fragment.MineFragment;
 import com.example.ysl.mywps.ui.fragment.NewWorkFragment;
 import com.example.ysl.mywps.utils.CommonUtil;
-import com.example.ysl.mywps.utils.NoDoubleClickListener;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.example.ysl.mywps.utils.ToastUtils;
 import com.orhanobut.logger.Logger;
@@ -81,7 +84,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private Fragment messageFragment, contactFragment, workFragment, mineFragment;
     private ColorStateList colorNomal, colorSelect;
-    private MyclickListener click;
+//    private MyclickListener click;
 
     private Fragment currentFragment;
     private FragmentManager fragmentManager;
@@ -99,7 +102,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         ButterKnife.bind(this);
 
-        click = new MyclickListener();
+//        click = new MyclickListener();
 
         llMessage.setOnClickListener(this);
         llWork.setOnClickListener(this);
@@ -110,6 +113,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         colorSelect = getResources().getColorStateList(R.color.bottom_selected);
         fragmentManager = getSupportFragmentManager();
         showMessage(0);
+
+        IntentFilter filter = new IntentFilter(MyJipushReceiver.ACTION_RECEIVE_MESSAGE);
+        filter.setPriority(2000);
+        registerReceiver(pushReceiver, filter);
     }
 
     /**
@@ -265,7 +272,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     fragmentTransaction.add(R.id.main_rl_container, messageFragment);
                 } else {
                     fragmentTransaction.show(messageFragment);
+                    if (badgeView.getVisibility() == View.VISIBLE) {
+                        ((MessageFragment) messageFragment).getFirstPageData();
+                    }
                 }
+
+                badgeView.setVisibility(View.GONE);
                 setTextBack(1);
                 currentFragment = messageFragment;
                 break;
@@ -311,22 +323,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    private class MyclickListener extends NoDoubleClickListener {
-        @Override
-        public void click(View v) {
-            int id = v.getId();
-            if (id == R.id.main_ll_message || id == R.id.main_ib_message) {
-
-            } else if (id == R.id.main_ll_work || id == R.id.main_ib_work) {
-
-            } else if (id == R.id.main_ll_contact || id == R.id.main_ib_contact) {
-
-            } else if (id == R.id.main_ll_mine || id == R.id.main_ib_mine) {
-
-            }
-
-        }
-    }
 
     /**
      * 检查存储权限，如果没有就请求
@@ -361,7 +357,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void onDestroy() {
+        try {
+            unregisterReceiver(pushReceiver);
+        } catch (Exception ex) {
+
+        }
         super.onDestroy();
     }
 
+    BroadcastReceiver pushReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (MyJipushReceiver.ACTION_RECEIVE_MESSAGE.equals(action)) {
+                badgeView.setVisibility(View.VISIBLE);
+            }
+        }
+    };
 }
