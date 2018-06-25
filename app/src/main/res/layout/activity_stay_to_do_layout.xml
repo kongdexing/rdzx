@@ -13,8 +13,8 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:background="#2B3435"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
+
         <RelativeLayout
             android:layout_width="1dp"
             android:layout_height="match_parent"
@@ -25,10 +25,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:text="代办事项"
                 android:layout_centerVertical="true"
+                android:text="代办事项"
                 android:textColor="@color/white_back"
-                android:textSize="@dimen/text_title" />
+                android:textSize="@dimen/text_normal" />
 
             <RelativeLayout
                 android:id="@+id/stay_rl_stay_do"
@@ -48,13 +48,13 @@
                 android:id="@+id/stay_tv_have_do"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
                 android:text="已办事项"
                 android:textColor="@color/text_stay"
-                android:textSize="@dimen/text_title"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginStart="20dp" />
+                android:textSize="@dimen/text_normal" />
 
             <RelativeLayout
                 android:id="@+id/stay_rl_have_do"

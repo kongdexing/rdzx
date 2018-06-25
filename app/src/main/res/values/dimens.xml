@@ -24,6 +24,7 @@
     <dimen name="main_small">4dp</dimen>
     <dimen name="main_icon">25dp</dimen>
     <dimen name="main_text">14dp</dimen>
+    <dimen name="icon_large_1">32sp</dimen>
 
     <dimen name="dp_0.5">0.5dp</dimen>
     <dimen name="dp_1">1dp</dimen>

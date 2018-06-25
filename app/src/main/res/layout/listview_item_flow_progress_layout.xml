@@ -1,25 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white_back"
-    android:orientation="horizontal"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin">
-
+              android:orientation="horizontal" android:layout_width="match_parent"
+              android:background="@color/white_back"
+              android:layout_height="match_parent"
+              android:paddingLeft="@dimen/activity_horizontal_margin"
+              android:paddingRight="@dimen/activity_horizontal_margin"
+    >
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="14dp">
-
-        <TextView
-            android:id="@+id/flow_tv_date"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:lineSpacingExtra="5dp"
-            android:text="  8 - 24 \n 14 : 24"
-            android:textColor="@color/text_gray"
-            android:textSize="@dimen/button_nomal" />
+        android:paddingTop="14dp"
+        >
     </RelativeLayout>
 
     <RelativeLayout
@@ -30,19 +21,21 @@
         <RelativeLayout
             android:id="@+id/line1"
             android:layout_width="0.5dp"
-            android:layout_height="19dp"
+            android:layout_height="28dp"
             android:layout_centerHorizontal="true"
-            android:background="@color/arrow" />
+            android:background="@color/arrow"
+            />
 
 
         <RelativeLayout
+            android:layout_below="@+id/line1"
             android:id="@+id/circle"
+            android:layout_centerHorizontal="true"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-            android:layout_below="@+id/line1"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="1dp">
+            android:layout_marginTop="1dp"
+            >
 
             <ImageView
                 android:id="@+id/flow_item_iv_circle"
@@ -59,11 +52,11 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-
             android:layout_below="@+id/circle"
             android:layout_centerHorizontal="true"
+
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
             android:layout_marginTop="1dp"
             android:background="@color/arrow" />
     </RelativeLayout>
@@ -78,7 +71,7 @@
         android:layout_marginBottom="18dp"
         android:orientation="vertical"
         android:paddingBottom="@dimen/paddingVertical"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingLeft="@dimen/paddingVertical"
         android:paddingTop="@dimen/paddingVertical">
 
         <RelativeLayout
@@ -97,19 +90,35 @@
 
                 <ImageView
                     android:id="@+id/imageView"
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/avatar" />
-
-                <TextView
-                    android:id="@+id/flow_tv_leader"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/padding_small"
-                    android:text="领导-0"
-                    android:textColor="@color/text_gray"
-                    android:textSize="@dimen/text_small" />
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/flow_tv_leader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding_small"
+                        android:text="领导-0"
+                        android:paddingBottom="1dp"
+                        android:textColor="@color/text_black"
+                        android:textSize="@dimen/text_normal" />
+                    <TextView
+                        android:id="@+id/flow_tv_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="  8 - 24 14 : 24"
+                        android:textSize="@dimen/text_small"
+                        android:lineSpacingExtra="5dp"
+                        android:textColor="@color/text_gray"
+                        android:paddingTop="1dp"
+                        />
+
+                </LinearLayout>
             </LinearLayout>
 
 
@@ -128,7 +137,7 @@
                 android:paddingTop="@dimen/button_padding_top"
                 android:text="拟文"
                 android:textColor="@color/rect_red"
-                android:textSize="12sp" />
+                android:textSize="@dimen/button_nomal" />
         </RelativeLayout>
 
         <TextView
@@ -140,6 +149,7 @@
             android:textColor="@color/text_gray"
             android:textSize="@dimen/text_small" />
     </LinearLayout>
+
 
 
 </LinearLayout>
