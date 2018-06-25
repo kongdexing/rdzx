@@ -79,7 +79,6 @@ public class StayDoFragment extends BaseFragment {
         this.wpsMode = wpsMode;
     }
 
-
     @Override
     public View setView(LayoutInflater inflater, ViewGroup container) {
 

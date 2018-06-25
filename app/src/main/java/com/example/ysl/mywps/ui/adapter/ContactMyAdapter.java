@@ -13,8 +13,11 @@ import android.widget.TextView;
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.ContactBean;
 import com.example.ysl.mywps.interfaces.PasssString;
+import com.example.ysl.mywps.ui.view.CircularImageView;
 import com.example.ysl.mywps.utils.CommonUtil;
 import com.example.ysl.mywps.utils.ToastUtils;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -29,11 +32,11 @@ public class ContactMyAdapter extends BaseAdapter {
     private ArrayList<ContactBean> list = new ArrayList<>();
     private ArrayList<String> exitContact = new ArrayList<>();
     private PasssString passsString;
-    private LinkedHashMap<Integer,ContactBean> selected = new LinkedHashMap<>();
+    private LinkedHashMap<Integer, ContactBean> selected = new LinkedHashMap<>();
 
     private boolean shouldHide;
 
-    public ContactMyAdapter(ArrayList<ContactBean> list, Context context, Boolean isHide,PasssString passsString) {
+    public ContactMyAdapter(ArrayList<ContactBean> list, Context context, Boolean isHide, PasssString passsString) {
 
         this.list = list;
         this.context = context;
@@ -41,45 +44,38 @@ public class ContactMyAdapter extends BaseAdapter {
         this.passsString = passsString;
     }
 
-    public void update(ArrayList<ContactBean> list){
+    public void update(ArrayList<ContactBean> list) {
         this.list = list;
         notifyDataSetChanged();
     }
 
-    public void selectAll(boolean isSelect){
-
-        if(isSelect){
-            for (int i = 0; i < list.size(); ++i){
-
-                selected.put(i,list.get(i));
+    public void selectAll(boolean isSelect) {
+        if (isSelect) {
+            for (int i = 0; i < list.size(); ++i) {
+                selected.put(i, list.get(i));
             }
-        }else {
+        } else {
             selected.clear();
         }
 
         notifyDataSetChanged();
     }
 
-    public void docFroward(){
-
+    public void docFroward() {
         String uids = null;
-
-        if(selected.size() == 0){
-            ToastUtils.showShort(context,"请选择要转发的人");
+        if (selected.size() == 0) {
+            ToastUtils.showShort(context, "请选择要转发的人");
             return;
         }
 
-        for (ContactBean bean : selected.values()){
-
-            if(uids == null){
+        for (ContactBean bean : selected.values()) {
+            if (uids == null) {
                 uids = bean.getUid();
-            }else {
-                uids += ","+uids;
+            } else {
+                uids += "," + uids;
             }
         }
-
         passsString.setString(uids);
-
     }
 
     @Override
@@ -103,8 +99,9 @@ public class ContactMyAdapter extends BaseAdapter {
             holder = new ViewHolder();
             view = LayoutInflater.from(context).inflate(R.layout.listview_item_contact_layout, viewGroup, false);
             holder.tvCapital = (TextView) view.findViewById(R.id.contact_tv_capital);
+            holder.imgHead = (CircularImageView) view.findViewById(R.id.imgHead);
             holder.tvName = (TextView) view.findViewById(R.id.contact_tv_name);
-            holder.tvDepart = (TextView) view.findViewById(R.id.contact_tv_num);
+            holder.tvDepart = (TextView) view.findViewById(R.id.dept_name);
             holder.tvPhone = (TextView) view.findViewById(R.id.contact_tv_phone);
             holder.llCapital = (LinearLayout) view.findViewById(R.id.contact_ll_capital);
             holder.checkBox = (CheckBox) view.findViewById(R.id.contact_item_cb);
@@ -115,30 +112,28 @@ public class ContactMyAdapter extends BaseAdapter {
 
         final ContactBean info = list.get(i);
 
-        if (exitContact.contains(info.getCapital())) {
+        ImageLoader.getInstance().displayImage(info.getAvatar(),
+                new ImageViewAware(holder.imgHead), CommonUtil.getDefaultUserImageLoaderOption());
 
+        if (exitContact.contains(info.getCapital())) {
             holder.llCapital.setVisibility(View.GONE);
         } else {
             exitContact.add(info.getCapital());
             holder.llCapital.setVisibility(View.VISIBLE);
             holder.tvCapital.setText(info.getCapital());
         }
-        if(shouldHide){
+        if (shouldHide) {
             holder.checkBox.setVisibility(View.VISIBLE);
-            if(selected.get(i) != null) holder.checkBox.setChecked(true);
+            if (selected.get(i) != null) holder.checkBox.setChecked(true);
             else holder.checkBox.setChecked(false);
             holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                    if(isChecked){
-
-                        selected.put(i,info);
-                    }else {
-
+                    if (isChecked) {
+                        selected.put(i, info);
+                    } else {
                         selected.remove(i);
                     }
-
                 }
             });
         }
@@ -149,6 +144,7 @@ public class ContactMyAdapter extends BaseAdapter {
     }
 
     private class ViewHolder {
+        CircularImageView imgHead;
         TextView tvCapital;
         TextView tvName, tvPhone, tvDepart;
         LinearLayout llCapital;

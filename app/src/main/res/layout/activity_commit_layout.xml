@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white_back"
-                android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_back"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -29,7 +28,7 @@
                 android:layout_alignParentTop="true"
                 android:text="公文标题: **************报告"
                 android:textColor="@color/text_black"
-                android:textSize="@dimen/text_large"/>
+                android:textSize="@dimen/text_large" />
 
         </RelativeLayout>
 
@@ -49,9 +48,10 @@
                 android:layout_height="wrap_content"
                 android:text="呈报人:张**"
                 android:textColor="@color/text_black"
-                android:textSize="@dimen/text_large"/>
+                android:textSize="@dimen/text_large" />
 
         </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,9 +66,10 @@
                 android:layout_height="wrap_content"
                 android:text="拟文单位: 四川成都环球中心"
                 android:textColor="@color/text_black"
-                android:textSize="@dimen/text_large"/>
+                android:textSize="@dimen/text_large" />
 
         </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -83,9 +84,10 @@
                 android:layout_height="wrap_content"
                 android:text="公文描述:"
                 android:textColor="@color/text_black"
-                android:textSize="@dimen/text_large"/>
+                android:textSize="@dimen/text_large" />
 
         </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -101,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:text="审核意见:"
                 android:textColor="@color/text_black"
-                android:textSize="@dimen/text_large"/>
+                android:textSize="@dimen/text_large" />
 
         </RelativeLayout>
 
@@ -120,10 +122,9 @@
                 android:hint="请填写审核意见"
                 android:paddingLeft="@dimen/padding_small"
                 android:paddingTop="@dimen/text_small"
-                android:textSize="@dimen/text_small"/>
+                android:textSize="@dimen/text_small" />
 
         </RelativeLayout>
-
 
         <com.gc.materialdesign.views.ButtonRectangle
             android:id="@+id/commit_rl_upload"
@@ -142,7 +143,7 @@
                 android:layout_centerVertical="true"
                 android:text="保存"
                 android:textColor="@color/white_back"
-                android:textSize="@dimen/text_large"/>
+                android:textSize="@dimen/text_large" />
 
         </com.gc.materialdesign.views.ButtonRectangle>
 
@@ -154,6 +155,7 @@
         android:layout_width="@dimen/loading_size"
         android:layout_height="@dimen/loading_size"
         android:layout_centerInParent="true"
+        android:visibility="gone"
         app:indicatorColor="@color/title"
-        app:indicatorName="LineSpinFadeLoaderIndicator"/>
+        app:indicatorName="LineSpinFadeLoaderIndicator" />
 </RelativeLayout>

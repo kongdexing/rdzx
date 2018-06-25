@@ -100,13 +100,10 @@ public class ContactActivity extends BaseActivity implements PasssString {
             cbAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
                     if (adapter == null) return;
                     adapter.selectAll(isChecked);
-
                 }
             });
-
 
         }
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -136,7 +133,7 @@ public class ContactActivity extends BaseActivity implements PasssString {
      * 提交审核
      */
     private void commitAudit(final String uid) {
-        if (docPath== null|| docPath.equals("")) {
+        if (docPath == null || docPath.equals("")) {
             ToastUtils.showShort(this, "文件不存在");
             return;
         }
@@ -204,7 +201,7 @@ public class ContactActivity extends BaseActivity implements PasssString {
      * 提交文件领导签署
      */
     private void commitSign(final String uid) {
-        if (docPath== null|| docPath.equals("")) {
+        if (docPath == null || docPath.equals("")) {
             ToastUtils.showShort(this, "文件不存在");
             return;
         }

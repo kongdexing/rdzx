@@ -135,7 +135,6 @@ public class WpsDetailActivity extends BaseActivity {
     @BindView(R.id.av_loading)
     AVLoadingIndicatorView loading;
 
-
     private MyclickListener click = new MyclickListener();
     private WpsBroadCast reciver = new WpsBroadCast();
     private int screenH = 0;

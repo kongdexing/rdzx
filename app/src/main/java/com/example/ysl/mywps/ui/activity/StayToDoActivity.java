@@ -1,17 +1,11 @@
 package com.example.ysl.mywps.ui.activity;
 
 import android.content.res.ColorStateList;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -45,12 +39,6 @@ public class StayToDoActivity extends BaseActivity {
     @BindView(R.id.stay_rl_have_do)
     RelativeLayout rlHave;
 
-
-    //    private FragmentManager fragmentManager;
-//    private FragmentTransaction beginTransaction;
-//    private StayDoFragment stayFragment;
-//    private HasDoFragment doFragment;
-//    private Fragment currentFragment;
     private MyclickListener click = new MyclickListener();
     private ColorStateList normal, selected;
     private Drawable selctedBack;
@@ -77,9 +65,7 @@ public class StayToDoActivity extends BaseActivity {
         initDatas();
         tvStay.setOnClickListener(click);
         tvHave.setOnClickListener(click);
-
     }
-
 
     @Override
     public void initView() {
@@ -92,7 +78,6 @@ public class StayToDoActivity extends BaseActivity {
     }
 
     private void initDatas() {
-
         selected = getResources().getColorStateList(R.color.white_back);
         normal = getResources().getColorStateList(R.color.text_stay);
         tvStay.setOnClickListener(click);
@@ -169,9 +154,7 @@ public class StayToDoActivity extends BaseActivity {
         }
 
 //        beginTransaction.commit();
-
     }
-
 
     private class MyclickListener extends NoDoubleClickListener {
         @Override

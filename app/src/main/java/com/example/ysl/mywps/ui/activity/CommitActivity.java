@@ -4,17 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.DocumentListBean;
-import com.example.ysl.mywps.bean.ImagePathMessage;
 import com.example.ysl.mywps.bean.WpsdetailFinish;
 import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.utils.CommonUtil;
@@ -36,7 +31,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -71,7 +65,6 @@ public class CommitActivity extends BaseActivity {
     private DocumentListBean documentInfo;
     private String isSigned = "1";
     private String mOpinion;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,8 +175,6 @@ public class CommitActivity extends BaseActivity {
                             } else {
                                 emitter.onNext(message);
                             }
-
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                             emitter.onNext(e.getMessage());
@@ -192,7 +183,6 @@ public class CommitActivity extends BaseActivity {
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-
                         emitter.onNext(t.getMessage());
                     }
                 });
@@ -224,7 +214,6 @@ public class CommitActivity extends BaseActivity {
     public void initData() {
 
     }
-
 
     /**
      * 签署审核意见
@@ -336,28 +325,19 @@ public class CommitActivity extends BaseActivity {
                             } else {
                                 emitter.onNext("N");
                             }
-
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                             emitter.onNext(e.getMessage());
-
                         }
-
-
                     }
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-
                         emitter.onNext(t.getMessage());
-
-
                     }
                 });
             }
         });
-
 
         Consumer<String> observer = new Consumer<String>() {
             @Override
@@ -371,7 +351,6 @@ public class CommitActivity extends BaseActivity {
                 } else {
                     ToastUtils.showLong(getApplicationContext(), s);
                 }
-
             }
         };
 

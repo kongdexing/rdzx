@@ -58,7 +58,7 @@ public class ContactAdapter extends BaseAdapter {
             holder = new ViewHolder();
 
             holder.tvName = (TextView) view.findViewById(R.id.contact_tv_name);
-            holder.tvDepart = (TextView) view.findViewById(R.id.contact_tv_num);
+            holder.tvDepart = (TextView) view.findViewById(R.id.dept_name);
             holder.tvPhone = (TextView) view.findViewById(R.id.contact_tv_phone);
 
             view.setTag(holder);
