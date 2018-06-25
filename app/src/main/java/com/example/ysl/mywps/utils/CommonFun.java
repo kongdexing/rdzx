@@ -5,10 +5,14 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.widget.Toast;
 
-import com.orhanobut.logger.Logger;
-
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,7 +28,7 @@ public class CommonFun {
 
     //反序列化
     static public Object deserialize(String info) {
-        String redStr ;
+        String redStr;
         try {
             redStr = java.net.URLDecoder.decode(info, "UTF-8");
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(redStr.getBytes("ISO-8859-1"));
@@ -54,6 +58,12 @@ public class CommonFun {
     public static int dip2px(Context context, float dpValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
+    }    /**
+     * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
+     */
+    public static float dip2pxFloat(Context context, float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (dpValue * scale + 0.5f);
     }
 
     /**
@@ -84,13 +94,13 @@ public class CommonFun {
 
     public static String ConverToString(Long longDate) {
 
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd",Locale.SIMPLIFIED_CHINESE);
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.SIMPLIFIED_CHINESE);
 
         return df.format(new Date(longDate));
     }
 
     public static String MinuteToString(Long longDate) {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm",Locale.SIMPLIFIED_CHINESE);
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.SIMPLIFIED_CHINESE);
 
         return df.format(new Date(longDate));
     }
@@ -99,7 +109,7 @@ public class CommonFun {
 
         long date = Long.parseLong(longDate);
 
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd",Locale.SIMPLIFIED_CHINESE);
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.SIMPLIFIED_CHINESE);
 
         return df.format(new Date(date));
     }
@@ -108,7 +118,7 @@ public class CommonFun {
 
         long date = Long.parseLong(longDate);
 
-        DateFormat df = new SimpleDateFormat("yyyy年MM月dd日",Locale.SIMPLIFIED_CHINESE);
+        DateFormat df = new SimpleDateFormat("yyyy年MM月dd日", Locale.SIMPLIFIED_CHINESE);
 
         return df.format(new Date(date));
     }
@@ -116,7 +126,7 @@ public class CommonFun {
 
     //把字符串转为日期
     public static Date ConverToDate(String strDate) throws Exception {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd",Locale.SIMPLIFIED_CHINESE);
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.SIMPLIFIED_CHINESE);
 
         return df.parse(strDate);
     }
@@ -125,7 +135,7 @@ public class CommonFun {
      * 把日期转为字符串，精确到分钟
      */
     public static String ConverToString_PreciseMinute(Date date) {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm",Locale.SIMPLIFIED_CHINESE);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.SIMPLIFIED_CHINESE);
 
         return df.format(date);
     }
@@ -134,7 +144,7 @@ public class CommonFun {
      * 把日期转为字符串，精确到分钟
      */
     public static String ConverToString_PreciseMinuteSecond(Date date) {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.SIMPLIFIED_CHINESE);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.SIMPLIFIED_CHINESE);
 
         return df.format(date);
     }
@@ -144,7 +154,7 @@ public class CommonFun {
      * 2017/4/19 16:13:22
      */
     public static String ConverToString_PreciseSecond(Date date) {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss",Locale.SIMPLIFIED_CHINESE);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.SIMPLIFIED_CHINESE);
 
         return df.format(date);
     }
@@ -196,7 +206,7 @@ public class CommonFun {
         if (s == null) {
             return false;
         }
-        if (s.trim().length() == 0){
+        if (s.trim().length() == 0) {
             return false;
         }
         return true;
@@ -206,15 +216,12 @@ public class CommonFun {
         if (s == null) {
             return true;
         }
-        if (s.trim().length() == 0 ){
+        if (s.trim().length() == 0) {
             return true;
         }
 
         return false;
     }
-
-
-
 
 
     public static boolean isChinese(char c) {
@@ -230,6 +237,27 @@ public class CommonFun {
         return false;
     }
 
+    public static String getMD5Three(File path) {
+        BigInteger bi = null;
+        try {
+            byte[] buffer = new byte[8192];
+            int len = 0;
+            MessageDigest md = MessageDigest.getInstance("MD5");
+//            File f = new File(path);
+            FileInputStream fis = new FileInputStream(path);
+            while ((len = fis.read(buffer)) != -1) {
+                md.update(buffer, 0, len);
+            }
+            fis.close();
+            byte[] b = md.digest();
+            bi = new BigInteger(1, b);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bi.toString(16);
 
+    }
 
 }

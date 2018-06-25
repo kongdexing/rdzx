@@ -23,7 +23,7 @@ import com.umeng.analytics.MobclickAgent;
  */
 public abstract class BaseActivity extends AppCompatActivity {
     private LinearLayout llRoot;
-    public static String TAG = "aaa";
+    public static String TAG = BaseActivity.class.getSimpleName();
 
     private TextView tvBack;
     private TextView tvTitle;

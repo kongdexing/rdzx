@@ -314,4 +314,10 @@ public class HttpUtl {
         return netApi.getRecommendList(token,page,pagelimit);
     }
 
+    public static Call<String> getDocumentMd5(String url, String token, String documentId) {
+        String httpUrl = HTTP_URL + url;
+        NetApi netApi = getRetrofit(httpUrl).create(NetApi.class);
+        return netApi.getDocumentMd5(token, documentId);
+    }
+
 }

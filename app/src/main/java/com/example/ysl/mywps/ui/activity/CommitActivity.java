@@ -1,6 +1,8 @@
 package com.example.ysl.mywps.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -24,6 +26,7 @@ import com.orhanobut.logger.Logger;
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
@@ -44,7 +47,7 @@ import retrofit2.Response;
 
 public class CommitActivity extends BaseActivity {
 
-
+    private static final String TAG = CommitActivity.class.getSimpleName();
     @BindView(R.id.commit_rl_upload)
     RelativeLayout rlCommit;
     @BindView(R.id.commit_et_opinion)
@@ -58,8 +61,8 @@ public class CommitActivity extends BaseActivity {
     @BindView(R.id.commit_tv_opinion)
     TextView tvOpinion;
 
-//    @BindView(R.id.av_loading)
-//    AVLoadingIndicatorView loading;
+    @BindView(R.id.commit_tv_desc)
+    TextView tvDocDescrip;
 
     private MyclickListener click = new MyclickListener();
     private String downloadPath = "";
@@ -67,6 +70,7 @@ public class CommitActivity extends BaseActivity {
     private String token = "";
     private DocumentListBean documentInfo;
     private String isSigned = "1";
+    private String mOpinion;
 
 
     @Override
@@ -85,22 +89,40 @@ public class CommitActivity extends BaseActivity {
         downloadPath = getIntent().getStringExtra("wpspath");
         token = SharedPreferenceUtils.loginValue(this, "token");
         documentInfo = getIntent().getExtras().getParcelable("documentInfo");
-
+        mOpinion = getIntent().getStringExtra("opinion");
         rlCommit.setOnClickListener(click);
 
         afterData();
     }
 
+    public void returnResult(String result) {
+        Intent intent = new Intent();
+        intent.putExtra("opinion", result);
+        setResult(WpsDetailActivity.GET_OPTION, intent);
+        finish();
+    }
+
     private void afterData() {
+        Log.d(TAG, "afterData: " + documentInfo.toString());
         tvTtitle.setText("公文标题：  " + documentInfo.getTitle());
         tvPeople.setText("呈报人:   " + documentInfo.getNow_nickname());
         tvDept.setText("拟文单位:   " + documentInfo.getDept_name());
-        if(CommonUtil.isEmpty(documentInfo.getOpinion())){
+        if (CommonUtil.isEmpty(documentInfo.getOpinion())) {
             tvOpinion.setVisibility(View.GONE);
-        }else 
-        tvOpinion.setText("审核意见：  "+documentInfo.getOpinion());
+        } else {
+            tvOpinion.setVisibility(View.VISIBLE);
+            tvOpinion.setText("审核意见：  " + documentInfo.getOpinion());
+        }
 
-        String myAccount = SharedPreferenceUtils.loginValue(this,"name");
+        if (documentInfo.getDes() != null && !documentInfo.getDes().equals("")) {
+            tvDocDescrip.setText("公文描述：  " + documentInfo.getDes());
+        } else {
+            tvDocDescrip.setVisibility(View.GONE);
+        }
+
+        Log.d(TAG, "afterData: " + documentInfo.getStatus());
+
+        String myAccount = SharedPreferenceUtils.loginValue(this, "name");
 //        documentInfo.getStatus().equals("6") && documentInfo.getIs_forward().equals("1")
 //        if(documentInfo.getStatus().equals("6") && myAccount.equals(documentInfo.getNow_username())){
 //           etOpinion.setVisibility(View.VISIBLE);
@@ -113,19 +135,83 @@ public class CommitActivity extends BaseActivity {
 //            rlCommit.setVisibility(View.INVISIBLE);
 //        }
 
-        if(myAccount.equals(documentInfo.getNow_username()) || myAccount.equals(documentInfo.getNow_nickname())){
-           etOpinion.setVisibility(View.VISIBLE);
-            rlCommit.setVisibility(View.VISIBLE);
-        }else  {
+        if (documentInfo.getStatus().equals("2") || documentInfo.getStatus().equals("3") || documentInfo.getStatus().equals("6")) {
+            if (myAccount.equals(documentInfo.getNow_username()) || myAccount.equals(documentInfo.getNow_nickname())) {
+                etOpinion.setVisibility(View.VISIBLE);
+                rlCommit.setVisibility(View.VISIBLE);
+                if (mOpinion != null) {
+                    etOpinion.setText(mOpinion);
+                }
+            }
+        } else if (documentInfo.getStatus().equals("5")) {
             etOpinion.setVisibility(View.INVISIBLE);
             rlCommit.setVisibility(View.INVISIBLE);
+            getOpinionFromNet();
         }
 
-        if(documentInfo.getStatus().equals("1")  || documentInfo.getStatus().equals("4")|| documentInfo.getStatus().equals("5")){
-            etOpinion.setVisibility(View.INVISIBLE);
-            rlCommit.setVisibility(View.INVISIBLE);
-        }
+    }
 
+    private void getOpinionFromNet() {
+        Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
+                Call<String> call = HttpUtl.getDocumentMd5("User/Oa/get_opinion/", token, documentInfo.getId());
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+
+                        if (!response.isSuccessful()) {
+                            emitter.onNext(response.message());
+                            return;
+                        }
+                        String msg = response.body();
+                        try {
+                            JSONObject jsonObject = new JSONObject(msg);
+
+                            int code = jsonObject.getInt("code");
+                            String message = jsonObject.getString("msg");
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            String op = data.getString("opinion");
+                            if (code == 0) {
+                                if (op != null && !op.equals("")) {
+                                    mOpinion = op;
+                                    emitter.onNext("Y");
+                                } else {
+                                    emitter.onNext("N");
+                                }
+                            } else {
+                                emitter.onNext(message);
+                            }
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            emitter.onNext(e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+
+                        emitter.onNext(t.getMessage());
+                    }
+                });
+            }
+        });
+        Consumer<String> consumer = new Consumer<String>() {
+            @Override
+            public void accept(String s) throws Exception {
+                if (s.equals("Y")) {
+                    tvOpinion.setText("审核意见:   " + mOpinion);
+                    tvOpinion.setVisibility(View.VISIBLE);
+                } else {
+                    ToastUtils.showShort(CommitActivity.this, s);
+                }
+            }
+        };
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(consumer);
     }
 
 
@@ -156,7 +242,7 @@ public class CommitActivity extends BaseActivity {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
 
-                        if(!response.isSuccessful()){
+                        if (!response.isSuccessful()) {
                             emitter.onNext(response.message());
                             return;
                         }
@@ -228,7 +314,7 @@ public class CommitActivity extends BaseActivity {
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
-                        if(!response.isSuccessful()){
+                        if (!response.isSuccessful()) {
                             emitter.onNext(response.message());
                             return;
                         }
@@ -295,31 +381,31 @@ public class CommitActivity extends BaseActivity {
     }
 
     /**
-     *反馈意见
+     * 反馈意见
      */
-    private void feedBack(final String opinion){
+    private void feedBack(final String opinion) {
         showProgress();
         final Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
 
-                Call<String> call = HttpUtl.feedBack("User/Oa/feedback/",documentInfo.getId(),opinion,token);
+                Call<String> call = HttpUtl.feedBack("User/Oa/feedback/", documentInfo.getId(), opinion, token);
 
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
 
-                        if(!response.isSuccessful()){
+                        if (!response.isSuccessful()) {
                             emitter.onNext(response.message());
                             return;
                         }
                         String msg = response.body();
                         Logger.i("commit  " + msg);
                         try {
-                          if(msg == null){
-                              emitter.onNext("N");
-                              return;
-                          }
+                            if (msg == null) {
+                                emitter.onNext("N");
+                                return;
+                            }
                             JSONObject jsonObject = new JSONObject(msg);
 
                             int code = jsonObject.getInt("code");
@@ -395,9 +481,9 @@ public class CommitActivity extends BaseActivity {
                         signCompleted(opinion, isSigned);
                     } else if (documentInfo.getStatus().equals("5")) {
 //                        uploadFile(opinion);
-                    }else if(documentInfo.getStatus().equals("6")){
+                    } else if (documentInfo.getStatus().equals("6")) {
                         feedBack(opinion);
-                    }else {
+                    } else {
                         ToastUtils.showShort(CommitActivity.this, "该文档还在拟稿状态");
                     }
                     break;

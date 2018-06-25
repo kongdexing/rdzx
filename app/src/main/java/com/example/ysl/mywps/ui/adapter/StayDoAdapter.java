@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.DocumentListBean;
-import com.example.ysl.mywps.ui.fragment.StayDoFragment;
 import com.example.ysl.mywps.utils.CommonUtil;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 
@@ -89,7 +88,7 @@ private String myAccount = "";
 
         holder.tvTitle.setText(info.getTitle());
         holder.tvDate.setText(CommonUtil.isEmpty(info.getN_time()) ? info.getCtime():info.getN_time());
-        holder.tvHandel.setText("处理人: "+info.getNow_nickname());
+        holder.tvHandel.setText(info.getNow_realname());
         if(myAccount.equals(info.getNow_nickname()) || myAccount.equals(info.getNow_username())){
             holder.ivStatus.setVisibility(View.VISIBLE);
         }else {

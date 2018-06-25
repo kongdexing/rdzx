@@ -146,4 +146,7 @@ public interface NetApi {
     @POST("query")
     Call<String> getRecommendList(@Query("token") String token, @Query("p") String page, @Query("pagelimit") String pagelimit);
 
+    @POST("query")
+    Call<String> getDocumentMd5(@Query("token") String token, @Query("doc_id") String doc_id);
+    
 }
