@@ -66,20 +66,23 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         Log.i(TAG, "appendTop before size: " + messageBeans.size());
         messageBeans.add(0, messageBean);
         Log.i(TAG, "appendTop after size: " + messageBeans.size());
+        notifyItemInserted(0);
+        notifyItemRangeChanged(0, messageBeans.size());
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.i(TAG, "onCreateViewHolder: ");
         View view = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.item_message, parent, false);
-        return new ViewHolder(view);
+        return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Log.i(TAG, "onBindViewHolder: " + position);
-        final ViewHolder mHolder = (ViewHolder) holder;
+        final MyViewHolder mHolder = (MyViewHolder) holder;
+        //MyViewHolder
         final MessageBean message = messageBeans.get(position);
         try {
             mHolder.txtTitle.setText(message.getTitle());
@@ -142,7 +145,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return messageBeans.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder {
         private Unbinder unbinder;
 
         @BindView(R.id.rlNewsItem)
@@ -160,7 +163,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         @BindView(R.id.optionImg)
         ImageView optionImg;
 
-        public ViewHolder(View itemView) {
+        public MyViewHolder(View itemView) {
             super(itemView);
             unbinder = ButterKnife.bind(this, itemView);
         }

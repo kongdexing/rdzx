@@ -7,10 +7,13 @@ import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.MessageBean;
@@ -20,6 +23,7 @@ import com.example.ysl.mywps.receiver.MyJipushReceiver;
 import com.example.ysl.mywps.ui.adapter.MessageAdapter;
 import com.example.ysl.mywps.ui.view.LoadMoreRecyclerView;
 import com.example.ysl.mywps.ui.view.WrapContentLinearLayoutManager;
+import com.example.ysl.mywps.utils.CommonUtil;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.example.ysl.mywps.utils.ToastUtils;
 import com.google.gson.Gson;
@@ -49,13 +53,15 @@ import retrofit2.Response;
  */
 public class MessageFragment extends BaseFragment {
 
+//    @BindView(R.id.btnAddItem)
+//    Button btnAddItem;
     public ResultPage resultPage = new ResultPage();
     @BindView(R.id.recyclerview)
     LoadMoreRecyclerView recyclerview;
 
     @BindView(R.id.swipe_refresh_widget)
     SwipeRefreshLayout swipeRefresh;
-    private WrapContentLinearLayoutManager mLayoutManager;
+    private LinearLayoutManager mLayoutManager;
     List<MessageBean> bannerBeans = new ArrayList<>();
     private MessageAdapter adapter;
 
@@ -74,14 +80,26 @@ public class MessageFragment extends BaseFragment {
         IntentFilter filter = new IntentFilter(MyJipushReceiver.ACTION_RECEIVE_MESSAGE);
         filter.setPriority(3000);
         getContext().registerReceiver(pushReceiver, filter);
+//        btnAddItem.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                String time = CommonUtil.getCurrentDateHms();
+//                String param = "{\"burl\":\"\\/meeting\\/details.html?id=67\",\"ctime\":\"" + time + "\",\"detail_id\":\"67\",\"from_uid\":\"215\",\"message\":\"会议标题\",\"model_code\":\"MEET\",\"model_name\":\"会议助手\",\"title\":\"会议通知\"}";
+//                Intent intent = new Intent(MyJipushReceiver.ACTION_RECEIVE_MESSAGE);
+//                intent.putExtra("param", param);
+//                getContext().sendOrderedBroadcast(intent, null);
+//            }
+//        });
     }
 
     public void initRecyclerView(LoadMoreRecyclerView recyclerView, final SwipeRefreshLayout swipeRefreshLayout) {
         Log.i(TAG, "initRecyclerView: ");
         if (recyclerView != null) {
             recyclerView.setHasFixedSize(true);
-            mLayoutManager = new WrapContentLinearLayoutManager(this.getContext());
+            mLayoutManager = new LinearLayoutManager(this.getContext());
+            mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             recyclerView.setLayoutManager(mLayoutManager);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
 //            recyclerView.addItemDecoration(new CardDividerItemDecoration(this.getContext(),
 //                    LinearLayoutManager.VERTICAL));
         }
@@ -217,11 +235,15 @@ public class MessageFragment extends BaseFragment {
                         recyclerview.setAutoLoadMoreEnable(true);
                         recyclerview.notifyMoreFinish(true);
                     } else {
-                        adapter.notifyDataSetChanged();
+                        recyclerview.notifyMoreFinish(false);
                     }
                     break;
                 case 0:
-                    adapter.notifyItemInserted(0);
+                    MessageBean messageBean = (MessageBean) msg.obj;
+                    recyclerview.removeAllViews();
+                    adapter.appendTop(messageBean);
+                    recyclerview.scrollToPosition(0);
+                    Log.i(TAG, "handleMessage: add item notifyItemInserted");
                     break;
             }
             super.handleMessage(msg);
@@ -243,20 +265,23 @@ public class MessageFragment extends BaseFragment {
                 try {
                     String params = intent.getStringExtra("param");
                     JSONObject object = new JSONObject(params);
-                    String id = object.getString("detail_id");
-                    String burl = object.getString("burl");
-                    String ctime = object.getString("ctime");
-                    String message = object.getString("message");
-                    String model_code = object.getString("model_code");
-                    String model_name = object.getString("model_name");
-                    String title = object.getString("title");
+//                    String id = object.getString("detail_id");
+//                    String burl = object.getString("burl");
+//                    String ctime = object.getString("ctime");
+//                    String message = object.getString("message");
+//                    String model_code = object.getString("model_code");
+//                    String model_name = object.getString("model_name");
+//                    String title = object.getString("title");
                     Gson gson = new Gson();
-                    MessageBean bannerBean = gson.fromJson(params, new TypeToken<MessageBean>() {
+                    MessageBean messageBean = gson.fromJson(params, new TypeToken<MessageBean>() {
                     }.getType());
                     Log.i(TAG, "onReceive: " + params);
-                    Log.i(TAG, "onReceive: " + bannerBean.getCtime());
-                    adapter.appendTop(bannerBean);
-                    handler.sendEmptyMessage(0);
+                    Log.i(TAG, "onReceive: " + messageBean.getCtime());
+
+                    Message handlerMsg = new Message();
+                    handlerMsg.what = 0;
+                    handlerMsg.obj = messageBean;
+                    handler.sendMessage(handlerMsg);
                 } catch (Exception ex) {
                     Log.i(TAG, "onReceive error: " + ex.getMessage());
                 }

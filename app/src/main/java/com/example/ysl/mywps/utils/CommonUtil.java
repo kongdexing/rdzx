@@ -161,4 +161,9 @@ public class CommonUtil {
         imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
+    public static String getCurrentDateHms() {
+        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sDateFormat.format(new Date());
+    }
+
 }
