@@ -17,13 +17,15 @@ import com.example.ysl.mywps.bean.Item;
 import com.example.ysl.mywps.ui.activity.ContactDetailActivity;
 import com.example.ysl.mywps.ui.view.CircularImageView;
 import com.example.ysl.mywps.utils.CommonUtil;
-import com.example.ysl.mywps.utils.ToastUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.halfbit.pinnedsection.PinnedSectionListView;
 
@@ -122,13 +124,28 @@ public class ContactPinnedAdapter extends ArrayAdapter<Item> implements PinnedSe
         } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_listview_item_layout, null);
 
-            CheckBox checkBox = (CheckBox)view.findViewById(R.id.contact_item_cb);
+            CheckBox checkBox = (CheckBox) view.findViewById(R.id.contact_item_cb);
             TextView tvName = (TextView) view.findViewById(R.id.contact_tv_name);
-            TextView dpName = (TextView)view.findViewById(R.id.dept_name);
+            TextView dpName = (TextView) view.findViewById(R.id.dept_name);
             TextView tvPhone = (TextView) view.findViewById(R.id.contact_tv_phone);
-            CircularImageView headImg = (CircularImageView)view.findViewById(R.id.imgHead);
+            CircularImageView headImg = (CircularImageView) view.findViewById(R.id.imgHead);
 
             final ContactBean contactBean = item.contactBean;
+            //取出是否选中状态
+            Map map = new HashMap();
+//            selected.entrySet().
+            Iterator<Map.Entry<Integer, ContactBean>> iterator = selected.entrySet().iterator();
+
+            while (iterator.hasNext()) {
+                Map.Entry entry = iterator.next();
+                int keyPosition = (Integer) entry.getKey();
+                if (keyPosition == position) {
+                    checkBox.setChecked(true);
+                } else {
+                    checkBox.setChecked(false);
+                }
+            }
+
             tvName.setText(contactBean.getRealname());
             dpName.setText(contactBean.getDept_name());
             tvPhone.setText(contactBean.getMobile());

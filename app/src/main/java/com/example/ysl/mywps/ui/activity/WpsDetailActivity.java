@@ -152,7 +152,6 @@ public class WpsDetailActivity extends BaseActivity {
     private String wpsMode = "";
     private String mAccount = "";
 
-
     private SharedPreferences wpsPreference;
 //    提交审核后是2 文档返回给拟稿人后是5  提交文件领导签署后是3 签署完成后 成功是4 失败是五，继续提交审核
 
@@ -161,7 +160,6 @@ public class WpsDetailActivity extends BaseActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-
             progressBar.setProgress(msg.what);
             if (msg.what == 100) {
                 rlLoading.setVisibility(View.GONE);
@@ -233,14 +231,11 @@ public class WpsDetailActivity extends BaseActivity {
             EventBus.getDefault().register(this);
         loading.setVisibility(View.GONE);
 
-
         if (wpsMode.equals(SysytemSetting.HANDLE_WPS) || wpsMode.equals(SysytemSetting.ISSUE_WPS) || wpsMode.equals(SysytemSetting.OUT_WPS)) {
-
             llMessage.setVisibility(View.INVISIBLE);
             llSign.setVisibility(View.INVISIBLE);
             llSend.setVisibility(View.INVISIBLE);
         }
-
         afterData();
     }
 
@@ -252,15 +247,11 @@ public class WpsDetailActivity extends BaseActivity {
     @Override
     public void initData() {
 
-
     }
-
 
     @SuppressLint("ClickableViewAccessibility")
     private void afterData() {
-
         mAccount = SharedPreferenceUtils.loginValue(this, "name");
-
         Bundle bundle = getIntent().getExtras();
         documentInfo = bundle.getParcelable("documentben");
         setTitleText(documentInfo.getDoc_name());
@@ -323,9 +314,7 @@ public class WpsDetailActivity extends BaseActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 //TODO 点击消失
-
                 float clickx = event.getX();
-
                 float x1, x2, y1, y2;
                 x1 = rlDragContent.getX();
                 x2 = rlDragContent.getX() + rlDragContent.getWidth();
@@ -345,38 +334,9 @@ public class WpsDetailActivity extends BaseActivity {
                 return false;
             }
         });
-
     }
 
     public void downLoadWps(final boolean shouldOpen) {
-//        String wpsPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath() + "/" + documentInfo.getDoc_name();
-//
-//        File file = new File(wpsPath);
-//
-//        boolean shouldUpdate = false;
-//
-//
-//        if (file.exists()) {
-//
-//            String existsStatus = wpsPreference.getString(documentInfo.getDoc_name(), "");
-//            if (CommonUtil.isNotEmpty(existsStatus)) {
-//                if (documentInfo.getStatus().equals(existsStatus)) {
-//                    downloadWpsPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath() + "/" + documentInfo.getDoc_name();
-//                    shouldUpdate = false;
-//                } else {
-//                    shouldUpdate = true;
-//                }
-//            } else {
-//                shouldUpdate = true;
-//            }
-//        } else {
-//            shouldUpdate = true;
-//        }
-//
-//        if (!shouldUpdate) {
-//            return;
-//        }
-
         if (checkFileExist()) {
             String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath() + "/" + documentInfo.getDoc_name();
             File file = new File(path);
@@ -394,7 +354,6 @@ public class WpsDetailActivity extends BaseActivity {
                 int headIndex = url.indexOf("com/") + 3;
                 String headUrl = url.substring(0, headIndex + 1);
                 String bodyUrl = url.substring(headIndex + 1);
-
 
                 Call<ResponseBody> call = HttpUtl.donwoldWps(headUrl, bodyUrl);
                 call.enqueue(new Callback<ResponseBody>() {
@@ -434,11 +393,9 @@ public class WpsDetailActivity extends BaseActivity {
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
-
                         emitter.onNext(t.getMessage());
                     }
                 });
-
             }
         });
         Consumer<String> observer = new Consumer<String>() {
@@ -454,30 +411,22 @@ public class WpsDetailActivity extends BaseActivity {
                 } else {
                     ToastUtils.showShort(getApplicationContext(), s);
                 }
-
             }
         };
 
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
-
     }
 
     /**
      * @param myPath
      */
     private boolean openWps(String myPath) {
-
-
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-
         switch (wpsMode) {
-
-
             case SysytemSetting.HANDLE_WPS:
-
                 bundle.putString(WpsModel.OPEN_MODE, WpsModel.OpenMode.READ_ONLY); // 只读模式
                 break;
             case SysytemSetting.OUT_WPS:
@@ -486,15 +435,12 @@ public class WpsDetailActivity extends BaseActivity {
             case SysytemSetting.ISSUE_WPS:
                 bundle.putString(WpsModel.OPEN_MODE, WpsModel.OpenMode.READ_ONLY); // 只读模式
                 break;
-
             case SysytemSetting.INSIDE_WPS:
                 if (documentInfo.getIs_writable() == 1)
                     bundle.putString(WpsModel.OPEN_MODE, WpsModel.OpenMode.NORMAL); // 正常模式
                 else
                     bundle.putString(WpsModel.OPEN_MODE, WpsModel.OpenMode.READ_ONLY); // 只读模式
                 break;
-
-
         }
         bundle.putBoolean(WpsModel.SEND_CLOSE_BROAD, true); // 关闭时是否发送广播
         bundle.putBoolean(WpsModel.SEND_SAVE_BROAD, true);//文件保存是是否发送广播
@@ -533,12 +479,10 @@ public class WpsDetailActivity extends BaseActivity {
         return true;
     }
 
-
     /**
      * 保存签署文件
      */
     private void saveImage() {
-
 //        holder.ivIcon.setDrawingCacheEnabled(true);
 //        imgBitmap = holder.ivIcon.getDrawingCache();
         if (adapter == null) {
@@ -629,7 +573,6 @@ public class WpsDetailActivity extends BaseActivity {
                 .subscribe(oberver);
     }
 
-
     /**
      * 签署成功完成返回给拟稿人
      */
@@ -666,28 +609,19 @@ public class WpsDetailActivity extends BaseActivity {
                             } else {
                                 emitter.onNext("N");
                             }
-
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                             emitter.onNext(e.getMessage());
-
                         }
-
-
                     }
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-
                         emitter.onNext(t.getMessage());
-
-
                     }
                 });
             }
         });
-
 
         Consumer<String> observer = new Consumer<String>() {
             @Override
@@ -704,7 +638,6 @@ public class WpsDetailActivity extends BaseActivity {
                 } else {
                     ToastUtils.showLong(getApplicationContext(), s);
                 }
-
             }
         };
 
@@ -717,7 +650,6 @@ public class WpsDetailActivity extends BaseActivity {
      * 签署失败返回给拟稿人
      */
     private void signUnCompleted(final String opinion, final String signed) {
-
 //        if (CommonUtil.isEmpty(uploadIamgePath)) {
 //            ToastUtils.showShort(this, "图片保存失败，请重新点击信息按钮");
 //            return;
@@ -754,36 +686,25 @@ public class WpsDetailActivity extends BaseActivity {
                             } else {
                                 emitter.onNext("N");
                             }
-
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                             emitter.onNext(e.getMessage());
-
                         }
-
-
                     }
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-
                         emitter.onNext(t.getMessage());
-
-
                     }
                 });
             }
         });
-
 
         Consumer<String> observer = new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
                 loading.setVisibility(View.GONE);
                 if (s.equals("Y") || s.equals("N")) {
-
-
                     if (s.equals("Y")) {
                         EventBus.getDefault().post(new WpsdetailFinish("commit 提交成功"));
                         finish();
@@ -791,7 +712,6 @@ public class WpsDetailActivity extends BaseActivity {
                 } else {
                     ToastUtils.showLong(getApplicationContext(), s);
                 }
-
             }
         };
 
@@ -827,8 +747,6 @@ public class WpsDetailActivity extends BaseActivity {
      * 保存图片
      */
     public void saveDownload(String path, Bitmap myBitmap) {
-
-
         Bitmap bitmap = myBitmap;
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
@@ -845,10 +763,8 @@ public class WpsDetailActivity extends BaseActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
     }
-
 
     private PopupWindow popupWindow;
     private WritingPadView writingPadView;
@@ -882,9 +798,7 @@ public class WpsDetailActivity extends BaseActivity {
 
         }).start();
 
-
         if (popupWindow == null) {
-
             View view = LayoutInflater.from(this).inflate(R.layout.sign_layout, null);
 
             writingPadView = (WritingPadView) view.findViewById(R.id.sign_writing);
@@ -941,11 +855,9 @@ public class WpsDetailActivity extends BaseActivity {
                         }
 
                     }).start();
-
 //                    rlAll.setVisibility(View.GONE);
                 }
             });
-
             tvCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -963,11 +875,9 @@ public class WpsDetailActivity extends BaseActivity {
             rlSignConfirm.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     Thread saveThread = new Thread(new Runnable() {
                         @Override
                         public void run() {
-
                             String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "wpsSign";
                             File file = new File(path);
                             if (!file.exists()) file.mkdirs();
@@ -977,10 +887,7 @@ public class WpsDetailActivity extends BaseActivity {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-
                             Logger.i("原始   " + path);
-
-
                             final String mypath = path;
                             localImagePath = mypath;
                             WpsDetailActivity.this.runOnUiThread(new Runnable() {
@@ -992,26 +899,18 @@ public class WpsDetailActivity extends BaseActivity {
                                     popupWindow.dismiss();
                                 }
                             });
-
-
                         }
                     });
                     saveThread.setDaemon(true);
                     saveThread.start();
                 }
             });
-
-
         } else {
 //            rlAll.setVisibility(View.VISIBLE);
             popupWindow.showAtLocation(LayoutInflater.from(this).inflate(R.layout.activity_wpc_details_layout, null),
                     Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-
         }
-
-
     }
-
 
     /**
      * 设置添加屏幕的背景透明度
@@ -1025,27 +924,21 @@ public class WpsDetailActivity extends BaseActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
     }
 
-
     private class WpsBroadCast extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             Toast.makeText(context, "mybitmap", Toast.LENGTH_SHORT).show();
             Logger.i("static  " + CommonUtil.myPath);
-
         }
-
-
     }
 
     @Subscribe
     public void onEvent(WpsdetailFinish finish) {
         Logger.i("finishe " + finish.getMsg());
-
         Intent intent = new Intent(this, StayToDoActivity.class);
         startActivity(intent);
         finish();
-
     }
 
     @Override
@@ -1065,18 +958,6 @@ public class WpsDetailActivity extends BaseActivity {
         String wpsPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath() + "/" + documentInfo.getDoc_name();
         Log.d(TAG, "checkFileExist: " + documentInfo.getDoc_name());
         File file = new File(wpsPath);
-
-        //            String existsStatus = wpsPreference.getString(documentInfo.getDoc_name(), "");
-//            if (CommonUtil.isNotEmpty(existsStatus)) {
-//                if (documentInfo.getStatus().equals(existsStatus)) {
-//                    downloadWpsPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath() + "/" + documentInfo.getDoc_name();
-//                    shouldUpdate = false;
-//                } else {
-//                    shouldUpdate = true;
-//                }
-//            } else {
-//                shouldUpdate = true;
-//            }
         if (file.exists()) {
             downloadWpsPath = wpsPath;
         }
@@ -1301,7 +1182,6 @@ public class WpsDetailActivity extends BaseActivity {
      * 签署审核意见
      */
     private void uploadFile(final String opinion) {
-
         loading.setVisibility(View.VISIBLE);
         final Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
@@ -1320,17 +1200,14 @@ public class WpsDetailActivity extends BaseActivity {
                         Logger.i("commit  " + msg);
                         try {
                             JSONObject jsonObject = new JSONObject(msg);
-
                             int code = jsonObject.getInt("code");
                             String message = jsonObject.getString("msg");
-
                             emitter.onNext(message);
                             if (code == 0) {
                                 emitter.onNext("Y");
                             } else {
                                 emitter.onNext("N");
                             }
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                             emitter.onNext(e.getMessage());
@@ -1339,7 +1216,6 @@ public class WpsDetailActivity extends BaseActivity {
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-
                         emitter.onNext(t.getMessage());
                     }
                 });
@@ -1357,21 +1233,17 @@ public class WpsDetailActivity extends BaseActivity {
                 } else {
                     ToastUtils.showShort(WpsDetailActivity.this, s);
                 }
-
             }
         };
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(consumer);
-
-
     }
 
     /**
      * 反馈意见
      */
     private void feedBack(final String opinion) {
-
         loading.setVisibility(View.VISIBLE);
         final Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
@@ -1414,7 +1286,6 @@ public class WpsDetailActivity extends BaseActivity {
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-
                         emitter.onNext(t.getMessage());
                     }
                 });
@@ -1433,14 +1304,11 @@ public class WpsDetailActivity extends BaseActivity {
                 } else {
                     ToastUtils.showShort(WpsDetailActivity.this, s);
                 }
-
             }
         };
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(consumer);
-
-
     }
     // 根据路径获得图片并压缩，返回bitmap用于显示
 //        private Bitmap getSmallBitmap(String filePath) {
@@ -1453,7 +1321,6 @@ public class WpsDetailActivity extends BaseActivity {
 //
 //            // Decode bitmap with inSampleSize set
 //            options.inJustDecodeBounds = false;
-//
 //            return BitmapFactory.decodeFile(filePath, options);
 //        }
 

@@ -9,7 +9,6 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,18 +19,14 @@ import com.example.ysl.mywps.bean.Item;
 import com.example.ysl.mywps.bean.WpsdetailFinish;
 import com.example.ysl.mywps.interfaces.PasssString;
 import com.example.ysl.mywps.net.HttpUtl;
-import com.example.ysl.mywps.ui.adapter.ContactMyAdapter;
 import com.example.ysl.mywps.ui.adapter.ContactPinnedAdapter;
-import com.example.ysl.mywps.ui.view.IconTextView;
 import com.example.ysl.mywps.utils.CommonUtil;
-import com.example.ysl.mywps.utils.MatchesUtil;
 import com.example.ysl.mywps.utils.NoDoubleClickListener;
 import com.example.ysl.mywps.utils.PingYinUtils;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.example.ysl.mywps.utils.ToastUtils;
 import com.gc.materialdesign.views.ButtonRectangle;
 import com.google.gson.Gson;
-import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
@@ -56,8 +51,6 @@ import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.alibaba.mtl.log.a.getContext;
 
 /**
  * Created by ysl on 2018/1/16.
@@ -95,7 +88,6 @@ public class ContactActivity extends BaseActivity implements PasssString {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_contact_layout);
         ButterKnife.bind(this);
 
@@ -113,6 +105,7 @@ public class ContactActivity extends BaseActivity implements PasssString {
             });
         }
 
+        /*start checkbox 全选测试*/
         rlBottom.setVisibility(View.VISIBLE);
         cbAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -121,6 +114,7 @@ public class ContactActivity extends BaseActivity implements PasssString {
                 adapter.selectAll(isChecked);
             }
         });
+        /*end*/
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -265,16 +259,13 @@ public class ContactActivity extends BaseActivity implements PasssString {
             public void accept(String s) throws Exception {
                 hideProgress();
                 if (s.equals("Y") || s.equals("N")) {
-
                     if (s.equals("Y")) {
                         EventBus.getDefault().post(new WpsdetailFinish("通讯录提交成功"));
                         finish();
                     }
-
                 } else {
                     ToastUtils.showShort(ContactActivity.this, s);
                 }
-
             }
         };
         observable.subscribeOn(Schedulers.io())
@@ -494,7 +485,6 @@ public class ContactActivity extends BaseActivity implements PasssString {
     }
 
     private void loadingContact(String target) {
-
         List<String> groups = new ArrayList<>();
         int sectionPosition = 0, listPosition = 0;
 
