@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.ui.view.IconTextView;
 import com.example.ysl.mywps.utils.CommonUtil;
+import com.example.ysl.mywps.utils.ToastUtils;
 import com.umeng.analytics.MobclickAgent;
 
 
@@ -198,6 +199,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         try {
             progressDialog.show();
         } catch (Exception ex) {
+            ToastUtils.showShort(this, ex.getMessage());
 //            Log.e(TAG, "showProgress: " + ex.getMessage());
         }
     }

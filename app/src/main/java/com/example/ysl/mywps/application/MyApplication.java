@@ -174,7 +174,7 @@ public class MyApplication extends MultiDexApplication implements Thread.Uncaugh
         UMConfigure.setLogEnabled(true);
 
 //崩溃捕获并处理
-        Thread.setDefaultUncaughtExceptionHandler(this);
+//        Thread.setDefaultUncaughtExceptionHandler(this);
     }
 
     public static Context getMyContext() {

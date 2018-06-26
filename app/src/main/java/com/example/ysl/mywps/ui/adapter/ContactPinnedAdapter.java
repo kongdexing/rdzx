@@ -16,9 +16,12 @@ import com.example.ysl.mywps.bean.Item;
 import com.example.ysl.mywps.ui.activity.ContactDetailActivity;
 import com.example.ysl.mywps.ui.view.CircularImageView;
 import com.example.ysl.mywps.utils.CommonUtil;
+import com.example.ysl.mywps.utils.ToastUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import de.halfbit.pinnedsection.PinnedSectionListView;
@@ -29,8 +32,41 @@ import de.halfbit.pinnedsection.PinnedSectionListView;
 
 public class ContactPinnedAdapter extends ArrayAdapter<Item> implements PinnedSectionListView.PinnedSectionListAdapter {
 
+
+    private ArrayList<ContactBean> list = new ArrayList<>();
+    private LinkedHashMap<Integer, ContactBean> selected = new LinkedHashMap<>();
+
     public ContactPinnedAdapter(@NonNull Context context, int resource) {
         super(context, resource);
+    }
+
+    public void selectAll(boolean isSelect) {
+        if (isSelect) {
+            for (int i = 0; i < list.size(); ++i) {
+                selected.put(i, list.get(i));
+            }
+        } else {
+            selected.clear();
+        }
+
+        notifyDataSetChanged();
+    }
+
+    public void docFroward() {
+        String uids = null;
+//        if (selected.size() == 0) {
+//            ToastUtils.showShort(context, "请选择要转发的人");
+//            return;
+//        }
+//
+//        for (ContactBean bean : selected.values()) {
+//            if (uids == null) {
+//                uids = bean.getUid();
+//            } else {
+//                uids += "," + uids;
+//            }
+//        }
+//        passsString.setString(uids);
     }
 
     public void loadData(List<ContactBean> contactBeans) {

@@ -144,7 +144,6 @@ public class ContactFragment extends BaseFragment {
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(consumer);
-
     }
 
     @Override

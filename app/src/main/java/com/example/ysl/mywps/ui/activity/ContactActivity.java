@@ -3,6 +3,7 @@ package com.example.ysl.mywps.ui.activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
@@ -15,10 +16,12 @@ import android.widget.TextView;
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.ContactBean;
 import com.example.ysl.mywps.bean.DocumentListBean;
+import com.example.ysl.mywps.bean.Item;
 import com.example.ysl.mywps.bean.WpsdetailFinish;
 import com.example.ysl.mywps.interfaces.PasssString;
 import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.ui.adapter.ContactMyAdapter;
+import com.example.ysl.mywps.ui.adapter.ContactPinnedAdapter;
 import com.example.ysl.mywps.ui.view.IconTextView;
 import com.example.ysl.mywps.utils.CommonUtil;
 import com.example.ysl.mywps.utils.MatchesUtil;
@@ -36,9 +39,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.halfbit.pinnedsection.PinnedSectionListView;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -52,18 +57,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.alibaba.mtl.log.a.getContext;
+
 /**
  * Created by ysl on 2018/1/16.
  */
 
 public class ContactActivity extends BaseActivity implements PasssString {
 
-    @BindView(R.id.contact_listview)
-    ListView listView;
-    //    @BindView(R.id.av_loading)
-//    AVLoadingIndicatorView loading;
-    @BindView(R.id.contact_itv_search)
-    IconTextView tvSearch;
+    @BindView(R.id.list)
+    PinnedSectionListView listView;
+    //    @BindView(R.id.contact_itv_search)
+//    IconTextView tvSearch;
     @BindView(R.id.contact_et_search)
     EditText etSearch;
     @BindView(R.id.contact_rl_bottom)
@@ -77,7 +82,9 @@ public class ContactActivity extends BaseActivity implements PasssString {
     @BindView(R.id.contact_tv_all)
     TextView tvAll;
 
-    private ContactMyAdapter adapter;
+    //    private ContactMyAdapter adapter;
+    private ContactPinnedAdapter adapter;
+
     private ArrayList<ContactBean> list = new ArrayList<>();
     private ArrayList<ContactBean> searchList = new ArrayList<>();
     private String token = "";
@@ -101,16 +108,15 @@ public class ContactActivity extends BaseActivity implements PasssString {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (adapter == null) return;
-                    adapter.selectAll(isChecked);
+//                    adapter.selectAll(isChecked);
                 }
             });
-
         }
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                拟稿1-》审核2-》审核通过5-》签署3（不同意）-》审核通过5
-                Logger.i("提交人  " + list.get((int) id).getUsername());
+                Log.i(TAG, "提交人  " + list.get((int) id).getUsername());
                 if (documentInfo.getStatus().equals("1")) {
                     commitAudit(list.get((int) id).getUid());
                 } else if (documentInfo.getStatus().equals("5")) {
@@ -126,7 +132,6 @@ public class ContactActivity extends BaseActivity implements PasssString {
             }
         });
         setTitleText("通讯录");
-        netWork();
     }
 
     /**
@@ -151,7 +156,7 @@ public class ContactActivity extends BaseActivity implements PasssString {
                                 emitter.onNext(response.message());
                                 return;
                             }
-                            Logger.i("contact  " + response.body());
+                            Log.i(TAG, "contact  " + response.body());
                             JSONObject jsonObject = new JSONObject(response.body());
 
                             int code = jsonObject.getInt("code");
@@ -222,7 +227,7 @@ public class ContactActivity extends BaseActivity implements PasssString {
 
                         try {
 
-                            Logger.i("contact  " + response.body());
+                            Log.i(TAG, "contact  " + response.body());
                             JSONObject jsonObject = new JSONObject(response.body());
 
                             int code = jsonObject.getInt("code");
@@ -272,6 +277,7 @@ public class ContactActivity extends BaseActivity implements PasssString {
      * 获取通讯录联系人
      */
     private void netWork() {
+        Log.i(TAG, "netWork: ");
         showProgress();
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
@@ -286,7 +292,7 @@ public class ContactActivity extends BaseActivity implements PasssString {
                             e.onNext(response.message());
                             return;
                         }
-                        Logger.i("response " + response.body());
+                        Log.i(TAG, "response " + response.body());
                         String data = response.body().toString();
                         String msg = null;
                         try {
@@ -299,13 +305,14 @@ public class ContactActivity extends BaseActivity implements PasssString {
                             Gson gson = new Gson();
                             for (int i = 0; i < jsonArray.length(); ++i) {
                                 JSONObject object = jsonArray.getJSONObject(i);
+                                String title = object.getString("title");
                                 JSONArray jsonArray1 = object.getJSONArray("contact");
 
                                 for (int j = 0; j < jsonArray1.length(); ++j) {
-
                                     JSONObject childObject = jsonArray1.getJSONObject(j);
                                     ContactBean bean = gson.fromJson(childObject.toString(), ContactBean.class);
                                     bean.setCapital(PingYinUtils.getPinYinHeadChar(bean.getUsername()));
+                                    bean.setTitle(title);
                                     list.add(bean);
                                 }
                             }
@@ -318,8 +325,7 @@ public class ContactActivity extends BaseActivity implements PasssString {
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-
-                        Logger.i("通讯录  " + t.getMessage());
+                        Log.i(TAG, "通讯录  " + t.getMessage());
                         e.onNext(t.getMessage());
                     }
                 });
@@ -331,12 +337,14 @@ public class ContactActivity extends BaseActivity implements PasssString {
             public void accept(String s) throws Exception {
                 hideProgress();
                 if (s.equals("Y")) {
-                    boolean shouldHide = false;
-                    if (documentInfo.getStatus().equals("4")) {
-                        shouldHide = true;
-                    }
-                    adapter = new ContactMyAdapter(list, ContactActivity.this, shouldHide, ContactActivity.this);
-                    listView.setAdapter(adapter);
+                    loadingContact("");
+//                    boolean shouldHide = false;
+//                    if (documentInfo.getStatus().equals("4")) {
+//                        shouldHide = true;
+//                    }
+//                    adapter = new ContactPinnedAdapter(getContext(), R.layout.layout_contact_group);
+////                    adapter = new ContactMyAdapter(list, ContactActivity.this, shouldHide, ContactActivity.this);
+//                    listView.setAdapter(adapter);
                 } else {
                     ToastUtils.showShort(ContactActivity.this, s);
                 }
@@ -370,7 +378,7 @@ public class ContactActivity extends BaseActivity implements PasssString {
                         }
 
                         String data = response.body();
-                        Logger.i("反馈流程  " + data);
+                        Log.i(TAG, "反馈流程  " + data);
                         if (CommonUtil.isEmpty(data)) {
                             emitter.onNext("N");
                             emitter.onComplete();
@@ -438,11 +446,14 @@ public class ContactActivity extends BaseActivity implements PasssString {
 
     @Override
     public void initView() {
-        tvSearch.setOnClickListener(click);
+        Log.i(TAG, "initView: ");
+//        tvSearch.setOnClickListener(click);
         tvAll.setOnClickListener(click);
         btConfirm.setOnClickListener(click);
         btCancel.setOnClickListener(click);
-
+        adapter = new ContactPinnedAdapter(this, R.layout.layout_contact_group);
+        listView.setAdapter(adapter);
+        
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -456,12 +467,10 @@ public class ContactActivity extends BaseActivity implements PasssString {
 
             @Override
             public void afterTextChanged(Editable s) {
-
                 if (CommonUtil.isEmpty(s.toString())) {
-
-                    if (adapter != null) adapter.update(list);
+                    final String value = etSearch.getText().toString();
+                    loadingContact(value.trim());
                 }
-
             }
         });
 
@@ -469,19 +478,64 @@ public class ContactActivity extends BaseActivity implements PasssString {
 
     @Override
     public void initData() {
+        Log.i(TAG, "initData: ");
+        netWork();
+    }
+
+    private void loadingContact(String target) {
+
+        List<String> groups = new ArrayList<>();
+        int sectionPosition = 0, listPosition = 0;
+
+        searchList.clear();
+        adapter.clear();
+
+        if (target == null || target.isEmpty()) {
+            searchList.addAll(list);
+        } else {
+            for (int i = 0; i < list.size(); i++) {
+                ContactBean bean = list.get(i);
+                if (bean.getMobile().contains(target) ||
+                        bean.getRealname().contains(target)) {
+                    searchList.add(bean);
+                }
+            }
+        }
+
+        for (int i = 0; i < searchList.size(); i++) {
+            ContactBean contactBean = searchList.get(i);
+
+            if (!groups.contains(contactBean.getTitle())) {
+                groups.add(contactBean.getTitle());
+
+                //添加组头
+                Item section = new Item(Item.SECTION, contactBean.getTitle());
+                section.sectionPosition = sectionPosition;
+                section.listPosition = listPosition++;
+                adapter.add(section);
+                //添加子分组
+                Item child = new Item(Item.ITEM, contactBean);
+                child.sectionPosition = sectionPosition;
+                child.listPosition = listPosition++;
+                adapter.add(child);
+            } else {
+                //添加子分组
+                Item child = new Item(Item.ITEM, contactBean);
+                child.sectionPosition = sectionPosition;
+                child.listPosition = listPosition++;
+                adapter.add(child);
+            }
+
+        }
 
     }
 
     @Override
     public void setString(String... datas) {
-
         if (datas.length > 0) {
-
             docForward(datas[0]);
         }
-
     }
-
 
     private class MyclickListener extends NoDoubleClickListener {
         @Override
@@ -490,47 +544,6 @@ public class ContactActivity extends BaseActivity implements PasssString {
             switch (v.getId()) {
                 case R.id.contact_itv_search:
 
-                    final String value = etSearch.getText().toString();
-
-                    if (CommonUtil.isEmpty(value)) {
-                        ToastUtils.showShort(ContactActivity.this, "请输入姓名或电话号码");
-                        return;
-                    }
-                    final boolean isNumber = MatchesUtil.isInteger(value);
-                    searchList.clear();
-                    showProgress();
-                    Thread searchThread = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            for (ContactBean bean : list) {
-
-                                if (isNumber && bean.getMobile().contains(value)) {
-
-                                    searchList.add(bean);
-                                } else {
-
-                                    if (bean.getUsername().contains(value) || PingYinUtils.getPingYin(bean.getUsername()).contains(value)) {
-                                        searchList.add(bean);
-                                    }
-
-                                }
-
-                            }
-
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    hideProgress();
-                                    if (adapter != null) {
-                                        adapter.update(searchList);
-                                    }
-                                }
-                            });
-                        }
-                    });
-
-                    searchThread.setDaemon(true);
-                    searchThread.start();
                     break;
                 case R.id.contact_bt_confirm:
                     if (adapter != null) {
@@ -544,7 +557,6 @@ public class ContactActivity extends BaseActivity implements PasssString {
                     cbAll.setChecked(!cbAll.isChecked());
                     break;
             }
-
         }
     }
 }
