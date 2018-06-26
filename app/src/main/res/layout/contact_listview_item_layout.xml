@@ -10,6 +10,15 @@
     android:paddingRight="@dimen/dp_10"
     android:paddingTop="@dimen/dp_8">
 
+    <CheckBox
+        android:id="@+id/contact_item_cb"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="@dimen/dp_5"
+        android:background="@drawable/cb_back"
+        android:button="@null"
+        android:visibility="visible" />
+
     <com.example.ysl.mywps.ui.view.CircularImageView
         android:id="@+id/imgHead"
         android:layout_width="@dimen/dp_45"

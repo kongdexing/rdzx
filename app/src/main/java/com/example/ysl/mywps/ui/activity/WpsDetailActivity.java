@@ -1233,6 +1233,7 @@ public class WpsDetailActivity extends BaseActivity {
                     bundle.putParcelable("documentInfo", documentInfo);
                     intent.putExtras(bundle);
                     startActivity(intent);
+
                 } else if (documentInfo.getStatus().equals("2")) {
                     if (opinion == null || opinion.equals("")) {
                         ToastUtils.showShort(WpsDetailActivity.this, "请填写意见");

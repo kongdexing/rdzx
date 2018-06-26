@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.example.ysl.mywps.R;
@@ -35,6 +36,7 @@ public class ContactPinnedAdapter extends ArrayAdapter<Item> implements PinnedSe
 
     private ArrayList<ContactBean> list = new ArrayList<>();
     private LinkedHashMap<Integer, ContactBean> selected = new LinkedHashMap<>();
+    private String type = "";
 
     public ContactPinnedAdapter(@NonNull Context context, int resource) {
         super(context, resource);
@@ -54,23 +56,24 @@ public class ContactPinnedAdapter extends ArrayAdapter<Item> implements PinnedSe
 
     public void docFroward() {
         String uids = null;
-//        if (selected.size() == 0) {
+        if (selected.size() == 0) {
 //            ToastUtils.showShort(context, "请选择要转发的人");
-//            return;
-//        }
-//
-//        for (ContactBean bean : selected.values()) {
-//            if (uids == null) {
-//                uids = bean.getUid();
-//            } else {
-//                uids += "," + uids;
-//            }
-//        }
+            return;
+        }
+
+        for (ContactBean bean : selected.values()) {
+            if (uids == null) {
+                uids = bean.getUid();
+            } else {
+                uids += "," + uids;
+            }
+        }
 //        passsString.setString(uids);
     }
 
     public void loadData(List<ContactBean> contactBeans) {
 //        generateDataSet(contactBeans);
+
     }
 
     public void generateDataSet(List<ContactBean> contactBeans) {
@@ -119,6 +122,7 @@ public class ContactPinnedAdapter extends ArrayAdapter<Item> implements PinnedSe
         } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_listview_item_layout, null);
 
+            CheckBox checkBox = (CheckBox)view.findViewById(R.id.contact_item_cb);
             TextView tvName = (TextView) view.findViewById(R.id.contact_tv_name);
             TextView dpName = (TextView)view.findViewById(R.id.dept_name);
             TextView tvPhone = (TextView) view.findViewById(R.id.contact_tv_phone);
@@ -131,8 +135,6 @@ public class ContactPinnedAdapter extends ArrayAdapter<Item> implements PinnedSe
 
             ImageLoader.getInstance().displayImage(contactBean.getAvatar(),
                     new ImageViewAware(headImg), CommonUtil.getDefaultUserImageLoaderOption());
-
-//            (new GlideImageLoader()).displayImage(this.getContext(), contactBean.getAvatar(), headImg);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override

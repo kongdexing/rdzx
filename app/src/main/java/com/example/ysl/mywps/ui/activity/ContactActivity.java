@@ -112,6 +112,16 @@ public class ContactActivity extends BaseActivity implements PasssString {
                 }
             });
         }
+
+        rlBottom.setVisibility(View.VISIBLE);
+        cbAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (adapter == null) return;
+                adapter.selectAll(isChecked);
+            }
+        });
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -452,8 +462,9 @@ public class ContactActivity extends BaseActivity implements PasssString {
         btConfirm.setOnClickListener(click);
         btCancel.setOnClickListener(click);
         adapter = new ContactPinnedAdapter(this, R.layout.layout_contact_group);
+
         listView.setAdapter(adapter);
-        
+
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
