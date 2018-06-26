@@ -128,6 +128,8 @@ public class CommitActivity extends BaseActivity {
 //            rlCommit.setVisibility(View.INVISIBLE);
 //        }
 
+        etOpinion.setVisibility(View.INVISIBLE);
+        rlCommit.setVisibility(View.INVISIBLE);
         if (documentInfo.getStatus().equals("2") || documentInfo.getStatus().equals("3") || documentInfo.getStatus().equals("6")) {
             if (myAccount.equals(documentInfo.getNow_username()) || myAccount.equals(documentInfo.getNow_nickname())) {
                 etOpinion.setVisibility(View.VISIBLE);
@@ -137,8 +139,6 @@ public class CommitActivity extends BaseActivity {
                 }
             }
         } else if (documentInfo.getStatus().equals("5")) {
-            etOpinion.setVisibility(View.INVISIBLE);
-            rlCommit.setVisibility(View.INVISIBLE);
             getOpinionFromNet();
         }
 
@@ -452,8 +452,8 @@ public class CommitActivity extends BaseActivity {
                         ToastUtils.showShort(CommitActivity.this, "请输入意见");
                         return;
                     }
-//            //                拟稿1-》审核2-》审核通过5-》签署3（不同意）-》审核通过5
-
+//            //                拟稿1-》审核2-》审核通过5-》签署3（不同意）-》审核通过5-》4转发状态-》6转发给多人，等待反馈状态
+//1.2.3.5 校验md5值
                     if (documentInfo.getStatus().equals("2")) {
                         uploadFile(opinion);
                     } else if (documentInfo.getStatus().equals("3")) {

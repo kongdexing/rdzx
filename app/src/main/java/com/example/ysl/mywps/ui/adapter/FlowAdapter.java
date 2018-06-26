@@ -62,8 +62,6 @@ public class FlowAdapter extends BaseAdapter {
     @SuppressLint("SetTextI18n")
     @Override
     public View getView(int position, View view, ViewGroup parent) {
-
-
         if (view == null) {
             view = LayoutInflater.from(context).inflate(R.layout.listview_item_flow_progress_layout, null);
             holder = new ViewHolder();

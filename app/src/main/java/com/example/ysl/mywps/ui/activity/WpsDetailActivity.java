@@ -411,7 +411,11 @@ public class WpsDetailActivity extends BaseActivity {
                         File file = new File(path);
 
                         if (!file.exists()) {
-                            file.mkdirs();
+                            boolean mkdirs = file.mkdirs();
+                            if (!mkdirs) {
+                                ToastUtils.showShort(WpsDetailActivity.this, "创建文件夹失败，请检查权限");
+                                return;
+                            }
                         }
                         downloadWpsPath = path + "/" + documentInfo.getDoc_name();
                         file = new File(downloadWpsPath);
@@ -419,15 +423,13 @@ public class WpsDetailActivity extends BaseActivity {
                         FileUtils.writeFile2Disk(response, file, new HttpFileCallBack() {
                             @Override
                             public void onLoading(long currentLength, long totalLength) {
-
                                 int precent = (int) (currentLength * 100 / totalLength);
                                 handler.sendEmptyMessage(precent);
-
+                                if (precent == 100) {
+                                    emitter.onNext("Y");
+                                }
                             }
                         });
-
-                        emitter.onNext("Y");
-
                     }
 
                     @Override
@@ -444,12 +446,11 @@ public class WpsDetailActivity extends BaseActivity {
             public void accept(String s) throws Exception {
                 loading.setVisibility(View.GONE);
                 if (s.equals("Y")) {
-
-                    if (shouldOpen) openWps(downloadWpsPath);
                     SharedPreferences.Editor editor = wpsPreference.edit();
                     editor.putString(documentInfo.getDoc_name(), documentInfo.getStatus());
                     editor.apply();
                     ToastUtils.showShort(getApplicationContext(), "文档下载成功");
+                    if (shouldOpen) openWps(downloadWpsPath);
                 } else {
                     ToastUtils.showShort(getApplicationContext(), s);
                 }
@@ -505,7 +506,7 @@ public class WpsDetailActivity extends BaseActivity {
         intent.setClassName(WpsModel.PackageName.NORMAL, WpsModel.ClassName.NORMAL);
 
         File file = new File(myPath);
-        if (file == null || !file.exists()) {
+        if (!file.exists()) {
             ToastUtils.showShort(WpsDetailActivity.this, "文件为空或者不存在");
             return false;
         }
@@ -583,8 +584,8 @@ public class WpsDetailActivity extends BaseActivity {
                     Bitmap localBitmap = BitmapFactory.decodeStream(fis);
                     int height = localBitmap.getHeight();
                     int width = localBitmap.getWidth();
-                    float scaleW = CommonFun.dip2pxFloat(WpsDetailActivity.this,78.0f) / width;
-                    float scaleH = CommonFun.dip2pxFloat(WpsDetailActivity.this,58.0f) / height;
+                    float scaleW = CommonFun.dip2pxFloat(WpsDetailActivity.this, 78.0f) / width;
+                    float scaleH = CommonFun.dip2pxFloat(WpsDetailActivity.this, 58.0f) / height;
                     Matrix matrix = new Matrix();
 //                    matrix.setScale(0.3f, 0.3f);
 //                    matrix.postScale(scaleW - 0.15f, scaleH - 0.04f); // w h
@@ -633,13 +634,11 @@ public class WpsDetailActivity extends BaseActivity {
      * 签署成功完成返回给拟稿人
      */
     private void signCompleted(final String opinion, final String signed) {
-
-
         loading.setVisibility(View.VISIBLE);
+        Log.d(TAG, "signCompleted: " + uploadImageName);
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(@NonNull final ObservableEmitter<String> emitter) throws Exception {
-//
                 Call<String> call = HttpUtl.signedCommit("User/Oa/back_signed_doc/", documentInfo.getProce_id(), documentInfo.getId(), opinion, signed, uploadImageName, uploadImagePath, token);
 
                 call.enqueue(new Callback<String>() {
@@ -695,13 +694,11 @@ public class WpsDetailActivity extends BaseActivity {
             public void accept(String s) throws Exception {
                 loading.setVisibility(View.GONE);
                 if (s.equals("Y") || s.equals("N")) {
-
-
                     if (s.equals("Y")) {
-                        File file = new File(uploadImagePath);
-                        if (file.exists()) {
-                            file.delete();
-                        }
+//                        File file = new File(uploadImagePath);
+//                        if (file.exists()) {
+//                            file.delete();
+//                        }
                         onEvent(new WpsdetailFinish("结束"));
                     }
                 } else {
@@ -1065,9 +1062,8 @@ public class WpsDetailActivity extends BaseActivity {
      * 检查是否应该下载当前文件
      */
     private boolean checkFileExist() {
-
         String wpsPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath() + "/" + documentInfo.getDoc_name();
-
+        Log.d(TAG, "checkFileExist: " + documentInfo.getDoc_name());
         File file = new File(wpsPath);
 
         //            String existsStatus = wpsPreference.getString(documentInfo.getDoc_name(), "");
@@ -1115,7 +1111,7 @@ public class WpsDetailActivity extends BaseActivity {
                             if (code == 0) {
                                 if (remoteMd5.equals(md5Value)) {
                                     emitter.onNext("N");
-                                }else {
+                                } else {
                                     emitter.onNext("Y");
                                 }
                             } else {
@@ -1142,11 +1138,11 @@ public class WpsDetailActivity extends BaseActivity {
             public void accept(String s) throws Exception {
                 if (s.equals("Y")) {
                     downLoadWps(needOpen);
-                }else if (s.equals("N")){
+                } else if (s.equals("N")) {
                     if (needOpen) {
                         openWps(wpsPath);
                     }
-                }else {
+                } else {
                     ToastUtils.showShort(WpsDetailActivity.this, s);
                 }
             }
@@ -1199,13 +1195,13 @@ public class WpsDetailActivity extends BaseActivity {
 //                    ToastUtils.showShort(WpsDetailActivity.this, "文档当前在拟稿状态");
 //                    return;
 //                }
-                    Intent intent = new Intent(WpsDetailActivity.this, CommitActivity.class);
-                    intent.putExtra("wpspath", downloadWpsPath);
-                    intent.putExtra("opinion", opinion);
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable("documentInfo", documentInfo);
-                    intent.putExtras(bundle);
-                    startActivityForResult(intent, GET_OPTION);
+                Intent intent = new Intent(WpsDetailActivity.this, CommitActivity.class);
+                intent.putExtra("wpspath", downloadWpsPath);
+                intent.putExtra("opinion", opinion);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("documentInfo", documentInfo);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, GET_OPTION);
             } else if (id == R.id.wpcdetail_iv_sign || id == R.id.wpcdetail_ll_sign) {
 
                 if (!mAccount.equals(documentInfo.getNow_nickname()) && !mAccount.equals(documentInfo.getNow_username())) {
