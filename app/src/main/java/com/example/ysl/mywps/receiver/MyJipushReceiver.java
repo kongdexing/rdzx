@@ -68,13 +68,6 @@ public class MyJipushReceiver extends BroadcastReceiver {
                 Intent intent = new Intent(context, LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
-
-//                String param = "{\"burl\":\"\\/meeting\\/details.html?id=67\",\"ctime\":\"2018-06-24 23:14:22\",\"detail_id\":\"67\",\"from_uid\":\"215\",\"message\":\"会议标题\",\"model_code\":\"MEET\",\"model_name\":\"会议助手\",\"title\":\"会议通知\"}";
-//
-//                Intent intent = new Intent(ACTION_RECEIVE_MESSAGE);
-//                intent.putExtra("param", param);
-//                context.sendOrderedBroadcast(intent, null);
-
             } else if (type.equals("1")) {
                 //消息
                 Intent intent = new Intent(ACTION_RECEIVE_MESSAGE);

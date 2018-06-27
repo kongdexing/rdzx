@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.ysl.mywps.R;
+import com.example.ysl.mywps.bean.MessageBean;
 import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.receiver.MyJipushReceiver;
 import com.example.ysl.mywps.ui.fragment.ContactFragment;
@@ -32,6 +33,8 @@ import com.example.ysl.mywps.ui.fragment.NewWorkFragment;
 import com.example.ysl.mywps.utils.CommonUtil;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.example.ysl.mywps.utils.ToastUtils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.orhanobut.logger.Logger;
 
 import org.json.JSONException;
@@ -370,7 +373,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (MyJipushReceiver.ACTION_RECEIVE_MESSAGE.equals(action)) {
-                badgeView.setVisibility(View.VISIBLE);
+                try {
+                    String params = intent.getStringExtra("param");
+                    Gson gson = new Gson();
+                    MessageBean messageBean = gson.fromJson(params, new TypeToken<MessageBean>() {
+                    }.getType());
+                    //表明是推送消息
+                    badgeView.setVisibility(View.VISIBLE);
+                } catch (Exception ex) {
+                    Log.i(TAG, "onReceive error: " + ex.getMessage());
+                }
+
             }
         }
     };

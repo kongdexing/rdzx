@@ -424,6 +424,7 @@ public class WebViewActivity extends BaseWebActivity implements JSCallBack {
                             if (CommonUtil.isVideo(file.getName()))
                                 comprossVideo(file.getName());
                         } else {
+                            //图片文件压缩
                             uploadFile(path, file.getName());
                         }
                     }

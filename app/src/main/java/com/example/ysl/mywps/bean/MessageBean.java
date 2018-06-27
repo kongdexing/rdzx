@@ -3,6 +3,7 @@ package com.example.ysl.mywps.bean;
 public class MessageBean {
 
     private String id;
+    private String detail_id;
     private String title;
     private String pic;
     private String burl;
@@ -10,12 +11,22 @@ public class MessageBean {
     private String model_code;
     private String ctime;
 
+    private String doc_id;
+
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getDetail_id() {
+        return detail_id;
+    }
+
+    public void setDetail_id(String detail_id) {
+        this.detail_id = detail_id;
     }
 
     public String getTitle() {
@@ -65,4 +76,5 @@ public class MessageBean {
     public void setCtime(String ctime) {
         this.ctime = ctime;
     }
+
 }

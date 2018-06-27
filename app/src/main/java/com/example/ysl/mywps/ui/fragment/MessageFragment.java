@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.MessageBean;
@@ -22,8 +21,6 @@ import com.example.ysl.mywps.net.ResultPage;
 import com.example.ysl.mywps.receiver.MyJipushReceiver;
 import com.example.ysl.mywps.ui.adapter.MessageAdapter;
 import com.example.ysl.mywps.ui.view.LoadMoreRecyclerView;
-import com.example.ysl.mywps.ui.view.WrapContentLinearLayoutManager;
-import com.example.ysl.mywps.utils.CommonUtil;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.example.ysl.mywps.utils.ToastUtils;
 import com.google.gson.Gson;
@@ -53,7 +50,7 @@ import retrofit2.Response;
  */
 public class MessageFragment extends BaseFragment {
 
-//    @BindView(R.id.btnAddItem)
+    //    @BindView(R.id.btnAddItem)
 //    Button btnAddItem;
     public ResultPage resultPage = new ResultPage();
     @BindView(R.id.recyclerview)
@@ -264,14 +261,6 @@ public class MessageFragment extends BaseFragment {
                 abortBroadcast();
                 try {
                     String params = intent.getStringExtra("param");
-                    JSONObject object = new JSONObject(params);
-//                    String id = object.getString("detail_id");
-//                    String burl = object.getString("burl");
-//                    String ctime = object.getString("ctime");
-//                    String message = object.getString("message");
-//                    String model_code = object.getString("model_code");
-//                    String model_name = object.getString("model_name");
-//                    String title = object.getString("title");
                     Gson gson = new Gson();
                     MessageBean messageBean = gson.fromJson(params, new TypeToken<MessageBean>() {
                     }.getType());

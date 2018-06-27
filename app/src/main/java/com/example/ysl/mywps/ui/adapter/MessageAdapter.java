@@ -2,6 +2,7 @@ package com.example.ysl.mywps.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
@@ -16,7 +17,9 @@ import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.MessageBean;
 import com.example.ysl.mywps.ui.activity.BaseWebActivity;
 import com.example.ysl.mywps.ui.activity.WebViewActivity;
+import com.example.ysl.mywps.ui.activity.WpsDetailActivity;
 import com.example.ysl.mywps.utils.CommonUtil;
+import com.example.ysl.mywps.utils.SysytemSetting;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 
@@ -128,10 +131,22 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mHolder.rlNewsItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(mContext, WebViewActivity.class);
-                    intent.putExtra(BaseWebActivity.WEB_TITLE, message.getModel_name());
-                    intent.putExtra(BaseWebActivity.WEB_URL, message.getBurl());
-                    mContext.startActivity(intent);
+                    if (code.equals("ODC")) {
+                        //公文流转
+                        Intent intent = new Intent(mContext, WpsDetailActivity.class);
+
+                        intent.putExtra(SysytemSetting.WPS_MODE, SysytemSetting.INSIDE_WPS);
+//                intent.putExtra(SysytemSetting.ACTIVITY_KIND,SysytemSetting.HANDLE_WPS);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("doc_id", message.getDetail_id());
+                        intent.putExtras(bundle);
+                        mContext.startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(mContext, WebViewActivity.class);
+                        intent.putExtra(BaseWebActivity.WEB_TITLE, message.getModel_name());
+                        intent.putExtra(BaseWebActivity.WEB_URL, message.getBurl());
+                        mContext.startActivity(intent);
+                    }
                 }
             });
 

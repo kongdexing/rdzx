@@ -88,20 +88,7 @@ public class DocumentListBean implements Parcelable {
     private String  now_realname;
     private String dept_name;
     private String is_forward;
-
-
-    public String getIs_forward() {
-        return is_forward;
-    }
-
-    public void setIs_forward(String is_forward) {
-        this.is_forward = is_forward;
-    }
-
-    public DocumentListBean(){
-
-    }
-
+    private String is_img_newest ;
 
     protected DocumentListBean(Parcel in) {
         doc_imgs = in.createTypedArrayList(DocumentImageBean.CREATOR);
@@ -128,6 +115,36 @@ public class DocumentListBean implements Parcelable {
         now_realname = in.readString();
         dept_name = in.readString();
         is_forward = in.readString();
+        is_img_newest = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeTypedList(doc_imgs);
+        dest.writeString(id);
+        dest.writeString(uid);
+        dest.writeString(title);
+        dest.writeString(dept);
+        dest.writeString(des);
+        dest.writeString(doc_name);
+        dest.writeString(doc_url);
+        dest.writeString(status);
+        dest.writeString(ctime);
+        dest.writeString(proce_id);
+        dest.writeString(now_uid);
+        dest.writeString(from_uid);
+        dest.writeString(n_time);
+        dest.writeString(opinion);
+        dest.writeInt(is_writable);
+        dest.writeString(c_username);
+        dest.writeString(c_nickname);
+        dest.writeString(c_realname);
+        dest.writeString(now_username);
+        dest.writeString(now_nickname);
+        dest.writeString(now_realname);
+        dest.writeString(dept_name);
+        dest.writeString(is_forward);
+        dest.writeString(is_img_newest);
     }
 
     public static final Creator<DocumentListBean> CREATOR = new Creator<DocumentListBean>() {
@@ -141,6 +158,14 @@ public class DocumentListBean implements Parcelable {
             return new DocumentListBean[size];
         }
     };
+
+    public String getIs_forward() {
+        return is_forward;
+    }
+
+    public void setIs_forward(String is_forward) {
+        this.is_forward = is_forward;
+    }
 
     public String getOpinion() {
         return opinion;
@@ -336,38 +361,17 @@ public class DocumentListBean implements Parcelable {
         this.dept_name = dept_name;
     }
 
-
     @Override
     public int describeContents() {
         return 0;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeTypedList(doc_imgs);
-        dest.writeString(id);
-        dest.writeString(uid);
-        dest.writeString(title);
-        dest.writeString(dept);
-        dest.writeString(des);
-        dest.writeString(doc_name);
-        dest.writeString(doc_url);
-        dest.writeString(status);
-        dest.writeString(ctime);
-        dest.writeString(proce_id);
-        dest.writeString(now_uid);
-        dest.writeString(from_uid);
-        dest.writeString(n_time);
-        dest.writeString(opinion);
-        dest.writeInt(is_writable);
-        dest.writeString(c_username);
-        dest.writeString(c_nickname);
-        dest.writeString(c_realname);
-        dest.writeString(now_username);
-        dest.writeString(now_nickname);
-        dest.writeString(now_realname);
-        dest.writeString(dept_name);
-        dest.writeString(is_forward);
+    public String getIs_img_newest() {
+        return is_img_newest;
+    }
+
+    public void setIs_img_newest(String is_img_newest) {
+        this.is_img_newest = is_img_newest;
     }
 
     @Override
@@ -397,6 +401,7 @@ public class DocumentListBean implements Parcelable {
                 ", now_realname='" + now_realname + '\'' +
                 ", dept_name='" + dept_name + '\'' +
                 ", is_forward='" + is_forward + '\'' +
+                ", is_img_newest='" + is_img_newest + '\'' +
                 '}';
     }
 }

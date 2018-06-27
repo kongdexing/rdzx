@@ -1,11 +1,11 @@
 package com.example.ysl.mywps.ui.activity;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
-import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -34,10 +34,8 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.ysl.mywps.R;
-import com.example.ysl.mywps.bean.DocumentListBean;
 import com.example.ysl.mywps.bean.WpsdetailFinish;
 import com.example.ysl.mywps.interfaces.HttpFileCallBack;
 import com.example.ysl.mywps.net.HttpUtl;
@@ -86,8 +84,7 @@ import retrofit2.Response;
 /**
  * Created by Administrator on 2018/1/14 0014.
  */
-
-public class WpsDetailActivity extends BaseActivity {
+public class WpsDetailActivity extends WpsDetailBaseActivity {
 
     private static final String TAG = WpsDetailActivity.class.getSimpleName();
     public static final int GET_OPTION = 0x0001;
@@ -128,14 +125,12 @@ public class WpsDetailActivity extends BaseActivity {
     RelativeLayout rlContent;
 
     private MyclickListener click = new MyclickListener();
-    private WpsBroadCast reciver = new WpsBroadCast();
     private int screenH = 0;
-    private DocumentListBean documentInfo = null;
     //    private WpsDetailAdapter adapter;
     private PreviewAdapter adapter;
     private String uploadImagePath = "";
     private String downloadWpsPath = "";
-    private String token = "";
+
     private boolean haveSigned = false;
     private String localImagePath = "";
     private String uploadImageName = "";
@@ -178,7 +173,6 @@ public class WpsDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_wpc_details_layout);
         ButterKnife.bind(this);
         int[] screenWH = CommonUtil.getScreenWH(this);
@@ -198,9 +192,6 @@ public class WpsDetailActivity extends BaseActivity {
         rlLoading.setVisibility(View.GONE);
         progressBar.setVisibility(View.GONE);
         rlDragContent.setVisibility(View.GONE);
-
-        this.registerReceiver(reciver, new IntentFilter("com.example.ysl.mywps.sign"));
-        token = SharedPreferenceUtils.loginValue(this, "token");
 
         screenH = CommonUtil.getScreenWH(this)[1];
         showLeftButton(true, "", new View.OnClickListener() {
@@ -227,7 +218,20 @@ public class WpsDetailActivity extends BaseActivity {
             llSign.setVisibility(View.INVISIBLE);
             llSend.setVisibility(View.INVISIBLE);
         }
-        afterData();
+        mAccount = SharedPreferenceUtils.loginValue(this, "name");
+        Bundle bundle = getIntent().getExtras();
+        try {
+            documentInfo = bundle.getParcelable("documentben");
+            if (documentInfo != null) {
+                afterData();
+            }
+            String doc_id = bundle.getString("doc_id");
+            if (doc_id != null) {
+                getWpsInfo(doc_id);
+            }
+        } catch (Exception ex) {
+
+        }
     }
 
     @Override
@@ -241,12 +245,9 @@ public class WpsDetailActivity extends BaseActivity {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void afterData() {
-        mAccount = SharedPreferenceUtils.loginValue(this, "name");
-        Bundle bundle = getIntent().getExtras();
-        documentInfo = bundle.getParcelable("documentben");
+    public void afterData() {
+        super.afterData();
         setTitleText(documentInfo.getDoc_name());
-
 //        http:\/\/p2c152618.bkt.clouddn.com\/1_测试中文.docx_2.png?v=1517064503"
         Log.d(TAG, "afterData: " + documentInfo.getOpinion());
         adapter = new PreviewAdapter(documentInfo.getDoc_imgs(), this);
@@ -320,8 +321,6 @@ public class WpsDetailActivity extends BaseActivity {
 //                    Log.d(TAG, "onTouch: left = " + ivIcon.getX() + " | top = " + ivIcon.getY());
                     return true;
                 }
-//                if ()
-//                ivIcon.setBackgroundColor(Color.TRANSPARENT);
                 return false;
             }
         });
@@ -911,15 +910,6 @@ public class WpsDetailActivity extends BaseActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
     }
 
-    private class WpsBroadCast extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Toast.makeText(context, "mybitmap", Toast.LENGTH_SHORT).show();
-            Logger.i("static  " + CommonUtil.myPath);
-        }
-    }
-
     @Subscribe
     public void onEvent(WpsdetailFinish finish) {
         Logger.i("finishe " + finish.getMsg());
@@ -1041,11 +1031,8 @@ public class WpsDetailActivity extends BaseActivity {
     private class MyclickListener extends NoDoubleClickListener {
         @Override
         public void click(View v) {
-
             int id = v.getId();
-
             if (id == R.id.wpcdetail_iv_artical || id == R.id.wpcdetail_ll_artical) {
-
                 if (checkFileExist()) {
 //                    ToastUtils.showShort(WpsDetailActivity.this, "正在下载");
                     checkMd5AndDownload(true);
@@ -1053,30 +1040,9 @@ public class WpsDetailActivity extends BaseActivity {
                 } else {
                     downLoadWps(true);
                 }
-//                if(!mAccount.equals(documentInfo.getNow_nickname()) && !mAccount.equals(documentInfo.getNow_username())){
-//                    if(checkFileExist()){
-//                        ToastUtils.showShort(WpsDetailActivity.this,"正在下载");
-//                        downLoadWps(true);
-//                    }else {
-//                        openWps(downloadWpsPath);
-//                    }
-////                    ToastUtils.showShort(WpsDetailActivity.this,"只有处理人才能查看文件");
-//                    return;
-//                }else {
-//                    if(checkFileExist()){
-//                        ToastUtils.showShort(WpsDetailActivity.this,"正在下载");
-//                        downLoadWps(true);
-//                    }else {
-//                        openWps(downloadWpsPath);
-//                    }
-//
-//                }
-
             } else if (id == R.id.wpcdetail_iv_message || id == R.id.wpcdetail_ll_message) {
-
 //                if (documentInfo.getStatus().equals("1")) {
 ////               //                拟稿1-》审核2-》审核通过5-》签署3（不同意）-》审核通过4
-
 //     1 拟文 2 审核  3 签署  4转发  5审核通过  6 反馈阶段
 //                    ToastUtils.showShort(WpsDetailActivity.this, "文档当前在拟稿状态");
 //                    return;
@@ -1089,7 +1055,6 @@ public class WpsDetailActivity extends BaseActivity {
                 intent.putExtras(bundle);
                 startActivityForResult(intent, GET_OPTION);
             } else if (id == R.id.wpcdetail_iv_sign || id == R.id.wpcdetail_ll_sign) {
-
                 if (!mAccount.equals(documentInfo.getNow_nickname()) && !mAccount.equals(documentInfo.getNow_username())) {
                     ToastUtils.showShort(WpsDetailActivity.this, "只有处理人才能签署文件");
                     return;
@@ -1100,11 +1065,25 @@ public class WpsDetailActivity extends BaseActivity {
                     return;
                 }
 
+                if (documentInfo.getIs_img_newest().equals("n")) {
+                    //最新文件的预览图片正在转码中，请稍后再试...
+                    new AlertDialog.Builder(WpsDetailActivity.this)
+                            .setTitle("公文")
+                            .setMessage("最新文件的预览图片正在转码中，请稍后再试...")
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    getWpsInfo(documentInfo.getId());
+                                }
+                            })
+                            .create().show();
+                    return;
+                }
+
                 haveSigned = true;
                 setSign();
             } else if (id == R.id.wpcdetail_iv_send || id == R.id.wpcdetail_ll_send) {
                 //点击发送
-
                 if (!mAccount.equals(documentInfo.getNow_nickname()) && !mAccount.equals(documentInfo.getNow_username())) {
                     ToastUtils.showShort(WpsDetailActivity.this, "只有处理人才能发送文件");
                     return;
