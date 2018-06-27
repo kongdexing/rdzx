@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.ysl.mywps.bean.DocumentListBean;
@@ -81,7 +82,7 @@ public class WpsDetailBaseActivity extends BaseActivity {
     }
 
     public void getWpsInfo(final String doc_id) {
-
+        showProgress();
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
@@ -89,18 +90,21 @@ public class WpsDetailBaseActivity extends BaseActivity {
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
+                        hideProgress();
                         if (!response.isSuccessful()) {
                             emitter.onNext(response.message());
                             return;
                         }
                         String data = response.body();
+                        Log.i(TAG, "onResponse: " + data);
                         try {
                             JSONObject jsonObject = new JSONObject(data);
                             int code = jsonObject.getInt("code");
                             String msg = jsonObject.getString("msg");
-                            if (code != 0) {
+
+                            if (code == 0) {
                                 Gson gson = new Gson();
-                                documentInfo = gson.fromJson(msg, new TypeToken<DocumentListBean>() {
+                                documentInfo = gson.fromJson(jsonObject.getString("data"), new TypeToken<DocumentListBean>() {
                                 }.getType());
 
                                 if (documentInfo != null) {
@@ -108,10 +112,10 @@ public class WpsDetailBaseActivity extends BaseActivity {
                                 } else {
                                     emitter.onNext("N");
                                 }
+                                Log.i(TAG, "onResponse documentInfo: " + documentInfo.getId());
                             } else {
                                 ToastUtils.showShort(WpsDetailBaseActivity.this, msg);
                             }
-
                         } catch (Exception e) {
                             e.printStackTrace();
                             emitter.onNext(e.getMessage());
@@ -128,6 +132,7 @@ public class WpsDetailBaseActivity extends BaseActivity {
         Consumer<String> consumer = new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
+                Log.i(TAG, "accept: " + s);
                 if (s != null && s.equals("Y")) {
                     afterData();
                 } else {

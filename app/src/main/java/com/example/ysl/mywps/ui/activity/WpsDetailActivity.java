@@ -223,7 +223,8 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
         try {
             documentInfo = bundle.getParcelable("documentben");
             if (documentInfo != null) {
-                afterData();
+//                afterData();
+                getWpsInfo(documentInfo.getId());
             }
             String doc_id = bundle.getString("doc_id");
             if (doc_id != null) {
@@ -248,6 +249,10 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
     public void afterData() {
         super.afterData();
         setTitleText(documentInfo.getDoc_name());
+        if (documentInfo.getIs_img_newest().equals("n")) {
+            //最新文件的预览图片正在转码中，请稍后再试...
+            ToastUtils.showShort(this, "最新文件的预览图片正在转码中，请稍后再试...");
+        }
 //        http:\/\/p2c152618.bkt.clouddn.com\/1_测试中文.docx_2.png?v=1517064503"
         Log.d(TAG, "afterData: " + documentInfo.getOpinion());
         adapter = new PreviewAdapter(documentInfo.getDoc_imgs(), this);

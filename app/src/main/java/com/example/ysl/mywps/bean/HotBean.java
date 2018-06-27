@@ -3,6 +3,7 @@ package com.example.ysl.mywps.bean;
 public class HotBean {
 
     private String id;
+    private String detail_id;
     private String title;
     private String pic;
     private String burl;
@@ -16,6 +17,14 @@ public class HotBean {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getDetail_id() {
+        return detail_id;
+    }
+
+    public void setDetail_id(String detail_id) {
+        this.detail_id = detail_id;
     }
 
     public String getTitle() {

@@ -3,8 +3,8 @@ package com.example.ysl.mywps.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 import com.example.ysl.mywps.R;
@@ -21,8 +21,10 @@ public class WelcomeActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().getDecorView().setBackgroundResource(R.drawable.bg_welcome);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+
         showTitle(false);
         getLogin();
     }
@@ -51,10 +53,15 @@ public class WelcomeActivity extends BaseActivity {
     }
 
     private void loginSuccess() {
-        //判断跳转类型
-        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //判断跳转类型
+                Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }, 2000);
     }
 
     private void rongYun(String imToken) {

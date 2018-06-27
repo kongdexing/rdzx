@@ -88,7 +88,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         //MyViewHolder
         final MessageBean message = messageBeans.get(position);
         try {
-            mHolder.txtTitle.setText(message.getTitle());
+            mHolder.txtTitle.setText(message.getMessage());
             mHolder.txtTime.setText(message.getCtime());
             final String code = message.getModel_code().toUpperCase();
             if (code.equals("ODC")) {

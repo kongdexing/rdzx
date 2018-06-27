@@ -5,13 +5,12 @@ public class MessageBean {
     private String id;
     private String detail_id;
     private String title;
+    private String message;
     private String pic;
     private String burl;
     private String model_name;
     private String model_code;
     private String ctime;
-
-    private String doc_id;
 
     public String getId() {
         return id;
@@ -35,6 +34,14 @@ public class MessageBean {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public String getPic() {
