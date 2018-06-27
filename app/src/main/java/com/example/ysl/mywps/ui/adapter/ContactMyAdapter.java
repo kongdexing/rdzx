@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.ContactBean;
-import com.example.ysl.mywps.interfaces.PasssString;
+import com.example.ysl.mywps.interfaces.PassString;
 import com.example.ysl.mywps.ui.view.CircularImageView;
 import com.example.ysl.mywps.utils.CommonUtil;
 import com.example.ysl.mywps.utils.ToastUtils;
@@ -31,12 +31,12 @@ public class ContactMyAdapter extends BaseAdapter {
     private Context context;
     private ArrayList<ContactBean> list = new ArrayList<>();
     private ArrayList<String> exitContact = new ArrayList<>();
-    private PasssString passsString;
+    private PassString passsString;
     private LinkedHashMap<Integer, ContactBean> selected = new LinkedHashMap<>();
 
     private boolean shouldHide;
 
-    public ContactMyAdapter(ArrayList<ContactBean> list, Context context, Boolean isHide, PasssString passsString) {
+    public ContactMyAdapter(ArrayList<ContactBean> list, Context context, Boolean isHide, PassString passsString) {
 
         this.list = list;
         this.context = context;

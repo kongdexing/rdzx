@@ -1,11 +1,8 @@
 package com.example.ysl.mywps.ui.fragment;
 
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
@@ -20,27 +17,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.ysl.mywps.R;
-import com.example.ysl.mywps.bean.FileListBean;
-import com.example.ysl.mywps.bean.FileListChildBean;
 import com.example.ysl.mywps.bean.TransportBean;
 import com.example.ysl.mywps.bean.UploadBean;
 import com.example.ysl.mywps.bean.UploadChildFileBean;
 import com.example.ysl.mywps.bean.UploadSlefBean;
-import com.example.ysl.mywps.interfaces.HttpFileCallBack;
-import com.example.ysl.mywps.interfaces.PassFileChildList;
-import com.example.ysl.mywps.interfaces.PasssString;
+import com.example.ysl.mywps.interfaces.PassString;
 import com.example.ysl.mywps.interfaces.UploadCallback;
 import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.net.ProgressListener;
-import com.example.ysl.mywps.provider.DownLoadProvider;
-import com.example.ysl.mywps.provider.UploadProvider;
 import com.example.ysl.mywps.ui.activity.DocumentDetailActivity;
 import com.example.ysl.mywps.ui.activity.MaterialActivity;
 import com.example.ysl.mywps.ui.adapter.FileUploadAdapter;
 
 import com.example.ysl.mywps.ui.view.MatchListView;
 import com.example.ysl.mywps.utils.CommonUtil;
-import com.example.ysl.mywps.utils.FileUtils;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.example.ysl.mywps.utils.ToastUtils;
 import com.google.gson.Gson;
@@ -66,7 +56,6 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -75,7 +64,7 @@ import retrofit2.Response;
  * Created by Administrator on 2018/2/4 0004.
  */
 
-public class TransportFragmentsUpload extends BaseFragment implements PasssString, UploadCallback {
+public class TransportFragmentsUpload extends BaseFragment implements PassString, UploadCallback {
 
     @BindView(R.id.fragment_documents_listview)
     MatchListView listView;

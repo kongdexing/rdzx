@@ -17,7 +17,7 @@ import com.example.ysl.mywps.bean.FileListBean;
 import com.example.ysl.mywps.bean.FileListChildBean;
 import com.example.ysl.mywps.bean.FileType;
 import com.example.ysl.mywps.interfaces.PassFileChildList;
-import com.example.ysl.mywps.interfaces.PasssString;
+import com.example.ysl.mywps.interfaces.PassString;
 import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.ui.activity.DocumentDetailActivity;
 import com.example.ysl.mywps.ui.activity.MaterialActivity;
@@ -56,7 +56,7 @@ import retrofit2.Response;
  * Created by Administrator on 2018/2/4 0004.
  */
 
-public class DocufragmentsFragment extends BaseFragment implements PassFileChildList, PasssString {
+public class DocufragmentsFragment extends BaseFragment implements PassFileChildList, PassString {
 
     @BindView(R.id.fragment_documents_listview)
     PullToRefreshListView listView;

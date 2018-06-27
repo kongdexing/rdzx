@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.FileListBean;
 import com.example.ysl.mywps.interfaces.PassFileChildList;
-import com.example.ysl.mywps.interfaces.PasssString;
 import com.example.ysl.mywps.ui.view.MatchListView;
 
 import java.util.ArrayList;

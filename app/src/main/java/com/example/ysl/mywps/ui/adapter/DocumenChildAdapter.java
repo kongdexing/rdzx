@@ -3,8 +3,6 @@ package com.example.ysl.mywps.ui.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +15,6 @@ import android.widget.TextView;
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.FileListChildBean;
 import com.example.ysl.mywps.interfaces.PassFileChildList;
-import com.example.ysl.mywps.interfaces.PasssString;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 

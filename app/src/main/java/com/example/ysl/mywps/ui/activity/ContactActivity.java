@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -17,7 +17,7 @@ import com.example.ysl.mywps.bean.ContactBean;
 import com.example.ysl.mywps.bean.DocumentListBean;
 import com.example.ysl.mywps.bean.Item;
 import com.example.ysl.mywps.bean.WpsdetailFinish;
-import com.example.ysl.mywps.interfaces.PasssString;
+import com.example.ysl.mywps.interfaces.PassString;
 import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.ui.adapter.ContactPinnedAdapter;
 import com.example.ysl.mywps.utils.CommonUtil;
@@ -56,7 +56,7 @@ import retrofit2.Response;
  * Created by ysl on 2018/1/16.
  */
 
-public class ContactActivity extends BaseActivity implements PasssString {
+public class ContactActivity extends BaseActivity {
 
     @BindView(R.id.list)
     PinnedSectionListView listView;
@@ -94,40 +94,8 @@ public class ContactActivity extends BaseActivity implements PasssString {
         docPath = getIntent().getStringExtra("path");
         documentInfo = getIntent().getExtras().getParcelable("documentInfo");
 
-        if (documentInfo.getStatus().equals("4")) {
-            rlBottom.setVisibility(View.VISIBLE);
-            cbAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (adapter == null) return;
-//                    adapter.selectAll(isChecked);
-                }
-            });
-        }
+        initPageView();
 
-        /*start checkbox 全选测试*/
-        rlBottom.setVisibility(View.VISIBLE);
-        cbAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (adapter == null) return;
-                adapter.selectAll(isChecked);
-            }
-        });
-        /*end*/
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                拟稿1-》审核2-》审核通过5-》签署3（不同意）-》审核通过5
-                Log.i(TAG, "提交人  " + list.get((int) id).getUsername());
-                if (documentInfo.getStatus().equals("1")) {
-                    commitAudit(list.get((int) id).getUid());
-                } else if (documentInfo.getStatus().equals("5")) {
-                    commitSign(list.get((int) id).getUid());
-                }
-            }
-        });
         token = SharedPreferenceUtils.loginValue(this, "token");
         showLeftButton(true, "", new View.OnClickListener() {
             @Override
@@ -136,6 +104,84 @@ public class ContactActivity extends BaseActivity implements PasssString {
             }
         });
         setTitleText("通讯录");
+    }
+
+    private void initPageView() {
+        tvAll.setOnClickListener(click);
+        btConfirm.setOnClickListener(click);
+        btCancel.setOnClickListener(click);
+
+        adapter = new ContactPinnedAdapter(this, R.layout.layout_contact_group);
+        listView.setAdapter(adapter);
+
+        adapter.setJumpType(ContactPinnedAdapter.Single, new ContactPinnedAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(ContactBean contactBean) {
+                //拟稿1-》审核2-》审核通过5-》签署3（不同意）-》审核通过5
+                Log.i(TAG, "提交人  " + contactBean.getUsername());
+                if (documentInfo.getStatus().equals("1")) {
+                    commitAudit(contactBean.getUid());
+                } else if (documentInfo.getStatus().equals("5")) {
+                    commitSign(contactBean.getUid());
+                }
+            }
+        });
+
+        if (documentInfo.getStatus().equals("4")) {
+            //可多选
+            adapter.setJumpType(ContactPinnedAdapter.Multiple, new PassString() {
+                @Override
+                public void setString(String... datas) {
+                    if (datas.length > 0) {
+                        docForward(datas[0]);
+                    }
+                }
+            });
+            rlBottom.setVisibility(View.VISIBLE);
+            cbAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (adapter == null) return;
+                    adapter.selectAll(isChecked);
+                }
+            });
+        }
+
+        /*start checkbox 全选测试*/
+        /*end*/
+
+        etSearch.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                if (keyCode == keyEvent.KEYCODE_ENTER) {
+                    // do some your things
+                    final String value = etSearch.getText().toString();
+                    loadingContact(value.trim());
+                    CommonUtil.hideSoftInput();
+                }
+                return false;
+            }
+        });
+
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!CommonUtil.isEmpty(s.toString())) {
+                    final String value = etSearch.getText().toString();
+                    loadingContact(value.trim());
+                }
+            }
+        });
     }
 
     /**
@@ -275,90 +321,6 @@ public class ContactActivity extends BaseActivity implements PasssString {
     }
 
     /**
-     * 获取通讯录联系人
-     */
-    private void netWork() {
-        Log.i(TAG, "netWork: ");
-        showProgress();
-        Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
-            @Override
-            public void subscribe(final ObservableEmitter<String> e) {
-
-                String token = SharedPreferenceUtils.loginValue(ContactActivity.this, "token");
-                Call<String> call = HttpUtl.contact("User/User/contacts/", token);
-                call.enqueue(new Callback<String>() {
-                    @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-                        if (!response.isSuccessful()) {
-                            e.onNext(response.message());
-                            return;
-                        }
-                        Log.i(TAG, "response " + response.body());
-                        String data = response.body().toString();
-                        String msg = null;
-                        try {
-                            JSONObject jsonObject = new JSONObject(data);
-                            int code = jsonObject.getInt("code");
-                            msg = jsonObject.getString("msg");
-
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
-
-                            Gson gson = new Gson();
-                            for (int i = 0; i < jsonArray.length(); ++i) {
-                                JSONObject object = jsonArray.getJSONObject(i);
-                                String title = object.getString("title");
-                                JSONArray jsonArray1 = object.getJSONArray("contact");
-
-                                for (int j = 0; j < jsonArray1.length(); ++j) {
-                                    JSONObject childObject = jsonArray1.getJSONObject(j);
-                                    ContactBean bean = gson.fromJson(childObject.toString(), ContactBean.class);
-                                    bean.setCapital(PingYinUtils.getPinYinHeadChar(bean.getUsername()));
-                                    bean.setTitle(title);
-                                    list.add(bean);
-                                }
-                            }
-                            e.onNext("Y");
-                        } catch (JSONException e1) {
-                            e1.printStackTrace();
-                            e.onNext(msg);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<String> call, Throwable t) {
-                        Log.i(TAG, "通讯录  " + t.getMessage());
-                        e.onNext(t.getMessage());
-                    }
-                });
-
-            }
-        });
-        Consumer<String> consumer = new Consumer<String>() {
-            @Override
-            public void accept(String s) throws Exception {
-                hideProgress();
-                if (s.equals("Y")) {
-                    loadingContact("");
-//                    boolean shouldHide = false;
-//                    if (documentInfo.getStatus().equals("4")) {
-//                        shouldHide = true;
-//                    }
-//                    adapter = new ContactPinnedAdapter(getContext(), R.layout.layout_contact_group);
-////                    adapter = new ContactMyAdapter(list, ContactActivity.this, shouldHide, ContactActivity.this);
-//                    listView.setAdapter(adapter);
-                } else {
-                    ToastUtils.showShort(ContactActivity.this, s);
-                }
-            }
-        };
-
-        observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(consumer);
-
-    }
-
-    /**
      * 转发进入反馈流程
      */
     private void docForward(final String uids) {
@@ -448,33 +410,6 @@ public class ContactActivity extends BaseActivity implements PasssString {
     @Override
     public void initView() {
         Log.i(TAG, "initView: ");
-//        tvSearch.setOnClickListener(click);
-        tvAll.setOnClickListener(click);
-        btConfirm.setOnClickListener(click);
-        btCancel.setOnClickListener(click);
-        adapter = new ContactPinnedAdapter(this, R.layout.layout_contact_group);
-
-        listView.setAdapter(adapter);
-
-        etSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (CommonUtil.isEmpty(s.toString())) {
-                    final String value = etSearch.getText().toString();
-                    loadingContact(value.trim());
-                }
-            }
-        });
 
     }
 
@@ -482,6 +417,90 @@ public class ContactActivity extends BaseActivity implements PasssString {
     public void initData() {
         Log.i(TAG, "initData: ");
         netWork();
+    }
+
+    /**
+     * 获取通讯录联系人
+     */
+    private void netWork() {
+        Log.i(TAG, "netWork: ");
+        showProgress();
+        Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(final ObservableEmitter<String> e) {
+
+                String token = SharedPreferenceUtils.loginValue(ContactActivity.this, "token");
+                Call<String> call = HttpUtl.contact("User/User/contacts/", token);
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        if (!response.isSuccessful()) {
+                            e.onNext(response.message());
+                            return;
+                        }
+                        Log.i(TAG, "response " + response.body());
+                        String data = response.body().toString();
+                        String msg = null;
+                        try {
+                            JSONObject jsonObject = new JSONObject(data);
+                            int code = jsonObject.getInt("code");
+                            msg = jsonObject.getString("msg");
+
+                            JSONArray jsonArray = jsonObject.getJSONArray("data");
+
+                            Gson gson = new Gson();
+                            for (int i = 0; i < jsonArray.length(); ++i) {
+                                JSONObject object = jsonArray.getJSONObject(i);
+                                String title = object.getString("title");
+                                JSONArray jsonArray1 = object.getJSONArray("contact");
+
+                                for (int j = 0; j < jsonArray1.length(); ++j) {
+                                    JSONObject childObject = jsonArray1.getJSONObject(j);
+                                    ContactBean bean = gson.fromJson(childObject.toString(), ContactBean.class);
+                                    bean.setCapital(PingYinUtils.getPinYinHeadChar(bean.getUsername()));
+                                    bean.setTitle(title);
+                                    list.add(bean);
+                                }
+                            }
+                            e.onNext("Y");
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                            e.onNext(msg);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        Log.i(TAG, "通讯录  " + t.getMessage());
+                        e.onNext(t.getMessage());
+                    }
+                });
+
+            }
+        });
+        Consumer<String> consumer = new Consumer<String>() {
+            @Override
+            public void accept(String s) throws Exception {
+                hideProgress();
+                if (s.equals("Y")) {
+                    loadingContact("");
+//                    boolean shouldHide = false;
+//                    if (documentInfo.getStatus().equals("4")) {
+//                        shouldHide = true;
+//                    }
+//                    adapter = new ContactPinnedAdapter(getContext(), R.layout.layout_contact_group);
+////                    adapter = new ContactMyAdapter(list, ContactActivity.this, shouldHide, ContactActivity.this);
+//                    listView.setAdapter(adapter);
+                } else {
+                    ToastUtils.showShort(ContactActivity.this, s);
+                }
+            }
+        };
+
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(consumer);
+
     }
 
     private void loadingContact(String target) {
@@ -502,6 +521,8 @@ public class ContactActivity extends BaseActivity implements PasssString {
                 }
             }
         }
+
+        adapter.loadData(searchList);
 
         for (int i = 0; i < searchList.size(); i++) {
             ContactBean contactBean = searchList.get(i);
@@ -531,17 +552,9 @@ public class ContactActivity extends BaseActivity implements PasssString {
 
     }
 
-    @Override
-    public void setString(String... datas) {
-        if (datas.length > 0) {
-            docForward(datas[0]);
-        }
-    }
-
     private class MyclickListener extends NoDoubleClickListener {
         @Override
         public void click(View v) {
-
             switch (v.getId()) {
                 case R.id.contact_itv_search:
 

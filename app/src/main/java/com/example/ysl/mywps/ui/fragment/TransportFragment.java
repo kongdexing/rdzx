@@ -1,6 +1,5 @@
 package com.example.ysl.mywps.ui.fragment;
 
-import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -9,15 +8,13 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.FileListChildBean;
 import com.example.ysl.mywps.interfaces.PassFileChildList;
-import com.example.ysl.mywps.interfaces.PasssString;
+import com.example.ysl.mywps.interfaces.PassString;
 import com.example.ysl.mywps.ui.adapter.PagerAdapter;
 import com.example.ysl.mywps.utils.NoDoubleClickListener;
 
@@ -30,7 +27,7 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2018/2/4 0004.
  */
 
-public class TransportFragment extends BaseFragment implements PassFileChildList,PasssString {
+public class TransportFragment extends BaseFragment implements PassFileChildList,PassString {
 
     @BindView(R.id.fragment_transport_viewpager)
     ViewPager viewPager;
@@ -53,7 +50,7 @@ public class TransportFragment extends BaseFragment implements PassFileChildList
     private ArrayList<Fragment> fragments = new ArrayList<>();
     private TransportFragmentsFragment fragment1;
     private TransportFragmentsUpload fragment2;
-    private PasssString  passsString2;
+    private PassString passsString2;
     private PassFileChildList passFileChildList;
     private ColorStateList normal, select;
 

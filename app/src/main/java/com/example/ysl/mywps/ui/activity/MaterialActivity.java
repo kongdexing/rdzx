@@ -30,7 +30,7 @@ import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.FileListChildBean;
 import com.example.ysl.mywps.bean.FileType;
 import com.example.ysl.mywps.interfaces.PassFileChildList;
-import com.example.ysl.mywps.interfaces.PasssString;
+import com.example.ysl.mywps.interfaces.PassString;
 import com.example.ysl.mywps.ui.fragment.DocumentFrageMent;
 import com.example.ysl.mywps.ui.fragment.TransportFragment;
 import com.example.ysl.mywps.utils.CommonUtil;
@@ -75,7 +75,7 @@ public class MaterialActivity extends BaseActivity implements View.OnClickListen
 
     private List<FileType> fileTypes;
     private String fileType = "";
-    private PasssString passsString;
+    private PassString passsString;
 
     private MyclickListener click = new MyclickListener();
 

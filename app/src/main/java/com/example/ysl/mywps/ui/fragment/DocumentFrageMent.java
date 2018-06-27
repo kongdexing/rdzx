@@ -6,14 +6,12 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.ysl.mywps.R;
-import com.example.ysl.mywps.bean.FileListChildBean;
 import com.example.ysl.mywps.interfaces.PassFileChildList;
-import com.example.ysl.mywps.interfaces.PasssString;
+import com.example.ysl.mywps.interfaces.PassString;
 import com.example.ysl.mywps.ui.adapter.PagerAdapter;
 import com.example.ysl.mywps.utils.NoDoubleClickListener;
 
@@ -69,7 +67,7 @@ public class DocumentFrageMent extends BaseFragment {
     private ColorStateList normal, select;
     private MyclickListener click = new MyclickListener();
     private PassFileChildList passFileChildList;
-    private PasssString passsString1, passsString2, passsString3, passsString4;
+    private PassString passsString1, passsString2, passsString3, passsString4;
 
     @Override
     public void initData() {

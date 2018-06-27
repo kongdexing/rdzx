@@ -189,8 +189,7 @@ public class ContactFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-
-                if (CommonUtil.isEmpty(s.toString())) {
+                if (!CommonUtil.isEmpty(s.toString())) {
                     final String value = etSearch.getText().toString();
                     loadingContact(value.trim());
                 }

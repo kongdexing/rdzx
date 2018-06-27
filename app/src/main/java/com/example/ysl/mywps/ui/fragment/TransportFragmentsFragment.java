@@ -25,7 +25,7 @@ import com.example.ysl.mywps.bean.TransportBean;
 import com.example.ysl.mywps.bean.UploadBean;
 import com.example.ysl.mywps.interfaces.HttpFileCallBack;
 import com.example.ysl.mywps.interfaces.PassFileChildList;
-import com.example.ysl.mywps.interfaces.PasssString;
+import com.example.ysl.mywps.interfaces.PassString;
 import com.example.ysl.mywps.interfaces.TransportCallBack;
 import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.net.ProgressListener;
@@ -60,7 +60,7 @@ import retrofit2.Response;
  * Created by Administrator on 2018/2/4 0004.
  */
 
-public class TransportFragmentsFragment extends BaseFragment implements PasssString, PassFileChildList, TransportCallBack {
+public class TransportFragmentsFragment extends BaseFragment implements PassString, PassFileChildList, TransportCallBack {
 
     @BindView(R.id.fragment_documents_listview)
     MatchListView listView;
