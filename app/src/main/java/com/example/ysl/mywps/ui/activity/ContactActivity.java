@@ -1,7 +1,6 @@
 package com.example.ysl.mywps.ui.activity;
 
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -265,7 +264,7 @@ public class ContactActivity extends BaseActivity {
             ToastUtils.showShort(this, "文件不存在");
             return;
         }
-        showProgress();
+        showProgress(ifUpload ? "正在处理文件和数据" : "正在处理数据");
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(final ObservableEmitter<String> emitter) {
@@ -334,7 +333,7 @@ public class ContactActivity extends BaseActivity {
             ToastUtils.showShort(this, "文件不存在");
             return;
         }
-        showProgress();
+        showProgress(ifUpload ? "正在处理文件和数据" : "正在处理数据");
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(final ObservableEmitter<String> emitter) {
@@ -350,7 +349,6 @@ public class ContactActivity extends BaseActivity {
                         }
 
                         try {
-
                             Log.i(TAG, "contact  " + response.body());
                             JSONObject jsonObject = new JSONObject(response.body());
 

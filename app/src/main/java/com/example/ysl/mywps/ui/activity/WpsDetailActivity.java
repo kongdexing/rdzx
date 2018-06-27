@@ -37,7 +37,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ysl.mywps.R;
-import com.example.ysl.mywps.bean.ContactBean;
 import com.example.ysl.mywps.bean.DocumentListBean;
 import com.example.ysl.mywps.bean.WpsdetailFinish;
 import com.example.ysl.mywps.interfaces.HttpFileCallBack;
@@ -57,7 +56,6 @@ import com.example.ysl.mywps.utils.WpsUtils;
 import com.lx.fit7.Fit7Utils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.orhanobut.logger.Logger;
-import com.wang.avi.AVLoadingIndicatorView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -118,11 +116,6 @@ public class WpsDetailActivity extends BaseActivity {
     DragViewGroup rlDragContent;
     @BindView(R.id.wpcdetal_pb_top)
     ProgressBar progressBar;
-//    @BindView(R.id.wpcdetail_listview)
-//    ListView listView;
-
-//    @BindView(R.id.preview_viewpager)
-//    MyViewPager previewViewPager;
 
     @BindView(R.id.previewList)
     RecyclerView mRecyclerView;
@@ -133,8 +126,6 @@ public class WpsDetailActivity extends BaseActivity {
     RelativeLayout rlLoading;
     @BindView(R.id.wpcdetail_rl_content)
     RelativeLayout rlContent;
-    @BindView(R.id.av_loading)
-    AVLoadingIndicatorView loading;
 
     private MyclickListener click = new MyclickListener();
     private WpsBroadCast reciver = new WpsBroadCast();
@@ -230,7 +221,6 @@ public class WpsDetailActivity extends BaseActivity {
         setRightSize(16);
         if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
-        loading.setVisibility(View.GONE);
 
         if (wpsMode.equals(SysytemSetting.HANDLE_WPS) || wpsMode.equals(SysytemSetting.ISSUE_WPS) || wpsMode.equals(SysytemSetting.OUT_WPS)) {
             llMessage.setVisibility(View.INVISIBLE);
@@ -346,7 +336,6 @@ public class WpsDetailActivity extends BaseActivity {
 
         rlLoading.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
-        loading.setVisibility(View.VISIBLE);
 
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
@@ -402,7 +391,6 @@ public class WpsDetailActivity extends BaseActivity {
         Consumer<String> observer = new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
-                loading.setVisibility(View.GONE);
                 if (s.equals("Y")) {
                     SharedPreferences.Editor editor = wpsPreference.edit();
                     editor.putString(documentInfo.getDoc_name(), documentInfo.getStatus());
@@ -493,7 +481,7 @@ public class WpsDetailActivity extends BaseActivity {
         if (!newFile.exists()) {
             newFile.mkdirs();
         }
-        loading.setVisibility(View.VISIBLE);
+        showProgress("");
         ivIcon.setDrawingCacheEnabled(true);
 
         final Bitmap backBitmap = adapter.getImgBitmap();
@@ -562,7 +550,7 @@ public class WpsDetailActivity extends BaseActivity {
         Consumer<String> oberver = new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
-                loading.setVisibility(View.GONE);
+                hideProgress();
                 if (s.equals("Y")) {
                     signCompleted("签署成功", "2");
                 }
@@ -578,13 +566,13 @@ public class WpsDetailActivity extends BaseActivity {
      * 签署成功完成返回给拟稿人
      */
     private void signCompleted(final String opinion, final String signed) {
-        loading.setVisibility(View.VISIBLE);
+        showProgress("");
         Log.d(TAG, "signCompleted: " + uploadImageName);
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(@NonNull final ObservableEmitter<String> emitter) throws Exception {
                 Call<String> call = HttpUtl.signedCommit("User/Oa/back_signed_doc/", documentInfo.getProce_id(), documentInfo.getId(), opinion,
-                        signed, uploadImageName, uploadImagePath, token,true);
+                        signed, uploadImageName, uploadImagePath, token, true);
 
                 call.enqueue(new Callback<String>() {
                     @Override
@@ -628,13 +616,9 @@ public class WpsDetailActivity extends BaseActivity {
         Consumer<String> observer = new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
-                loading.setVisibility(View.GONE);
+                hideProgress();
                 if (s.equals("Y") || s.equals("N")) {
                     if (s.equals("Y")) {
-//                        File file = new File(uploadImagePath);
-//                        if (file.exists()) {
-//                            file.delete();
-//                        }
                         onEvent(new WpsdetailFinish("结束"));
                     }
                 } else {
@@ -651,18 +635,18 @@ public class WpsDetailActivity extends BaseActivity {
     /**
      * 签署失败返回给拟稿人
      */
-    private void signUnCompleted(final String opinion, final String signed,final boolean ifUpload) {
+    private void signUnCompleted(final String opinion, final String signed, final boolean ifUpload) {
 //        if (CommonUtil.isEmpty(uploadIamgePath)) {
 //            ToastUtils.showShort(this, "图片保存失败，请重新点击信息按钮");
 //            return;
 //        }
-        loading.setVisibility(View.VISIBLE);
+        showProgress(ifUpload ? "正在处理文件和数据" : "正在处理数据");
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(@NonNull final ObservableEmitter<String> emitter) throws Exception {
 
                 Call<String> call = HttpUtl.signedCommit("User/Oa/back_signed_doc/", documentInfo.getProce_id(), documentInfo.getId(), opinion, signed,
-                        documentInfo.getDoc_name(), downloadWpsPath, token,ifUpload);
+                        documentInfo.getDoc_name(), downloadWpsPath, token, ifUpload);
                 Logger.i("commit  " + opinion);
                 call.enqueue(new Callback<String>() {
                     @Override
@@ -706,7 +690,7 @@ public class WpsDetailActivity extends BaseActivity {
         Consumer<String> observer = new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
-                loading.setVisibility(View.GONE);
+                hideProgress();
                 if (s.equals("Y") || s.equals("N")) {
                     if (s.equals("Y")) {
                         EventBus.getDefault().post(new WpsdetailFinish("commit 提交成功"));
@@ -971,74 +955,21 @@ public class WpsDetailActivity extends BaseActivity {
         final String wpsPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath() + "/" + documentInfo.getDoc_name();
         File file = new File(wpsPath);
         final String md5Value = CommonFun.getMD5Three(file);
-
-        Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
-            @Override
-            public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
-                Call<String> call = HttpUtl.getDocumentMd5("User/Oa/get_doc_md5/", token, documentInfo.getId());
-                call.enqueue(new Callback<String>() {
-                    @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-                        if (!response.isSuccessful()) {
-                            emitter.onNext(response.message());
-                            return;
-                        }
-                        String msg = response.body();
-                        Logger.i("commit  " + msg + "   " + md5Value);
-                        try {
-                            JSONObject jsonObject = new JSONObject(msg);
-
-                            int code = jsonObject.getInt("code");
-                            String message = jsonObject.getString("msg");
-                            JSONObject data = jsonObject.getJSONObject("data");
-                            String remoteMd5 = data.getString("md5");
-                            if (code == 0) {
-                                if (remoteMd5.equals(md5Value)) {
-                                    emitter.onNext("Y");
-                                } else {
-                                    emitter.onNext("N");
-                                }
-                            } else {
-                                emitter.onNext(message);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            emitter.onNext(e.getMessage());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<String> call, Throwable t) {
-                        emitter.onNext(t.getMessage());
-                    }
-                });
+        if (md5Value.equals(remoteMd5)) {
+            // 2审核人审核阶段（点发送提交返回给拟稿人）
+            // 3领导签署阶段（领导没有签名 点发送提交返回给拟稿人）
+            if (documentInfo.getStatus().equals("2")) {
+                uploadFile(opinion, false);
+            } else if (documentInfo.getStatus().equals("3")) {
+                signUnCompleted(opinion, "1", false);
             }
-        });
-        Consumer<String> consumer = new Consumer<String>() {
-            @Override
-            public void accept(String s) throws Exception {
-                if (s.equals("Y")) {
-                    // 2审核人审核阶段（点发送提交返回给拟稿人）
-                    // 3领导签署阶段（领导没有签名 点发送提交返回给拟稿人）
-                    if (documentInfo.getStatus().equals("2")) {
-                        uploadFile(opinion,false);
-                    } else if (documentInfo.getStatus().equals("3")) {
-                        signUnCompleted(opinion, "1",false);
-                    }
-                } else if (s.equals("N")) {
-                    if (documentInfo.getStatus().equals("2")) {
-                        uploadFile(opinion,true);
-                    } else if (documentInfo.getStatus().equals("3")) {
-                        signUnCompleted(opinion, "1",true);
-                    }
-                } else {
-                    ToastUtils.showShort(WpsDetailActivity.this, s);
-                }
+        } else {
+            if (documentInfo.getStatus().equals("2")) {
+                uploadFile(opinion, true);
+            } else if (documentInfo.getStatus().equals("3")) {
+                signUnCompleted(opinion, "1", true);
             }
-        };
-        observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(consumer);
+        }
     }
 
     private void checkMd5AndDownload(final boolean needOpen) {
@@ -1260,7 +1191,7 @@ public class WpsDetailActivity extends BaseActivity {
      * 签署审核意见
      */
     private void uploadFile(final String opinion, final boolean ifUploadFile) {
-        loading.setVisibility(View.VISIBLE);
+        showProgress(ifUploadFile ? "正在处理文件和数据" : "正在处理数据");
         final Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
@@ -1303,7 +1234,7 @@ public class WpsDetailActivity extends BaseActivity {
         Consumer<String> consumer = new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
-                loading.setVisibility(View.GONE);
+                hideProgress();
                 if (s.equals("Y") || s.equals("N")) {
                     if (s.equals("Y")) {
                         EventBus.getDefault().post(new WpsdetailFinish("commit 提交成功"));
@@ -1323,7 +1254,7 @@ public class WpsDetailActivity extends BaseActivity {
      * 反馈意见
      */
     private void feedBack(final String opinion) {
-        loading.setVisibility(View.VISIBLE);
+        showProgress("");
         final Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
@@ -1373,9 +1304,8 @@ public class WpsDetailActivity extends BaseActivity {
         Consumer<String> consumer = new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
-                loading.setVisibility(View.GONE);
+                hideProgress();
                 if (s.equals("Y") || s.equals("N")) {
-
                     if (s.equals("Y")) {
                         EventBus.getDefault().post(new WpsdetailFinish("commit 提交成功"));
                         finish();

@@ -223,7 +223,7 @@ public class CommitActivity extends BaseActivity {
      * 签署审核意见
      */
     private void uploadFile(final String opinion, final boolean isUpload) {
-        showProgress();
+        showProgress(isUpload ? "正在处理文件和数据" : "正在处理数据");
 
         final Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
@@ -291,20 +291,20 @@ public class CommitActivity extends BaseActivity {
     /**
      * 签署失败返回给拟稿人
      */
-    private void signCompleted(final String opinion, final String signed,final boolean ifUpload) {
+    private void signCompleted(final String opinion, final String signed, final boolean ifUpload) {
 
 //        if (CommonUtil.isEmpty(uploadIamgePath)) {
 //            ToastUtils.showShort(this, "图片保存失败，请重新点击信息按钮");
 //            return;
 //        }
-        showProgress();
+        showProgress(ifUpload ? "正在处理文件和数据" : "正在处理数据");
 
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(@NonNull final ObservableEmitter<String> emitter) throws Exception {
 
                 Call<String> call = HttpUtl.signedCommit("User/Oa/back_signed_doc/", documentInfo.getProce_id(), documentInfo.getId(), opinion, signed,
-                        documentInfo.getDoc_name(), downloadPath, token,ifUpload);
+                        documentInfo.getDoc_name(), downloadPath, token, ifUpload);
 
                 call.enqueue(new Callback<String>() {
                     @Override

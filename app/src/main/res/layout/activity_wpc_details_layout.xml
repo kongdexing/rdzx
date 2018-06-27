@@ -33,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="正在下载中~~"
+                android:text="正在下载中..."
                 android:textColor="@color/white_back"
                 android:textSize="@dimen/text_small" />
         </RelativeLayout>
@@ -44,24 +44,6 @@
             android:layout_height="0dp"
             android:layout_weight="7">
 
-            <!--<ListView-->
-            <!--android:id="@+id/wpcdetail_listview"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:background="@color/stay_back"-->
-            <!--android:divider="@android:color/transparent"-->
-            <!--android:dividerHeight="0dp"-->
-            <!--android:scrollbars="none"-->
-            <!--android:fadeScrollbars="false"-->
-            <!--android:layout_alignParentTop="true"-->
-            <!--android:layout_alignParentLeft="true"-->
-            <!--android:layout_alignParentStart="true">-->
-            <!--</ListView>-->
-
-            <!--<com.example.ysl.mywps.ui.view.MyViewPager-->
-            <!--android:id="@+id/preview_viewpager"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"/>-->
             <com.example.ysl.mywps.ui.view.MyRecyclerView
                 android:id="@+id/previewList"
                 android:layout_width="match_parent"
@@ -190,14 +172,6 @@
         </LinearLayout>
 
     </LinearLayout>
-
-    <com.wang.avi.AVLoadingIndicatorView
-        android:id="@+id/av_loading"
-        android:layout_width="@dimen/loading_size"
-        android:layout_height="@dimen/loading_size"
-        android:layout_centerInParent="true"
-        app:indicatorColor="@color/title"
-        app:indicatorName="LineSpinFadeLoaderIndicator" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/textPager"

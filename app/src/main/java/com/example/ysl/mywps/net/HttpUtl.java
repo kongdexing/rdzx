@@ -92,7 +92,7 @@ public class HttpUtl {
             MultipartBody.Part body = MultipartBody.Part.createFormData("name", docName, requestFile);
             return netApi.commitAudit(docId, toUid, token, body);
         }
-        return netApi.commitAudit(docId, toUid, token, null);
+        return netApi.commitAudit(docId, toUid, token);
     }
 
     /**
@@ -114,7 +114,7 @@ public class HttpUtl {
             return netApi.uploadWps(docId, proceId, token, opinion, body);
         }
 
-        return netApi.uploadWps(docId, proceId, token, opinion, null);
+        return netApi.uploadWps(docId, proceId, token, opinion);
     }
 
     /**
@@ -134,7 +134,7 @@ public class HttpUtl {
             MultipartBody.Part body = MultipartBody.Part.createFormData("name", docName, requestFile);
             return netApi.commitSign(docId, token, body, leaderId);
         }
-        return netApi.commitSign(docId, token, null, leaderId);
+        return netApi.commitSign(docId, token, leaderId);
     }
 
     /**
@@ -155,7 +155,7 @@ public class HttpUtl {
             MultipartBody.Part body = MultipartBody.Part.createFormData("name", docName, requestFile);
             return netApi.signedCommit(proceId, docId, opinion, signed, token, body);
         }
-        return netApi.signedCommit(proceId, docId, opinion, signed, token, null);
+        return netApi.signedCommit(proceId, docId, opinion, signed, token);
     }
 
     /**

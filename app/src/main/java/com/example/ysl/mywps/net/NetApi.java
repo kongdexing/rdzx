@@ -33,6 +33,9 @@ public interface NetApi {
     @POST("query")
     Call<String> commitAudit(@Query("doc_id") String doc_id, @Query("to_uid") String to_uid, @Query("token") String token, @Part MultipartBody.Part file);
 
+    @POST("query")
+    Call<String> commitAudit(@Query("doc_id") String doc_id, @Query("to_uid") String to_uid, @Query("token") String token);
+
     /**
      * 下载文档
      */
@@ -58,6 +61,9 @@ public interface NetApi {
     @POST("query")
     Call<String> uploadWps(@Query("doc_id") String docId, @Query("proce_id") String proceId, @Query("token") String token, @Query("opinion") String opinion, @Part MultipartBody.Part file);
 
+    @POST("query")
+    Call<String> uploadWps(@Query("doc_id") String docId, @Query("proce_id") String proceId, @Query("token") String token, @Query("opinion") String opinion);
+
     /**
      * 提交文件领导签署
      */
@@ -65,12 +71,18 @@ public interface NetApi {
     @POST("query")
     Call<String> commitSign(@Query("doc_id") String docId, @Query("token") String token, @Part MultipartBody.Part file, @Query("leader_id") String leaderId);
 
+    @POST("query")
+    Call<String> commitSign(@Query("doc_id") String docId, @Query("token") String token, @Query("leader_id") String leaderId);
+
     /***
      *签署完成返回公文给拟稿人
      */
     @Multipart
     @POST("query")
     Call<String> signedCommit(@Query("proce_id") String proceId, @Query("doc_id") String docId, @Query("opinion") String opinion, @Query("is_signed") String signed, @Query("token") String token, @Part MultipartBody.Part file);
+
+    @POST("query")
+    Call<String> signedCommit(@Query("proce_id") String proceId, @Query("doc_id") String docId, @Query("opinion") String opinion, @Query("is_signed") String signed, @Query("token") String token);
 
     /***
      * 获取流程
@@ -148,5 +160,5 @@ public interface NetApi {
 
     @POST("query")
     Call<String> getDocumentMd5(@Query("token") String token, @Query("doc_id") String doc_id);
-    
+
 }
