@@ -48,7 +48,7 @@
         <activity
             android:name=".ui.activity.MainActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity android:name=".ui.activity.BaseActivity" />
         <activity android:name=".ui.activity.DocumentFlowActivity" />
         <activity android:name=".ui.activity.DocumentTurnActivity" />
@@ -68,11 +68,7 @@
         <activity android:name=".ui.activity.WebViewActivity" />
         <activity android:name=".ui.activity.HandleActivity" />
         <activity android:name=".ui.activity.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <!-- 融云客服Activity注册 -->
@@ -166,7 +162,14 @@
             android:authorities="com.example.ysl.mywps.download.file"
             android:exported="true" />
 
-        <activity android:name=".ui.activity.NewOAActivity"></activity>
+        <activity android:name=".ui.activity.NewOAActivity" />
+        <activity android:name=".ui.activity.WelcomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
