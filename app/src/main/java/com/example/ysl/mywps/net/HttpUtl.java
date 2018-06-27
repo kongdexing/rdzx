@@ -77,78 +77,85 @@ public class HttpUtl {
         return api.contact(token);
     }
 
-    public static Call<String> contactDetail(String url, String token,String uid) {
+    public static Call<String> contactDetail(String url, String token, String uid) {
         String httpUrl = HTTP_URL + url;
         NetApi api = getRetrofit(httpUrl).create(NetApi.class);
-        return api.contactDetail(token,uid);
+        return api.contactDetail(token, uid);
     }
 
-    public static Call<String> commitAudit(String url, String docId, String toUid, String token, String docName, String path) {
-
+    public static Call<String> commitAudit(String url, String docId, String toUid, String token, String docName, String path, boolean ifUpload) {
         String httpUrl = HTTP_URL + url;
         NetApi netApi = getRetrofit(httpUrl).create(NetApi.class);
-        File file = new File(path);
-        RequestBody requestFile = RequestBody.create(MediaType.parse("application/otcet-stream"), file);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("name", docName, requestFile);
-        return netApi.commitAudit(docId, toUid, token, body);
+        if (ifUpload) {
+            File file = new File(path);
+            RequestBody requestFile = RequestBody.create(MediaType.parse("application/otcet-stream"), file);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("name", docName, requestFile);
+            return netApi.commitAudit(docId, toUid, token, body);
+        }
+        return netApi.commitAudit(docId, toUid, token, null);
     }
 
     /**
      * 文档发挥拟稿人
      */
-    public static Call<String> uploadWps(String url, String docId, String proceId, String token, String opinion, String docName, String path) {
-
-        File file = new File(path);
+    public static Call<String> uploadWps(String url, String docId, String proceId, String token, String opinion, String docName, String path, boolean ifupload) {
         String httpUrl = HTTP_URL + url;
-
-        if (!file.exists()) {
-            ToastUtils.showShort(MyApplication.getMyContext(), "文件不存在");
-            Logger.i("filenotexists");
-        }
-        RequestBody requestFile =
-                RequestBody.create(MediaType.parse("application/otcet-stream"), file);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("name", docName, requestFile);
-
         NetApi netApi = getRetrofit(httpUrl).create(NetApi.class);
 
-        return netApi.uploadWps(docId, proceId, token, opinion, body);
+        if (ifupload) {
+            File file = new File(path);
+            if (!file.exists()) {
+                ToastUtils.showShort(MyApplication.getMyContext(), "文件不存在");
+                Logger.i("filenotexists");
+            }
+            RequestBody requestFile =
+                    RequestBody.create(MediaType.parse("application/otcet-stream"), file);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("name", docName, requestFile);
+            return netApi.uploadWps(docId, proceId, token, opinion, body);
+        }
+
+        return netApi.uploadWps(docId, proceId, token, opinion, null);
     }
 
     /**
      * 提交文件领导签署
      */
-    public static Call<String> commitSign(String url, String docId, String token, String docName, String path, String leaderId) {
-        File file = new File(path);
-
-        if (!file.exists()) {
-            ToastUtils.showShort(MyApplication.getMyContext(), "文件不存在");
-            Logger.i("filenotexists");
-        }
+    public static Call<String> commitSign(String url, String docId, String token, String docName, String path, String leaderId, boolean ifUpload) {
         String httpUrl = HTTP_URL + url;
-        RequestBody requestFile = RequestBody.create(MediaType.parse("application/otcet-stream"), file);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("name", docName, requestFile);
-
         NetApi netApi = getRetrofit(httpUrl).create(NetApi.class);
-        return netApi.commitSign(docId, token, body, leaderId);
+        if (ifUpload) {
+            File file = new File(path);
+            if (!file.exists()) {
+                ToastUtils.showShort(MyApplication.getMyContext(), "文件不存在");
+                Logger.i("filenotexists");
+            }
+
+            RequestBody requestFile = RequestBody.create(MediaType.parse("application/otcet-stream"), file);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("name", docName, requestFile);
+            return netApi.commitSign(docId, token, body, leaderId);
+        }
+        return netApi.commitSign(docId, token, null, leaderId);
     }
 
     /**
      * 签署完成返回公文给拟稿人
      */
-    public static Call<String> signedCommit(String url, String proceId, String docId, String opinion, String signed, String docName, String path, String token) {
+    public static Call<String> signedCommit(String url, String proceId, String docId, String opinion, String signed, String docName, String path, String token, boolean ifUpload) {
 
-        File file = new File(path);
-
-        if (!file.exists()) {
-            ToastUtils.showShort(MyApplication.getMyContext(), "文件不存在");
-            Logger.i("filenotexists");
-        }
         String httpUrl = HTTP_URL + url;
-        RequestBody requestFile = RequestBody.create(MediaType.parse("application/otcet-stream"), file);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("name", docName, requestFile);
-
         NetApi netApi = getRetrofit(httpUrl).create(NetApi.class);
-        return netApi.signedCommit(proceId, docId, opinion, signed, token, body);
+        if (ifUpload) {
+            File file = new File(path);
+            if (!file.exists()) {
+                ToastUtils.showShort(MyApplication.getMyContext(), "文件不存在");
+                Logger.i("filenotexists");
+            }
+
+            RequestBody requestFile = RequestBody.create(MediaType.parse("application/otcet-stream"), file);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("name", docName, requestFile);
+            return netApi.signedCommit(proceId, docId, opinion, signed, token, body);
+        }
+        return netApi.signedCommit(proceId, docId, opinion, signed, token, null);
     }
 
     /**
@@ -287,31 +294,33 @@ public class HttpUtl {
 
     /**
      * 获取消息列表
+     *
      * @param url
      * @param token
      * @param page
      * @param pagelimit
      * @return
      */
-    public static Call<String> getMessageList(String url,String token,String page,String pagelimit){
+    public static Call<String> getMessageList(String url, String token, String page, String pagelimit) {
         String httpUrl = HTTP_URL + url;
         NetApi netApi = getRetrofit(httpUrl).create(NetApi.class);
 
-        return netApi.getMessageList(token,page,pagelimit);
+        return netApi.getMessageList(token, page, pagelimit);
     }
 
     /**
      * 获取热门列表
+     *
      * @param url
      * @param token
      * @param page
      * @param pagelimit
      * @return
      */
-    public static Call<String> getRecommendList(String url,String token,String page,String pagelimit){
+    public static Call<String> getRecommendList(String url, String token, String page, String pagelimit) {
         String httpUrl = HTTP_URL + url;
         NetApi netApi = getRetrofit(httpUrl).create(NetApi.class);
-        return netApi.getRecommendList(token,page,pagelimit);
+        return netApi.getRecommendList(token, page, pagelimit);
     }
 
     public static Call<String> getDocumentMd5(String url, String token, String documentId) {

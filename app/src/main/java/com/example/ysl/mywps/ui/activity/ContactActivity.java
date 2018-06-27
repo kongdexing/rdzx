@@ -1,6 +1,7 @@
 package com.example.ysl.mywps.ui.activity;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -20,6 +21,7 @@ import com.example.ysl.mywps.bean.WpsdetailFinish;
 import com.example.ysl.mywps.interfaces.PassString;
 import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.ui.adapter.ContactPinnedAdapter;
+import com.example.ysl.mywps.utils.CommonFun;
 import com.example.ysl.mywps.utils.CommonUtil;
 import com.example.ysl.mywps.utils.NoDoubleClickListener;
 import com.example.ysl.mywps.utils.PingYinUtils;
@@ -27,12 +29,14 @@ import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.example.ysl.mywps.utils.ToastUtils;
 import com.gc.materialdesign.views.ButtonRectangle;
 import com.google.gson.Gson;
+import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,8 +64,6 @@ public class ContactActivity extends BaseActivity {
 
     @BindView(R.id.list)
     PinnedSectionListView listView;
-    //    @BindView(R.id.contact_itv_search)
-//    IconTextView tvSearch;
     @BindView(R.id.contact_et_search)
     EditText etSearch;
     @BindView(R.id.contact_rl_bottom)
@@ -119,11 +121,7 @@ public class ContactActivity extends BaseActivity {
             public void onItemClick(ContactBean contactBean) {
                 //拟稿1-》审核2-》审核通过5-》签署3（不同意）-》审核通过5
                 Log.i(TAG, "提交人  " + contactBean.getUsername());
-                if (documentInfo.getStatus().equals("1")) {
-                    commitAudit(contactBean.getUid());
-                } else if (documentInfo.getStatus().equals("5")) {
-                    commitSign(contactBean.getUid());
-                }
+                checkRemoteMd5(contactBean);
             }
         });
 
@@ -184,10 +182,85 @@ public class ContactActivity extends BaseActivity {
         });
     }
 
+    private void checkRemoteMd5(final ContactBean contactBean) {
+        File file = new File(docPath);
+        final String md5Value = CommonFun.getMD5Three(file);
+        Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
+                Call<String> call = HttpUtl.getDocumentMd5("User/Oa/get_doc_md5/", token, documentInfo.getId());
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        if (!response.isSuccessful()) {
+                            emitter.onNext(response.message());
+                            return;
+                        }
+                        String msg = response.body();
+                        Logger.i("commit  " + msg + "   " + md5Value);
+                        try {
+                            JSONObject jsonObject = new JSONObject(msg);
+
+                            int code = jsonObject.getInt("code");
+                            String message = jsonObject.getString("msg");
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            String remoteMd5 = data.getString("md5");
+                            if (code == 0) {
+                                if (remoteMd5.equals(md5Value)) {
+                                    emitter.onNext("Y");
+                                } else {
+                                    emitter.onNext("N");
+                                }
+                            } else {
+                                emitter.onNext(message);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            emitter.onNext(e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        emitter.onNext(t.getMessage());
+                    }
+                });
+            }
+        });
+        Consumer<String> consumer = new Consumer<String>() {
+            @Override
+            public void accept(String s) throws Exception {
+                if (s.equals("Y")) {
+                    if (documentInfo.getStatus().equals("1")) {
+                        //1拟稿阶段（点发送调起通讯录选人提交）
+                        commitAudit(contactBean.getUid(), false);
+                    } else if (documentInfo.getStatus().equals("5")) {
+                        //5拟稿人审核阶段 （点发送调起通讯录选人提交）
+                        commitSign(contactBean.getUid(), false);
+                    }
+                } else if (s.equals("N")) {
+                    if (documentInfo.getStatus().equals("1")) {
+                        //1拟稿阶段（点发送调起通讯录选人提交）
+                        commitAudit(contactBean.getUid(), true);
+                    } else if (documentInfo.getStatus().equals("5")) {
+                        //5拟稿人审核阶段 （点发送调起通讯录选人提交）
+                        commitSign(contactBean.getUid(), true);
+                    }
+                } else {
+                    ToastUtils.showShort(ContactActivity.this, s);
+                }
+            }
+        };
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(consumer);
+    }
+
     /**
+     * 拟稿1
      * 提交审核
      */
-    private void commitAudit(final String uid) {
+    private void commitAudit(final String uid, final boolean ifUpload) {
         if (docPath == null || docPath.equals("")) {
             ToastUtils.showShort(this, "文件不存在");
             return;
@@ -197,7 +270,7 @@ public class ContactActivity extends BaseActivity {
             @Override
             public void subscribe(final ObservableEmitter<String> emitter) {
 
-                Call<String> call = HttpUtl.commitAudit("User/Oa/submit_review/", documentInfo.getId(), uid, token, documentInfo.getDoc_name(), docPath);
+                Call<String> call = HttpUtl.commitAudit("User/Oa/submit_review/", documentInfo.getId(), uid, token, documentInfo.getDoc_name(), docPath, ifUpload);
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
@@ -253,9 +326,10 @@ public class ContactActivity extends BaseActivity {
     }
 
     /**
-     * 提交文件领导签署
+     * 审核通过5
+     * 提交文件领导签署（拟稿人审核阶段）
      */
-    private void commitSign(final String uid) {
+    private void commitSign(final String uid, final boolean ifUpload) {
         if (docPath == null || docPath.equals("")) {
             ToastUtils.showShort(this, "文件不存在");
             return;
@@ -265,7 +339,7 @@ public class ContactActivity extends BaseActivity {
             @Override
             public void subscribe(final ObservableEmitter<String> emitter) {
 
-                Call<String> call = HttpUtl.commitSign("User/Oa/doc_sign/", documentInfo.getId(), token, documentInfo.getDoc_name(), docPath, uid);
+                Call<String> call = HttpUtl.commitSign("User/Oa/doc_sign/", documentInfo.getId(), token, documentInfo.getDoc_name(), docPath, uid, ifUpload);
 
                 call.enqueue(new Callback<String>() {
                     @Override
@@ -410,7 +484,6 @@ public class ContactActivity extends BaseActivity {
     @Override
     public void initView() {
         Log.i(TAG, "initView: ");
-
     }
 
     @Override

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white_back"
+    android:background="@drawable/bg_login"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/padding_large">
@@ -30,7 +30,8 @@
                 android:paddingRight="@dimen/padding_large"
                 android:paddingTop="@dimen/padding_large"
                 android:scaleType="fitXY"
-                android:src="@mipmap/ic_launcher" />
+                android:src="@mipmap/ic_launcher"
+                android:visibility="invisible" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -43,7 +44,8 @@
                 android:layout_centerInParent="true"
                 android:text="如东政协移动办公"
                 android:textColor="@color/text_black"
-                android:textSize="@dimen/sp_20" />
+                android:textSize="@dimen/sp_20"
+                android:visibility="invisible" />
         </RelativeLayout>
 
         <LinearLayout

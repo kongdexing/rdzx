@@ -75,6 +75,8 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login_layout);
         ButterKnife.bind(this);
         setTitleText("登录");
+        showTitle(false);
+
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             _finishType = bundle.getString(finishType);

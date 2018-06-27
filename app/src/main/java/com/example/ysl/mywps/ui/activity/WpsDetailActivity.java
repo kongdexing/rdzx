@@ -37,6 +37,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ysl.mywps.R;
+import com.example.ysl.mywps.bean.ContactBean;
 import com.example.ysl.mywps.bean.DocumentListBean;
 import com.example.ysl.mywps.bean.WpsdetailFinish;
 import com.example.ysl.mywps.interfaces.HttpFileCallBack;
@@ -582,7 +583,8 @@ public class WpsDetailActivity extends BaseActivity {
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(@NonNull final ObservableEmitter<String> emitter) throws Exception {
-                Call<String> call = HttpUtl.signedCommit("User/Oa/back_signed_doc/", documentInfo.getProce_id(), documentInfo.getId(), opinion, signed, uploadImageName, uploadImagePath, token);
+                Call<String> call = HttpUtl.signedCommit("User/Oa/back_signed_doc/", documentInfo.getProce_id(), documentInfo.getId(), opinion,
+                        signed, uploadImageName, uploadImagePath, token,true);
 
                 call.enqueue(new Callback<String>() {
                     @Override
@@ -649,7 +651,7 @@ public class WpsDetailActivity extends BaseActivity {
     /**
      * 签署失败返回给拟稿人
      */
-    private void signUnCompleted(final String opinion, final String signed) {
+    private void signUnCompleted(final String opinion, final String signed,final boolean ifUpload) {
 //        if (CommonUtil.isEmpty(uploadIamgePath)) {
 //            ToastUtils.showShort(this, "图片保存失败，请重新点击信息按钮");
 //            return;
@@ -659,7 +661,8 @@ public class WpsDetailActivity extends BaseActivity {
             @Override
             public void subscribe(@NonNull final ObservableEmitter<String> emitter) throws Exception {
 
-                Call<String> call = HttpUtl.signedCommit("User/Oa/back_signed_doc/", documentInfo.getProce_id(), documentInfo.getId(), opinion, signed, documentInfo.getDoc_name(), downloadWpsPath, token);
+                Call<String> call = HttpUtl.signedCommit("User/Oa/back_signed_doc/", documentInfo.getProce_id(), documentInfo.getId(), opinion, signed,
+                        documentInfo.getDoc_name(), downloadWpsPath, token,ifUpload);
                 Logger.i("commit  " + opinion);
                 call.enqueue(new Callback<String>() {
                     @Override
@@ -964,6 +967,80 @@ public class WpsDetailActivity extends BaseActivity {
         return file.exists();
     }
 
+    private void checkRemoteMd5() {
+        final String wpsPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath() + "/" + documentInfo.getDoc_name();
+        File file = new File(wpsPath);
+        final String md5Value = CommonFun.getMD5Three(file);
+
+        Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
+                Call<String> call = HttpUtl.getDocumentMd5("User/Oa/get_doc_md5/", token, documentInfo.getId());
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        if (!response.isSuccessful()) {
+                            emitter.onNext(response.message());
+                            return;
+                        }
+                        String msg = response.body();
+                        Logger.i("commit  " + msg + "   " + md5Value);
+                        try {
+                            JSONObject jsonObject = new JSONObject(msg);
+
+                            int code = jsonObject.getInt("code");
+                            String message = jsonObject.getString("msg");
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            String remoteMd5 = data.getString("md5");
+                            if (code == 0) {
+                                if (remoteMd5.equals(md5Value)) {
+                                    emitter.onNext("Y");
+                                } else {
+                                    emitter.onNext("N");
+                                }
+                            } else {
+                                emitter.onNext(message);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            emitter.onNext(e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        emitter.onNext(t.getMessage());
+                    }
+                });
+            }
+        });
+        Consumer<String> consumer = new Consumer<String>() {
+            @Override
+            public void accept(String s) throws Exception {
+                if (s.equals("Y")) {
+                    // 2审核人审核阶段（点发送提交返回给拟稿人）
+                    // 3领导签署阶段（领导没有签名 点发送提交返回给拟稿人）
+                    if (documentInfo.getStatus().equals("2")) {
+                        uploadFile(opinion,false);
+                    } else if (documentInfo.getStatus().equals("3")) {
+                        signUnCompleted(opinion, "1",false);
+                    }
+                } else if (s.equals("N")) {
+                    if (documentInfo.getStatus().equals("2")) {
+                        uploadFile(opinion,true);
+                    } else if (documentInfo.getStatus().equals("3")) {
+                        signUnCompleted(opinion, "1",true);
+                    }
+                } else {
+                    ToastUtils.showShort(WpsDetailActivity.this, s);
+                }
+            }
+        };
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(consumer);
+    }
+
     private void checkMd5AndDownload(final boolean needOpen) {
         final String wpsPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath() + "/" + documentInfo.getDoc_name();
         File file = new File(wpsPath);
@@ -998,8 +1075,6 @@ public class WpsDetailActivity extends BaseActivity {
                             } else {
                                 emitter.onNext(message);
                             }
-
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                             emitter.onNext(e.getMessage());
@@ -1008,7 +1083,6 @@ public class WpsDetailActivity extends BaseActivity {
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-
                         emitter.onNext(t.getMessage());
                     }
                 });
@@ -1098,6 +1172,8 @@ public class WpsDetailActivity extends BaseActivity {
                 haveSigned = true;
                 setSign();
             } else if (id == R.id.wpcdetail_iv_send || id == R.id.wpcdetail_ll_send) {
+                //点击发送
+
                 if (!mAccount.equals(documentInfo.getNow_nickname()) && !mAccount.equals(documentInfo.getNow_username())) {
                     ToastUtils.showShort(WpsDetailActivity.this, "只有处理人才能发送文件");
                     return;
@@ -1110,19 +1186,21 @@ public class WpsDetailActivity extends BaseActivity {
                     bundle.putParcelable("documentInfo", documentInfo);
                     intent.putExtras(bundle);
                     startActivity(intent);
-
                 } else if (documentInfo.getStatus().equals("2")) {
                     if (opinion == null || opinion.equals("")) {
                         ToastUtils.showShort(WpsDetailActivity.this, "请填写意见");
                         return;
                     }
-                    uploadFile(opinion);
+                    //校验 MD5值是否相同，相同则调用 uploadFile(opinion);
+                    //2审核人审核阶段（点发送提交返回给拟稿人）
+                    checkRemoteMd5();
                 } else if (documentInfo.getStatus().equals("3")) {
                     if (!haveSigned || CommonUtil.isEmpty(localImagePath)) {
                         if (opinion.equals("")) {
                             ToastUtils.showShort(WpsDetailActivity.this, "请填写意见或者签署文件");
                         } else {
-                            signUnCompleted(opinion, "1");
+                            //3领导签署阶段（领导没有签名 点发送提交返回给拟稿人）
+                            checkRemoteMd5();
                         }
                     } else {
                         if (adapter != null) {
@@ -1181,12 +1259,13 @@ public class WpsDetailActivity extends BaseActivity {
     /**
      * 签署审核意见
      */
-    private void uploadFile(final String opinion) {
+    private void uploadFile(final String opinion, final boolean ifUploadFile) {
         loading.setVisibility(View.VISIBLE);
         final Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
-                Call<String> call = HttpUtl.uploadWps("User/Oa/back_doc/", documentInfo.getId(), documentInfo.getProce_id(), token, opinion, documentInfo.getDoc_name(), downloadWpsPath);
+                Call<String> call = HttpUtl.uploadWps("User/Oa/back_doc/", documentInfo.getId(), documentInfo.getProce_id(), token, opinion,
+                        documentInfo.getDoc_name(), downloadWpsPath, ifUploadFile);
                 Logger.i("commit  " + opinion);
                 call.enqueue(new Callback<String>() {
                     @Override
