@@ -91,6 +91,11 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
 
     private String opinion = "";
 
+    @BindView(R.id.wpcdownload_iv_artical)
+    ImageView ivDownload;
+    @BindView(R.id.wpcdownload_ll_artical)
+    LinearLayout llDownload;
+
     @BindView(R.id.wpcdetail_iv_artical)
     ImageView ivArtical;
     @BindView(R.id.wpcdetail_ll_artical)
@@ -180,6 +185,8 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
 
         wpsMode = getIntent().getStringExtra(SysytemSetting.WPS_MODE);
 
+        ivDownload.setOnClickListener(click);
+        llDownload.setOnClickListener(click);
         ivArtical.setOnClickListener(click);
         llArtival.setOnClickListener(click);
         ivMessage.setOnClickListener(click);
@@ -219,6 +226,8 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
             llSend.setVisibility(View.INVISIBLE);
         }
         mAccount = SharedPreferenceUtils.loginValue(this, "name");
+        Log.i(TAG, "onCreate: account " + mAccount);
+
         Bundle bundle = getIntent().getExtras();
         try {
             documentInfo = bundle.getParcelable("documentben");
@@ -297,14 +306,17 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
         new PagerSnapHelper().attachToRecyclerView(mRecyclerView);
 
         //只有处理人才会下载文件
-        if (mAccount.equals(documentInfo.getNow_nickname()) || mAccount.equals(documentInfo.getNow_username())) {
-//            downLoadWps(false);
-            if (checkFileExist()) {
-                checkMd5AndDownload(false);
-            } else {
-                downLoadWps(false);
-            }
-        }
+//        if (mAccount.equals(documentInfo.getNow_nickname()) || mAccount.equals(documentInfo.getNow_username())) {
+////            downLoadWps(false);
+//            if (checkFileExist()) {
+//                //判断本地文件时候被修改
+//                //第一次文件下载后，将doc_id，fileMd5保存
+//                //第二次进入后，判断本地md5与缓存fileMd5是否相同，本地相同
+//                checkMd5AndDownload(false);
+//            } else {
+//                downLoadWps(false);
+//            }
+//        }
 
         mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
 
@@ -1018,7 +1030,29 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
             @Override
             public void accept(String s) throws Exception {
                 if (s.equals("Y")) {
-                    downLoadWps(needOpen);
+                    //云端文件与本地文件不同
+                    if (needOpen) {
+                        //点击正文，下载完成打开wps
+                        new AlertDialog.Builder(WpsDetailActivity.this)
+                                .setTitle("公文")
+                                .setMessage("是否重新下载并覆盖文件？")
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                    }
+                                })
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        downLoadWps(needOpen);
+                                    }
+                                })
+                                .create().show();
+                    } else {
+                        downLoadWps(needOpen);
+                    }
                 } else if (s.equals("N")) {
                     if (needOpen) {
                         openWps(wpsPath);
@@ -1037,7 +1071,13 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
         @Override
         public void click(View v) {
             int id = v.getId();
-            if (id == R.id.wpcdetail_iv_artical || id == R.id.wpcdetail_ll_artical) {
+            if (id == R.id.wpcdownload_ll_artical || id == R.id.wpcdownload_iv_artical) {
+                if (checkFileExist()) {
+                    checkMd5AndDownload(false);
+                } else {
+                    downLoadWps(false);
+                }
+            } else if (id == R.id.wpcdetail_iv_artical || id == R.id.wpcdetail_ll_artical) {
                 if (checkFileExist()) {
 //                    ToastUtils.showShort(WpsDetailActivity.this, "正在下载");
                     checkMd5AndDownload(true);
@@ -1060,7 +1100,7 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
                 intent.putExtras(bundle);
                 startActivityForResult(intent, GET_OPTION);
             } else if (id == R.id.wpcdetail_iv_sign || id == R.id.wpcdetail_ll_sign) {
-                if (!mAccount.equals(documentInfo.getNow_nickname()) && !mAccount.equals(documentInfo.getNow_username())) {
+                if (!mAccount.equals(documentInfo.getNow_username())) {
                     ToastUtils.showShort(WpsDetailActivity.this, "只有处理人才能签署文件");
                     return;
                 }
@@ -1089,7 +1129,7 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
                 setSign();
             } else if (id == R.id.wpcdetail_iv_send || id == R.id.wpcdetail_ll_send) {
                 //点击发送
-                if (!mAccount.equals(documentInfo.getNow_nickname()) && !mAccount.equals(documentInfo.getNow_username())) {
+                if (!mAccount.equals(documentInfo.getNow_username())) {
                     ToastUtils.showShort(WpsDetailActivity.this, "只有处理人才能发送文件");
                     return;
                 }

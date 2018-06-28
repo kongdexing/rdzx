@@ -132,8 +132,6 @@ public class CommitActivity extends BaseActivity {
 //            rlCommit.setVisibility(View.INVISIBLE);
 //        }
 
-        etOpinion.setVisibility(View.INVISIBLE);
-        rlCommit.setVisibility(View.INVISIBLE);
         if (documentInfo.getStatus().equals("2") || documentInfo.getStatus().equals("3") || documentInfo.getStatus().equals("6")) {
             if (myAccount.equals(documentInfo.getNow_username()) || myAccount.equals(documentInfo.getNow_nickname())) {
                 etOpinion.setVisibility(View.VISIBLE);
@@ -143,9 +141,10 @@ public class CommitActivity extends BaseActivity {
                 }
             }
         } else if (documentInfo.getStatus().equals("5")) {
+            etOpinion.setVisibility(View.INVISIBLE);
+            rlCommit.setVisibility(View.INVISIBLE);
             getOpinionFromNet();
         }
-
     }
 
     private void getOpinionFromNet() {
@@ -439,12 +438,9 @@ public class CommitActivity extends BaseActivity {
 
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-
     }
 
     private void checkRemoteMd5(final String opinion) {
@@ -527,27 +523,26 @@ public class CommitActivity extends BaseActivity {
         public void click(View v) {
             switch (v.getId()) {
                 case R.id.commit_rl_upload:
-                    String opinion = etOpinion.getText().toString();
-
+                    String opinion = etOpinion.getText().toString().trim();
                     if (CommonUtil.isEmpty(opinion)) {
                         ToastUtils.showShort(CommitActivity.this, "请输入意见");
                         return;
                     }
+                    returnResult(opinion);
 //            //                拟稿1-》审核2-》审核通过5-》签署3（不同意）-》审核通过5-》4转发状态-》6转发给多人，等待反馈状态
 //1.2.3.5 校验md5值
-                    if (documentInfo.getStatus().equals("2")) {
-//                        uploadFile(opinion);
-                        checkRemoteMd5(opinion);
-                    } else if (documentInfo.getStatus().equals("3")) {
-//                        signCompleted(opinion, isSigned);
-                        checkRemoteMd5(opinion);
-                    } else if (documentInfo.getStatus().equals("5")) {
-//                        uploadFile(opinion);
-                    } else if (documentInfo.getStatus().equals("6")) {
-                        feedBack(opinion);
-                    } else {
-                        ToastUtils.showShort(CommitActivity.this, "该文档还在拟稿状态");
-                    }
+//                    if (documentInfo.getStatus().equals("2")) {
+//                        checkRemoteMd5(opinion);
+//                    } else if (documentInfo.getStatus().equals("3")) {
+////                        signCompleted(opinion, isSigned);
+//                        checkRemoteMd5(opinion);
+//                    } else if (documentInfo.getStatus().equals("5")) {
+////                        uploadFile(opinion);
+//                    } else if (documentInfo.getStatus().equals("6")) {
+//                        feedBack(opinion);
+//                    } else {
+//                        ToastUtils.showShort(CommitActivity.this, "该文档还在拟稿状态");
+//                    }
                     break;
 
 

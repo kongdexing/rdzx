@@ -82,6 +82,29 @@
             android:paddingTop="@dimen/padding_small">
 
             <LinearLayout
+                android:id="@+id/wpcdownload_ll_artical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/wpcdownload_iv_artical"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@mipmap/ico_file_download" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="下载"
+                    android:textColor="@color/white_back"
+                    android:textSize="@dimen/button_nomal" />
+            </LinearLayout>
+
+
+            <LinearLayout
                 android:id="@+id/wpcdetail_ll_artical"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

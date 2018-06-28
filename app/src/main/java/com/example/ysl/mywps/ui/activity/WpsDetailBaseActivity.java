@@ -158,4 +158,15 @@ public class WpsDetailBaseActivity extends BaseActivity {
     protected void afterData() {
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hideProgress();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        hideProgress();
+    }
 }

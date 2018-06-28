@@ -2,6 +2,7 @@ package com.example.ysl.mywps.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +15,12 @@ import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.ui.activity.StayToDoActivity;
 import com.example.ysl.mywps.ui.activity.WpsDetailActivity;
 import com.example.ysl.mywps.ui.adapter.StayDoAdapter;
-import com.example.ysl.mywps.utils.CommonSetting;
 import com.example.ysl.mywps.utils.CommonUtil;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.example.ysl.mywps.utils.SysytemSetting;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.orhanobut.logger.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,7 +47,6 @@ import retrofit2.Response;
 public class StayDoFragment extends BaseFragment {
 
     private static final int PAGE_SIZE = 20;
-
 
     @BindView(R.id.stay_to_listview)
     PullToRefreshListView listView;
@@ -122,7 +120,7 @@ public class StayDoFragment extends BaseFragment {
             @Override
             public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
                 String token = SharedPreferenceUtils.loginValue(getActivity(), "token");
-                Logger.i("token  " + token + "  " + CommonSetting.HTTP_TOKEN);
+                Log.i(TAG, "network token  " + token + " pageNum " + pageNUmber);
                 Call<String> call = HttpUtl.documentList("User/Oa/doc_list/", token, pageNUmber + "", PAGE_SIZE + "", "1");
                 call.enqueue(new Callback<String>() {
                     @Override
@@ -134,7 +132,7 @@ public class StayDoFragment extends BaseFragment {
                         }
 
                         String data = response.body();
-                        Logger.i("stay " + data);
+                        Log.i(TAG, "stay " + data);
                         try {
                             JSONObject jsonObject = new JSONObject(data);
                             int code = jsonObject.getInt("code");
@@ -149,8 +147,6 @@ public class StayDoFragment extends BaseFragment {
                             JSONObject childeObject = jsonObject.getJSONObject("data");
                             int total = childeObject.getInt("total");
                             JSONArray array = childeObject.getJSONArray("list");
-
-
                             Gson gson = new Gson();
                             for (int i = 0; i < array.length(); ++i) {
                                 JSONObject child = array.getJSONObject(i);
@@ -158,7 +154,6 @@ public class StayDoFragment extends BaseFragment {
                                 documents.add(document);
                             }
                             emitter.onNext("Y");
-
                         } catch (JSONException e) {
                             isLoadMore = false;
                             e.printStackTrace();
@@ -204,12 +199,12 @@ public class StayDoFragment extends BaseFragment {
         listView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                Logger.i("Stay downto");
+                Log.i(TAG, "onPullDownToRefresh");
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-
+                Log.i(TAG, "onPullUpToRefresh: ");
                 if (isLoadMore) {
                     ++pageNUmber;
                     netWork();

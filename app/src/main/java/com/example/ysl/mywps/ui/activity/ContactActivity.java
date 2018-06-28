@@ -182,6 +182,10 @@ public class ContactActivity extends BaseActivity {
     }
 
     private void checkRemoteMd5(final ContactBean contactBean) {
+        if (docPath == null || docPath.equals("")) {
+            ToastUtils.showShort(this, "文件不存在");
+            return;
+        }
         File file = new File(docPath);
         final String md5Value = CommonFun.getMD5Three(file);
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
