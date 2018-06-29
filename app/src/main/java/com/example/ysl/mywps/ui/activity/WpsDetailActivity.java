@@ -173,7 +173,7 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
     };
     private int firstItemPosition = 0;
     private MotionEvent mSignOldPosition;
-    private String remoteMd5;
+    private String remoteMd5 = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -488,8 +488,6 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
      * 保存签署文件
      */
     private void saveImage() {
-//        holder.ivIcon.setDrawingCacheEnabled(true);
-//        imgBitmap = holder.ivIcon.getDrawingCache();
         if (adapter == null) {
             return;
         }
@@ -501,26 +499,8 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
         ivIcon.setDrawingCacheEnabled(true);
 
         final Bitmap backBitmap = adapter.getImgBitmap();
-//        int blackEreaHeigh = 0;
-//        int blackEreaWidth = 0;
-//        float contentRatio = (float)rlContent.getWidth() / rlContent.getHeight();
-//        float bitmapRatio = (float)backBitmap.getWidth() / backBitmap.getHeight();
-//        if (contentRatio - bitmapRatio < 0) {
-//            int i = rlContent.getWidth() / backBitmap.getWidth() * backBitmap.getHeight();
-//            blackEreaHeigh = (rlContent.getHeight() - i) / 2;
-//            Log.d(TAG, "saveImage: blackEreaHeigh = " + blackEreaHeigh);
-//        }else if (contentRatio - bitmapRatio > 0){
-//            int i = rlContent.getHeight() / backBitmap.getHeight() * backBitmap.getWidth();
-//            blackEreaWidth = (rlContent.getWidth() - i) / 2;
-//            Log.d(TAG, "saveImage: blackEreaWidth = " + blackEreaWidth);
-//        }
-
-//        Log.d(TAG, "saveImage: " + ivIcon.getX() + " - " + rlDragContent.getX() + " - " + blackEreaWidth);
-//        Log.d(TAG, "saveImage: " + ivIcon.getY() + " - " + rlDragContent.getY() + " - " + blackEreaHeigh);
         final float left = getSignPositionX(ivIcon.getX() + rlDragContent.getX(), backBitmap);
         final float top = getSignPositionY(ivIcon.getY() + rlDragContent.getY(), backBitmap);
-//        int i = CommonFun.px2dip(this, 87);
-//        int j = CommonFun.px2dip(this, 105);
         if (backBitmap == null || CommonUtil.isEmpty(uploadImageName)) {
             ToastUtils.showShort(WpsDetailActivity.this, "列表中没有图片不能上传图片");
             return;
@@ -544,7 +524,6 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
                             height, matrix, true);
                     Log.d("压缩后  ", forgroundBitmao.getWidth() + "  " + forgroundBitmao.getHeight());
                     localBitmap.recycle();
-
 //                    Bitmap myBitmap = toConformBitmap(backBitmap, forgroundBitmao, left + 40, top + 15);
                     Bitmap myBitmap = toConformBitmap(backBitmap, forgroundBitmao, left, top);
 
@@ -944,7 +923,6 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
         unregisterReceiver(reciver);
     }
 
-
     /**
      * 检查是否应该下载当前文件
      */
@@ -961,22 +939,85 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
     private void checkRemoteMd5() {
         final String wpsPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath() + "/" + documentInfo.getDoc_name();
         File file = new File(wpsPath);
-        final String md5Value = CommonFun.getMD5Three(file);
-        if (md5Value.equals(remoteMd5)) {
-            // 2审核人审核阶段（点发送提交返回给拟稿人）
-            // 3领导签署阶段（领导没有签名 点发送提交返回给拟稿人）
+        if (!file.exists()) {
+            //文件不存在，则不上传
             if (documentInfo.getStatus().equals("2")) {
                 uploadFile(opinion, false);
             } else if (documentInfo.getStatus().equals("3")) {
                 signUnCompleted(opinion, "1", false);
             }
-        } else {
-            if (documentInfo.getStatus().equals("2")) {
-                uploadFile(opinion, true);
-            } else if (documentInfo.getStatus().equals("3")) {
-                signUnCompleted(opinion, "1", true);
-            }
+            return;
         }
+        final String md5Value = CommonFun.getMD5Three(file);
+
+        Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
+                Call<String> call = HttpUtl.getDocumentMd5("User/Oa/get_doc_md5/", token, documentInfo.getId());
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        if (!response.isSuccessful()) {
+                            emitter.onNext(response.message());
+                            return;
+                        }
+
+                        String msg = response.body();
+                        Log.i(TAG, "commit  " + msg + "   " + md5Value);
+
+                        try {
+                            JSONObject jsonObject = new JSONObject(msg);
+                            int code = jsonObject.getInt("code");
+                            String message = jsonObject.getString("msg");
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            remoteMd5 = data.getString("md5");
+                            if (code == 0) {
+                                if (remoteMd5.equals(md5Value)) {
+                                    emitter.onNext("Y");
+                                } else {
+                                    emitter.onNext("N");
+                                }
+                            } else {
+                                emitter.onNext(message);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            emitter.onNext(e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        emitter.onNext(t.getMessage());
+                    }
+                });
+            }
+        });
+        Consumer<String> consumer = new Consumer<String>() {
+            @Override
+            public void accept(String s) throws Exception {
+                if (s.equals("Y")) {
+                    // 2审核人审核阶段（点发送提交返回给拟稿人）
+                    // 3领导签署阶段（领导没有签名 点发送提交返回给拟稿人）
+                    if (documentInfo.getStatus().equals("2")) {
+                        uploadFile(opinion, false);
+                    } else if (documentInfo.getStatus().equals("3")) {
+                        signUnCompleted(opinion, "1", false);
+                    }
+                } else if (s.equals("N")) {
+                    if (documentInfo.getStatus().equals("2")) {
+                        uploadFile(opinion, true);
+                    } else if (documentInfo.getStatus().equals("3")) {
+                        signUnCompleted(opinion, "1", true);
+                    }
+                } else {
+                    ToastUtils.showShort(WpsDetailActivity.this, s);
+                }
+            }
+        };
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(consumer);
     }
 
     private void checkMd5AndDownload(final boolean needOpen) {
@@ -1124,7 +1165,6 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
                             .create().show();
                     return;
                 }
-
                 haveSigned = true;
                 setSign();
             } else if (id == R.id.wpcdetail_iv_send || id == R.id.wpcdetail_ll_send) {
@@ -1221,7 +1261,7 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
             public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
                 Call<String> call = HttpUtl.uploadWps("User/Oa/back_doc/", documentInfo.getId(), documentInfo.getProce_id(), token, opinion,
                         documentInfo.getDoc_name(), downloadWpsPath, ifUploadFile);
-                Logger.i("commit  " + opinion);
+                Log.i(TAG, "commit  " + opinion);
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
@@ -1231,7 +1271,7 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
                             return;
                         }
                         String msg = response.body();
-                        Logger.i("commit  " + msg);
+                        Log.i(TAG, "commit  " + msg);
                         try {
                             JSONObject jsonObject = new JSONObject(msg);
                             int code = jsonObject.getInt("code");
@@ -1294,7 +1334,7 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
                             return;
                         }
                         String msg = response.body();
-                        Logger.i("commit  " + msg);
+                        Log.i(TAG, "commit  " + msg);
                         try {
                             if (msg == null) {
                                 emitter.onNext("N");

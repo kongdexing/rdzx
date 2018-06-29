@@ -146,7 +146,6 @@ public class ContactActivity extends BaseActivity {
 
         /*start checkbox 全选测试*/
         /*end*/
-
         etSearch.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
@@ -183,10 +182,15 @@ public class ContactActivity extends BaseActivity {
 
     private void checkRemoteMd5(final ContactBean contactBean) {
         if (docPath == null || docPath.equals("")) {
-            ToastUtils.showShort(this, "文件不存在");
+            postNetNoFile(contactBean,false);
             return;
         }
         File file = new File(docPath);
+        if (!file.exists()) {
+            postNetNoFile(contactBean,false);
+            return;
+        }
+
         final String md5Value = CommonFun.getMD5Three(file);
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
@@ -234,21 +238,9 @@ public class ContactActivity extends BaseActivity {
             @Override
             public void accept(String s) throws Exception {
                 if (s.equals("Y")) {
-                    if (documentInfo.getStatus().equals("1")) {
-                        //1拟稿阶段（点发送调起通讯录选人提交）
-                        commitAudit(contactBean.getUid(), false);
-                    } else if (documentInfo.getStatus().equals("5")) {
-                        //5拟稿人审核阶段 （点发送调起通讯录选人提交）
-                        commitSign(contactBean.getUid(), false);
-                    }
+                    postNetNoFile(contactBean,false);
                 } else if (s.equals("N")) {
-                    if (documentInfo.getStatus().equals("1")) {
-                        //1拟稿阶段（点发送调起通讯录选人提交）
-                        commitAudit(contactBean.getUid(), true);
-                    } else if (documentInfo.getStatus().equals("5")) {
-                        //5拟稿人审核阶段 （点发送调起通讯录选人提交）
-                        commitSign(contactBean.getUid(), true);
-                    }
+                    postNetNoFile(contactBean,true);
                 } else {
                     ToastUtils.showShort(ContactActivity.this, s);
                 }
@@ -257,6 +249,17 @@ public class ContactActivity extends BaseActivity {
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(consumer);
+    }
+
+    private void postNetNoFile(ContactBean contactBean,boolean isUpload) {
+        //文件未下载，不上传文件
+        if (documentInfo.getStatus().equals("1")) {
+            //1拟稿阶段（点发送调起通讯录选人提交）
+            commitAudit(contactBean.getUid(), isUpload);
+        } else if (documentInfo.getStatus().equals("5")) {
+            //5拟稿人审核阶段 （点发送调起通讯录选人提交）
+            commitSign(contactBean.getUid(), isUpload);
+        }
     }
 
     /**

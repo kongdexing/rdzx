@@ -173,8 +173,8 @@ public class MyApplication extends MultiDexApplication implements Thread.Uncaugh
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
         UMConfigure.setLogEnabled(true);
 
-//崩溃捕获并处理
-//        Thread.setDefaultUncaughtExceptionHandler(this);
+        //崩溃捕获并处理
+        Thread.setDefaultUncaughtExceptionHandler(this);
     }
 
     public static Context getMyContext() {

@@ -120,17 +120,6 @@ public class CommitActivity extends BaseActivity {
         Log.d(TAG, "afterData: " + documentInfo.getStatus());
 
         String myAccount = SharedPreferenceUtils.loginValue(this, "name");
-//        documentInfo.getStatus().equals("6") && documentInfo.getIs_forward().equals("1")
-//        if(documentInfo.getStatus().equals("6") && myAccount.equals(documentInfo.getNow_username())){
-//           etOpinion.setVisibility(View.VISIBLE);
-//            rlCommit.setVisibility(View.VISIBLE);
-//        }if(documentInfo.getStatus().equals("6") && documentInfo.getIs_forward().equals("1")){
-//            etOpinion.setVisibility(View.VISIBLE);
-//            rlCommit.setVisibility(View.VISIBLE);
-//        }else {
-//            etOpinion.setVisibility(View.INVISIBLE);
-//            rlCommit.setVisibility(View.INVISIBLE);
-//        }
 
         if (documentInfo.getStatus().equals("2") || documentInfo.getStatus().equals("3") || documentInfo.getStatus().equals("6")) {
             if (myAccount.equals(documentInfo.getNow_username()) || myAccount.equals(documentInfo.getNow_nickname())) {
@@ -516,7 +505,6 @@ public class CommitActivity extends BaseActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(consumer);
     }
-
 
     private class MyclickListener extends NoDoubleClickListener {
         @Override
