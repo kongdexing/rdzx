@@ -92,7 +92,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-
             android:paddingBottom="@dimen/padding_small"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/padding_small">
@@ -111,7 +110,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:padding="20dp">
+            android:padding="@dimen/activity_horizontal_margin">
 
             <EditText
                 android:id="@+id/commit_et_opinion"

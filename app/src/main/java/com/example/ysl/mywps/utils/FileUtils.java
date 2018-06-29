@@ -81,7 +81,7 @@ public class FileUtils {
                             e.printStackTrace();
                         }
                     }
-                    Logger.e("文件下载完成");
+                    Logger.e("文件同步完成");
 
                 } catch(Exception e) {
                     e.printStackTrace();

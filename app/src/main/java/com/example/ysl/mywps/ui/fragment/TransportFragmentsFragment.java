@@ -202,7 +202,7 @@ public class TransportFragmentsFragment extends BaseFragment implements PassStri
                     if (pro == 100) {
 
                         loadingContent.removeView(view);
-                        tvSize.setText("下载中");
+                        tvSize.setText("同步中");
                     }
                 }
             }
@@ -318,13 +318,13 @@ public class TransportFragmentsFragment extends BaseFragment implements PassStri
 
     /***
      *
-     * 下载文件
+     * 同步文件
      */
     @Override
     public void passFileChild(ArrayList<FileListChildBean> files, int kind) {
 
         if (files != null) {
-            Logger.i("传递过来的下载文件  " + files.size());
+            Logger.i("传递过来的同步文件  " + files.size());
             for (int i = 0; i < files.size(); ++i) {
                 FileListChildBean downloadBean = files.get(i);
                 if (loadingContent != null) addDownloadView(downloadBean);
@@ -375,7 +375,7 @@ public class TransportFragmentsFragment extends BaseFragment implements PassStri
 
                     if (progr == 100) {
                         loadingContent.removeView(view);
-                        tvSize.setText("下载完毕");
+                        tvSize.setText("同步完毕");
                     }
                 }
 
@@ -396,7 +396,7 @@ public class TransportFragmentsFragment extends BaseFragment implements PassStri
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        tvStay.setText("下载中");
+                        tvStay.setText("同步中");
 
                     }
                 });
@@ -466,7 +466,7 @@ public class TransportFragmentsFragment extends BaseFragment implements PassStri
                             contentResolver.insert(DownLoadProvider.CONTENT_URI, bean.toContentValues());
 
                             Message msg = new Message();
-                            msg.obj = "下载成功";
+                            msg.obj = "同步成功";
                             msg.what = 0;
                             handler.sendMessage(msg);
                             getActivity().runOnUiThread(new Runnable() {
@@ -478,7 +478,7 @@ public class TransportFragmentsFragment extends BaseFragment implements PassStri
 
                         } catch (Exception e) {
                             Message msg = new Message();
-                            msg.obj = "下载失败";
+                            msg.obj = "同步失败";
                             msg.what = 0;
                             handler.sendMessage(msg);
                         }

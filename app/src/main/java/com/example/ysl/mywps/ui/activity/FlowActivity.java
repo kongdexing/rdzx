@@ -120,7 +120,6 @@ public class FlowActivity extends BaseActivity {
                             int code = jsonObject.getInt("code");
                             String msg = jsonObject.getString("msg");
 
-
                             if (code == 0) {
                                 emitter.onNext("N");
                                 emitter.onNext(msg);

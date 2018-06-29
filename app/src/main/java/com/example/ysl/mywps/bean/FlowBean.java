@@ -15,7 +15,7 @@ public class FlowBean {
      * username : 13240368231
      * realname : null
      */
-
+    private String avatar;
     private String status;
     private String opinion;
     private String opinion_type;
@@ -24,6 +24,14 @@ public class FlowBean {
     private String realname;
     private String month;
     private String time;
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
 
     public String getMonth() {
         return month;

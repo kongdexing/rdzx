@@ -50,7 +50,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:text="正在下载中..."
+                        android:text="正在同步中..."
                         android:textColor="@color/white_back"
                         android:textSize="@dimen/text_small" />
                 </RelativeLayout>
@@ -98,14 +98,14 @@
 
                 <ImageView
                     android:id="@+id/wpcdownload_iv_artical"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:background="@mipmap/ico_file_download" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="下载"
+                    android:text="同步"
                     android:textColor="@color/white_back"
                     android:textSize="@dimen/button_nomal" />
             </LinearLayout>
@@ -121,8 +121,8 @@
 
                 <ImageView
                     android:id="@+id/wpcdetail_iv_artical"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:background="@mipmap/ico_file_detail" />
 
                 <TextView
@@ -143,8 +143,8 @@
 
                 <ImageView
                     android:id="@+id/wpcdetail_iv_message"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:background="@mipmap/ico_file_info" />
 
                 <TextView
@@ -165,8 +165,8 @@
 
                 <ImageView
                     android:id="@+id/wpcdetail_iv_sign"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:background="@mipmap/ico_file_sing" />
 
                 <TextView
@@ -187,8 +187,8 @@
 
                 <ImageView
                     android:id="@+id/wpcdetail_iv_send"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:background="@mipmap/ico_file_send" />
 
                 <TextView

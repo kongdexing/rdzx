@@ -6,12 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.bean.FlowBean;
+import com.example.ysl.mywps.ui.view.CircularImageView;
 import com.example.ysl.mywps.utils.CommonUtil;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 
 import java.util.ArrayList;
 
@@ -25,7 +27,6 @@ public class FlowAdapter extends BaseAdapter {
     private ArrayList<FlowBean> list;
 
     public FlowAdapter(Context context, ArrayList<FlowBean> list) {
-
         this.context = context;
         this.list = list;
     }
@@ -53,8 +54,7 @@ public class FlowAdapter extends BaseAdapter {
 
     private class ViewHolder {
         TextView tvDate, tvLeader, tvStage, tvOpinion;
-        ImageView ivCircle;
-
+        CircularImageView ivCircle;
     }
 
     private ViewHolder holder;
@@ -69,7 +69,7 @@ public class FlowAdapter extends BaseAdapter {
             holder.tvLeader = (TextView) view.findViewById(R.id.flow_tv_leader);
             holder.tvStage = (TextView) view.findViewById(R.id.flow_tv_stage);
             holder.tvOpinion = (TextView) view.findViewById(R.id.flow_tv_opinion);
-            holder.ivCircle = (ImageView) view.findViewById(R.id.flow_item_iv_circle);
+            holder.ivCircle = (CircularImageView) view.findViewById(R.id.imageView);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -78,11 +78,11 @@ public class FlowAdapter extends BaseAdapter {
         FlowBean bean = list.get(position);
 
         holder.tvStage.setText(bean.getStatus());
-        if(CommonUtil.isEmpty(bean.getMonth()))  holder.tvDate.setText(bean.getCtime());
-        else holder.tvDate.setText("  "+bean.getMonth()+"  "+bean.getTime());
-        if (bean.getRealname() == null || bean.getRealname().equals("")){
+        if (CommonUtil.isEmpty(bean.getMonth())) holder.tvDate.setText(bean.getCtime());
+        else holder.tvDate.setText("  " + bean.getMonth() + "  " + bean.getTime());
+        if (bean.getRealname() == null || bean.getRealname().equals("")) {
             holder.tvLeader.setText("测试");
-        }else {
+        } else {
             holder.tvLeader.setText(bean.getRealname());
         }
         if (bean.getOpinion() == null || bean.getOpinion().equals("")) {
@@ -90,9 +90,8 @@ public class FlowAdapter extends BaseAdapter {
         } else {
             holder.tvOpinion.setText(bean.getOpinion());
         }
-//        if (position == list.size() - 1) {
-//           holder.ivCircle.setBackground(context.getResources().getDrawable(R.drawable.circle_red));
-//        }
+        ImageLoader.getInstance().displayImage(bean.getAvatar(),
+                new ImageViewAware(holder.ivCircle), CommonUtil.getDefaultUserImageLoaderOption());
         return view;
     }
 }

@@ -47,7 +47,7 @@ import retrofit2.Response;
 
 public class StayDoFragment extends BaseFragment {
 
-    private static final int PAGE_SIZE = 10;
+    private static final int PAGE_SIZE = 20;
 
     @BindView(R.id.stay_to_listview)
     PullToRefreshListView listView;

@@ -356,7 +356,7 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
         }
 
         rlLoading.setVisibility(View.VISIBLE);
-        txt_file_status.setText("正在下载中...");
+        txt_file_status.setText("正在同步中...");
         progressBar.setVisibility(View.VISIBLE);
 
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
@@ -416,7 +416,7 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
                     SharedPreferences.Editor editor = wpsPreference.edit();
                     editor.putString(documentInfo.getDoc_name(), documentInfo.getStatus());
                     editor.apply();
-                    ToastUtils.showShort(getApplicationContext(), "文档下载成功");
+                    ToastUtils.showShort(getApplicationContext(), "文档同步成功");
                     if (shouldOpen) openWps(downloadWpsPath);
                 } else {
                     ToastUtils.showShort(getApplicationContext(), s);
@@ -567,7 +567,7 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
      * 签署成功完成返回给拟稿人
      */
     private void signCompleted(final String opinion, final String signed) {
-        showProgress("");
+        showProgress("正在处理签名和数据");
         Log.d(TAG, "signCompleted: " + uploadImageName);
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
@@ -931,7 +931,7 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
     }
 
     /**
-     * 检查是否应该下载当前文件
+     * 检查是否应该同步当前文件
      */
     private boolean checkFileExist() {
         String wpsPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath() + "/" + documentInfo.getDoc_name();
@@ -1080,10 +1080,10 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
                 if (s.equals("Y")) {
                     //云端文件与本地文件不同
                     if (needOpen) {
-                        //点击正文，下载完成打开wps
+                        //点击正文，同步完成打开wps
                         new AlertDialog.Builder(WpsDetailActivity.this)
                                 .setTitle("公文")
-                                .setMessage("是否重新下载并覆盖文件？")
+                                .setMessage("是否重新同步并覆盖文件？")
                                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
 
                                     @Override
@@ -1105,7 +1105,7 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
                     if (needOpen) {
                         openWps(wpsPath);
                     } else {
-                        //md5相同，不需要下载
+                        //md5相同，不需要同步
                         ToastUtils.showShort(WpsDetailActivity.this, "文件已同步到本地");
                     }
                 } else {
@@ -1130,10 +1130,11 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
                 }
             } else if (id == R.id.wpcdetail_iv_artical || id == R.id.wpcdetail_ll_artical) {
                 if (checkFileExist()) {
-//                    ToastUtils.showShort(WpsDetailActivity.this, "正在下载");
-                    checkMd5AndDownload(true);
-//                    downLoadWps(true);
+                    //打开wps
+
+//                    checkMd5AndDownload(true);
                 } else {
+                    //提示请先同步文件
                     downLoadWps(true);
                 }
             } else if (id == R.id.wpcdetail_iv_message || id == R.id.wpcdetail_ll_message) {
