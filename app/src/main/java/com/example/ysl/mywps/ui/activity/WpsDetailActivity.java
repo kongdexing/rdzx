@@ -378,7 +378,6 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
                             return;
                         }
                         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath();
-
                         File file = new File(path);
 
                         if (!file.exists()) {
@@ -501,7 +500,7 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
         if (!newFile.exists()) {
             newFile.mkdirs();
         }
-        showProgress("");
+        showProgress("正在处理签名和数据");
         ivIcon.setDrawingCacheEnabled(true);
 
         final Bitmap backBitmap = adapter.getImgBitmap();
@@ -554,8 +553,9 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
                 hideProgress();
                 if (s.equals("Y")) {
                     signCompleted("签署成功", "2");
+                } else {
+                    ToastUtils.showShort(WpsDetailActivity.this, s);
                 }
-                ToastUtils.showShort(WpsDetailActivity.this, s);
             }
         };
         observable.subscribeOn(Schedulers.io())
@@ -764,7 +764,8 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
     float alpha = 1;
 
     private void setSign() {
-
+        //如正在转码中，则隐藏顶部提示
+        rlLoading.setVisibility(View.GONE);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -1103,6 +1104,9 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
                 } else if (s.equals("N")) {
                     if (needOpen) {
                         openWps(wpsPath);
+                    } else {
+                        //md5相同，不需要下载
+                        ToastUtils.showShort(WpsDetailActivity.this, "文件已同步到本地");
                     }
                 } else {
                     ToastUtils.showShort(WpsDetailActivity.this, s);
@@ -1157,22 +1161,38 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
                     return;
                 }
 
-                if (documentInfo.getIs_img_newest().equals("n")) {
-                    //最新文件的预览图片正在转码中，请稍后再试...
-                    new AlertDialog.Builder(WpsDetailActivity.this)
-                            .setTitle("公文")
-                            .setMessage("最新文件的预览图片正在转码中，请稍后再试...")
-                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    getWpsInfo(documentInfo.getId());
-                                }
-                            })
-                            .create().show();
-                    return;
+                if ("n".equals(documentInfo.getIs_img_newest())) {
+                    //调用接口判断文档状态是否变为N..接口请求时由于弹出progress，所以无法再次点击签署
+                    getWpsInfo(documentInfo.getId(), new DocumentInfoListener() {
+                        @Override
+                        public void onDocSuccess() {
+                            if ("n".equals(documentInfo.getIs_img_newest())) {
+                                //最新文件的预览图片正在转码中，请稍后再试...
+                                new AlertDialog.Builder(WpsDetailActivity.this)
+                                        .setTitle("公文")
+                                        .setMessage("最新文件的预览图片正在转码中，请稍后再试...")
+                                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                            }
+                                        })
+                                        .create().show();
+                            } else {
+                                haveSigned = true;
+                                setSign();
+                            }
+                        }
+
+                        @Override
+                        public void onDocFailed() {
+
+                        }
+                    });
+                } else {
+                    haveSigned = true;
+                    setSign();
                 }
-                haveSigned = true;
-                setSign();
             } else if (id == R.id.wpcdetail_iv_send || id == R.id.wpcdetail_ll_send) {
                 //点击发送
                 if (!mAccount.equals(documentInfo.getNow_username())) {
@@ -1182,7 +1202,6 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
                 if (documentInfo.getStatus().equals("1") || documentInfo.getStatus().equals("5") || documentInfo.getStatus().equals("4")) {
                     Intent intent = new Intent(WpsDetailActivity.this, ContactActivity.class);
                     intent.putExtra("path", downloadWpsPath);
-                    Log.d(TAG, "click: " + downloadWpsPath);
                     Bundle bundle = new Bundle();
                     bundle.putParcelable("documentInfo", documentInfo);
                     intent.putExtras(bundle);

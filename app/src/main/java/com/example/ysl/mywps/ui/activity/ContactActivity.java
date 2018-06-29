@@ -1,6 +1,7 @@
 package com.example.ysl.mywps.ui.activity;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -92,8 +93,11 @@ public class ContactActivity extends BaseActivity {
         setContentView(R.layout.activity_contact_layout);
         ButterKnife.bind(this);
 
-        docPath = getIntent().getStringExtra("path");
         documentInfo = getIntent().getExtras().getParcelable("documentInfo");
+        if (documentInfo!=null) {
+            String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath();
+            docPath = path + "/" + documentInfo.getDoc_name();
+        }
 
         initPageView();
 
@@ -182,12 +186,12 @@ public class ContactActivity extends BaseActivity {
 
     private void checkRemoteMd5(final ContactBean contactBean) {
         if (docPath == null || docPath.equals("")) {
-            postNetNoFile(contactBean,false);
+            postNetNoFile(contactBean, false);
             return;
         }
         File file = new File(docPath);
         if (!file.exists()) {
-            postNetNoFile(contactBean,false);
+            postNetNoFile(contactBean, false);
             return;
         }
 
@@ -238,9 +242,9 @@ public class ContactActivity extends BaseActivity {
             @Override
             public void accept(String s) throws Exception {
                 if (s.equals("Y")) {
-                    postNetNoFile(contactBean,false);
+                    postNetNoFile(contactBean, false);
                 } else if (s.equals("N")) {
-                    postNetNoFile(contactBean,true);
+                    postNetNoFile(contactBean, true);
                 } else {
                     ToastUtils.showShort(ContactActivity.this, s);
                 }
@@ -251,7 +255,7 @@ public class ContactActivity extends BaseActivity {
                 .subscribe(consumer);
     }
 
-    private void postNetNoFile(ContactBean contactBean,boolean isUpload) {
+    private void postNetNoFile(ContactBean contactBean, boolean isUpload) {
         //文件未下载，不上传文件
         if (documentInfo.getStatus().equals("1")) {
             //1拟稿阶段（点发送调起通讯录选人提交）
@@ -267,7 +271,7 @@ public class ContactActivity extends BaseActivity {
      * 提交审核
      */
     private void commitAudit(final String uid, final boolean ifUpload) {
-        if (docPath == null || docPath.equals("")) {
+        if (ifUpload && (docPath == null || docPath.equals(""))) {
             ToastUtils.showShort(this, "文件不存在");
             return;
         }
@@ -336,7 +340,7 @@ public class ContactActivity extends BaseActivity {
      * 提交文件领导签署（拟稿人审核阶段）
      */
     private void commitSign(final String uid, final boolean ifUpload) {
-        if (docPath == null || docPath.equals("")) {
+        if (ifUpload && (docPath == null || docPath.equals(""))) {
             ToastUtils.showShort(this, "文件不存在");
             return;
         }

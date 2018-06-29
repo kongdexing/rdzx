@@ -19,6 +19,7 @@ import com.example.ysl.mywps.utils.CommonUtil;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.example.ysl.mywps.utils.SysytemSetting;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
@@ -46,7 +47,7 @@ import retrofit2.Response;
 
 public class StayDoFragment extends BaseFragment {
 
-    private static final int PAGE_SIZE = 20;
+    private static final int PAGE_SIZE = 10;
 
     @BindView(R.id.stay_to_listview)
     PullToRefreshListView listView;
@@ -54,10 +55,53 @@ public class StayDoFragment extends BaseFragment {
     private StayDoAdapter adapter;
     private ArrayList<String> list = new ArrayList<>();
     private int pageNUmber = 1;
+    private int pageTotal = 0;
     private ArrayList<DocumentListBean> documents = new ArrayList<>();
-    private boolean isLoadMore = false;
-
     private String wpsMode = "";
+
+    @Override
+    public View setView(LayoutInflater inflater, ViewGroup container) {
+
+        View view = inflater.inflate(R.layout.frament_stay_to_do_layout, container, false);
+        ButterKnife.bind(this, view);
+        initView();
+        return view;
+    }
+
+    private void initView() {
+        adapter = new StayDoAdapter(getActivity(), documents);
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), WpsDetailActivity.class);
+                intent.putExtra(SysytemSetting.WPS_MODE, wpsMode);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("documentben", documents.get((int) id));
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+        listView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+        listView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                Log.i(TAG, "onPullDownToRefresh");
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                Log.i(TAG, "onPullUpToRefresh: ");
+                if (pageTotal > pageNUmber) {
+                    ++pageNUmber;
+                    netWork();
+                } else {
+                    finishLoad();
+                }
+            }
+        });
+    }
 
     @Override
     public void initData() {
@@ -67,8 +111,6 @@ public class StayDoFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        documents.clear();
-        isLoadMore = false;
         pageNUmber = 1;
         netWork();
     }
@@ -78,44 +120,13 @@ public class StayDoFragment extends BaseFragment {
     }
 
     @Override
-    public View setView(LayoutInflater inflater, ViewGroup container) {
+    public void afterView(View view) {
 
-        View view = inflater.inflate(R.layout.frament_stay_to_do_layout, container, false);
-        ButterKnife.bind(this, view);
-
-        adapter = new StayDoAdapter(getActivity(), documents);
-        listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Intent intent = new Intent(getActivity(), WpsDetailActivity.class);
-
-                intent.putExtra(SysytemSetting.WPS_MODE, wpsMode);
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("documentben", documents.get((int) id));
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
-
-//        documents.clear();
-//        isLoadMore = false;
-//        pageNUmber = 1;
-//        netWork();
-
-        return view;
     }
 
     private void netWork() {
+        ((StayToDoActivity) getActivity()).showProgress();
 
-        if (isLoadMore) {
-            documents.clear();
-        }
-        if (!isLoadMore) {
-            ((StayToDoActivity) getActivity()).showProgress();
-        }
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
@@ -125,7 +136,7 @@ public class StayDoFragment extends BaseFragment {
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
-
+                        Log.i(TAG, "onResponse: " + response.toString());
                         if (!response.isSuccessful()) {
                             emitter.onNext(response.message());
                             return;
@@ -137,25 +148,15 @@ public class StayDoFragment extends BaseFragment {
                             JSONObject jsonObject = new JSONObject(data);
                             int code = jsonObject.getInt("code");
                             String msg = jsonObject.getString("msg");
-                            if (code != 0) {
-                                emitter.onNext(msg);
-                                isLoadMore = true;
-                            } else {
-                                isLoadMore = false;
-                            }
-//                            String datas = jsonObject.getString("data");
                             JSONObject childeObject = jsonObject.getJSONObject("data");
                             int total = childeObject.getInt("total");
+                            pageTotal = total;
                             JSONArray array = childeObject.getJSONArray("list");
                             Gson gson = new Gson();
-                            for (int i = 0; i < array.length(); ++i) {
-                                JSONObject child = array.getJSONObject(i);
-                                DocumentListBean document = gson.fromJson(child.toString(), DocumentListBean.class);
-                                documents.add(document);
-                            }
+                            documents = gson.fromJson(array.toString(),new TypeToken<ArrayList<DocumentListBean>>() {
+                            }.getType());
                             emitter.onNext("Y");
                         } catch (JSONException e) {
-                            isLoadMore = false;
                             e.printStackTrace();
                         }
                     }
@@ -165,7 +166,6 @@ public class StayDoFragment extends BaseFragment {
                         emitter.onNext(t.getMessage());
                     }
                 });
-
             }
         });
 
@@ -174,9 +174,12 @@ public class StayDoFragment extends BaseFragment {
             public void accept(String s) {
                 finishLoad();
                 ((StayToDoActivity) getActivity()).hideProgress();
-
                 if (s.equals("Y")) {
-                    adapter.updateList(documents);
+                    if (pageNUmber == 1) {
+                        adapter.updateList(documents);
+                    } else {
+                        adapter.addList(documents);
+                    }
                 } else if (s.equals("N")) {
 
                 } else {
@@ -192,37 +195,13 @@ public class StayDoFragment extends BaseFragment {
                 .subscribe(observer);
     }
 
-    @Override
-    public void afterView(View view) {
-        listView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
-
-        listView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
-            @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                Log.i(TAG, "onPullDownToRefresh");
-            }
-
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                Log.i(TAG, "onPullUpToRefresh: ");
-                if (isLoadMore) {
-                    ++pageNUmber;
-                    netWork();
-                } else {
-                    finishLoad();
-                }
-            }
-        });
-    }
-
     private void finishLoad() {
         listView.postDelayed(new Runnable() {
             @Override
             public void run() {
                 listView.onRefreshComplete();
-
             }
-        }, 1000);
+        }, 300);
     }
 
     @Override

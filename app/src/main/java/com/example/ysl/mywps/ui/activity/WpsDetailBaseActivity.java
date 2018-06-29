@@ -81,7 +81,11 @@ public class WpsDetailBaseActivity extends BaseActivity {
         registerReceiver(pushReceiver, filter);
     }
 
-    public void getWpsInfo(final String doc_id) {
+    public void getWpsInfo(String doc_id) {
+        getWpsInfo(doc_id, null);
+    }
+
+    public void getWpsInfo(final String doc_id, final DocumentInfoListener listener) {
         showProgress();
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
@@ -134,8 +138,15 @@ public class WpsDetailBaseActivity extends BaseActivity {
             public void accept(String s) throws Exception {
                 Log.i(TAG, "accept: " + s);
                 if (s != null && s.equals("Y")) {
-                    afterData();
+                    if (listener != null) {
+                        listener.onDocSuccess();
+                    } else {
+                        afterData();
+                    }
                 } else {
+                    if (listener != null) {
+                        listener.onDocFailed();
+                    }
                     ToastUtils.showShort(WpsDetailBaseActivity.this, s);
                 }
             }
@@ -144,6 +155,7 @@ public class WpsDetailBaseActivity extends BaseActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(consumer);
     }
+
 
     @Override
     public void initView() {
@@ -169,4 +181,11 @@ public class WpsDetailBaseActivity extends BaseActivity {
         super.onPause();
         hideProgress();
     }
+
+    public interface DocumentInfoListener {
+        void onDocSuccess();
+
+        void onDocFailed();
+    }
+
 }
