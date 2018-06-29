@@ -126,6 +126,8 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
 
     @BindView(R.id.wpcdetail_rl_loading)
     RelativeLayout rlLoading;
+    @BindView(R.id.txt_file_status)
+    TextView txt_file_status;
     @BindView(R.id.wpcdetail_rl_content)
     RelativeLayout rlContent;
 
@@ -260,7 +262,10 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
         setTitleText(documentInfo.getDoc_name());
         if (documentInfo.getIs_img_newest().equals("n")) {
             //最新文件的预览图片正在转码中，请稍后再试...
-            ToastUtils.showShort(this, "最新文件的预览图片正在转码中，请稍后再试...");
+            rlLoading.setVisibility(View.VISIBLE);
+            txt_file_status.setText("最新文件的预览图片正在转码中，请稍后再试...");
+        } else {
+            rlLoading.setVisibility(View.GONE);
         }
 //        http:\/\/p2c152618.bkt.clouddn.com\/1_测试中文.docx_2.png?v=1517064503"
         Log.d(TAG, "afterData: " + documentInfo.getOpinion());
@@ -351,6 +356,7 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
         }
 
         rlLoading.setVisibility(View.VISIBLE);
+        txt_file_status.setText("正在下载中...");
         progressBar.setVisibility(View.VISIBLE);
 
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
