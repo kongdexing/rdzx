@@ -94,7 +94,7 @@ public class ContactActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         documentInfo = getIntent().getExtras().getParcelable("documentInfo");
-        if (documentInfo!=null) {
+        if (documentInfo != null) {
             String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getPath();
             docPath = path + "/" + documentInfo.getDoc_name();
         }
@@ -244,7 +244,12 @@ public class ContactActivity extends BaseActivity {
                 if (s.equals("Y")) {
                     postNetNoFile(contactBean, false);
                 } else if (s.equals("N")) {
-                    postNetNoFile(contactBean, true);
+                    if ("n".equals(documentInfo.getIs_download())) {
+                        //md5不同，但未同步文件，所以不上传文件
+                        postNetNoFile(contactBean, false);
+                    } else {
+                        postNetNoFile(contactBean, true);
+                    }
                 } else {
                     ToastUtils.showShort(ContactActivity.this, s);
                 }

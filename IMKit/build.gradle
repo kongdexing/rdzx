@@ -39,10 +39,11 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'src/main/libs')
     compile 'com.android.support:support-v4:27.0.0'
     compile project(':IMLib')
-//    compile files('src/main/libs/MiPush_SDK_Client_3_5_1.jar')
+    compile files('src/main/libs/MiPush_SDK_Client_3_6_2.jar')
 }
 
-repositories { flatDir { dirs '../push/aars' }
+repositories {
+    flatDir { dirs '../push/aars' }
     maven {
         url 'https://maven.google.com/'
         name 'Google'

@@ -7,7 +7,6 @@ import android.widget.RelativeLayout;
 
 import com.example.ysl.mywps.R;
 import com.example.ysl.mywps.ui.fragment.HandleFragment;
-import com.example.ysl.mywps.ui.fragment.HasDoFragment;
 import com.example.ysl.mywps.utils.SysytemSetting;
 
 import butterknife.BindView;
@@ -18,7 +17,6 @@ import butterknife.ButterKnife;
  */
 
 public class HandleActivity extends BaseActivity {
-
 
     @BindView(R.id.handle_rl_content)
     RelativeLayout rl_content;
@@ -44,7 +42,6 @@ public class HandleActivity extends BaseActivity {
 
     @Override
     public void initView() {
-
         HandleFragment fragment = new HandleFragment();
         fragment.setWpsMode(wpsMode);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

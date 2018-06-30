@@ -81,7 +81,7 @@ public class NewOAActivity extends BaseActivity {
                 .setIconId(R.drawable.icon_oa_6)
                 .setTitle("同事吧")
                 .setIntent(new Intent(this, WebViewActivity.class)
-                        .putExtra(BaseWebActivity.WEB_URL, HttpUtl.HTTP_WEB_URL + "topic/index.html")
+                        .putExtra(BaseWebActivity.WEB_URL, HttpUtl.HTTP_WEB_URL + "bbs/index.html")
                         .putExtra(BaseWebActivity.WEB_TITLE, "同事吧")));
 
         oaItems.add(new NewOAItem()

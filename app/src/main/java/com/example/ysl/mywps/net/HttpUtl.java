@@ -329,4 +329,10 @@ public class HttpUtl {
         return netApi.getDocumentMd5(token, documentId);
     }
 
+    public static Call<String> updateDownloadStatus(String url, String token, String proce_id) {
+        String httpUrl = HTTP_URL + url;
+        NetApi netApi = getRetrofit(httpUrl).create(NetApi.class);
+        return netApi.updateDownloadStatus(token, proce_id);
+    }
+
 }

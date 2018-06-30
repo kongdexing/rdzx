@@ -24,14 +24,13 @@
             android:layout_centerHorizontal="true"
             android:background="@color/arrow" />
 
-
         <RelativeLayout
             android:id="@+id/circle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:layout_below="@+id/line1"
             android:layout_centerHorizontal="true"
+            android:visibility="visible"
             android:layout_marginTop="1dp">
 
             <ImageView
@@ -49,9 +48,9 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/line2"
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
-
             android:layout_below="@+id/circle"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="1dp"
@@ -95,13 +94,13 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/padding_small"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/flow_tv_leader"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/padding_small"
                         android:paddingBottom="1dp"
                         android:text="领导-0"
                         android:textColor="@color/text_black"
@@ -113,7 +112,7 @@
                         android:layout_height="wrap_content"
                         android:lineSpacingExtra="5dp"
                         android:paddingTop="1dp"
-                        android:text="  8 - 24 14 : 24"
+                        android:text="8 - 24 14 : 24"
                         android:textColor="@color/text_gray"
                         android:textSize="@dimen/text_small" />
 

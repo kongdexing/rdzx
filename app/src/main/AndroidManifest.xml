@@ -46,6 +46,16 @@
             android:value="comyslexample" />
 
         <activity
+            android:name=".ui.activity.WelcomeActivity"
+            android:theme="@style/Theme.BackgroundTranslucent">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".ui.activity.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
@@ -67,9 +77,7 @@
         <activity android:name=".ui.activity.ColleagueActivity" />
         <activity android:name=".ui.activity.WebViewActivity" />
         <activity android:name=".ui.activity.HandleActivity" />
-        <activity android:name=".ui.activity.LoginActivity">
-
-        </activity>
+        <activity android:name=".ui.activity.LoginActivity"/>
 
         <!-- 融云客服Activity注册 -->
         <activity android:name=".ui.activity.ConversionListActivity">
@@ -163,13 +171,6 @@
             android:exported="true" />
 
         <activity android:name=".ui.activity.NewOAActivity" />
-        <activity android:name=".ui.activity.WelcomeActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

@@ -62,10 +62,8 @@ public class DocumentTurnActivity extends BaseActivity {
     private class MyClickListener extends NoDoubleClickListener {
         @Override
         public void click(View v) {
-
             Intent intent = null;
             switch (v.getId()) {
-
                 case R.id.document_ll_inside:
                     //内部公文
                     intent = new Intent(DocumentTurnActivity.this, StayToDoActivity.class);

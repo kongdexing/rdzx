@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -222,11 +223,11 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
         if (!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
 
-        if (wpsMode.equals(SysytemSetting.HANDLE_WPS) || wpsMode.equals(SysytemSetting.ISSUE_WPS) || wpsMode.equals(SysytemSetting.OUT_WPS)) {
-            llMessage.setVisibility(View.INVISIBLE);
-            llSign.setVisibility(View.INVISIBLE);
-            llSend.setVisibility(View.INVISIBLE);
-        }
+//        if (wpsMode.equals(SysytemSetting.HANDLE_WPS) || wpsMode.equals(SysytemSetting.ISSUE_WPS) || wpsMode.equals(SysytemSetting.OUT_WPS)) {
+//            llMessage.setVisibility(View.INVISIBLE);
+//            llSign.setVisibility(View.INVISIBLE);
+//            llSend.setVisibility(View.INVISIBLE);
+//        }
         mAccount = SharedPreferenceUtils.loginValue(this, "name");
         Log.i(TAG, "onCreate: account " + mAccount);
 
@@ -323,11 +324,18 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
 //            }
 //        }
 
+        rlDragContent.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                rlDragContent.setBackgroundResource(R.drawable.dash1dp);
+                return false;
+            }
+        });
+
         mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                //TODO 点击消失
                 float clickx = event.getX();
                 float x1, x2, y1, y2;
                 x1 = rlDragContent.getX();
@@ -338,10 +346,12 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
                 float sumy = Math.abs(y2 - y1);
                 if (clickx > x1 && clickx < x2 && sumy < 350 && y1 > y2) {
                     rlDragContent.autoMouse(event);
-//                    ivIcon.setBackgroundResource(R.drawable.dash1dp);
+                    rlDragContent.setBackgroundResource(R.drawable.dash1dp);
                     mSignOldPosition = event;
 //                    Log.d(TAG, "onTouch: left = " + ivIcon.getX() + " | top = " + ivIcon.getY());
                     return true;
+                } else {
+                    rlDragContent.setBackgroundColor(Color.TRANSPARENT);
                 }
                 return false;
             }
@@ -417,6 +427,7 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
                     editor.putString(documentInfo.getDoc_name(), documentInfo.getStatus());
                     editor.apply();
                     ToastUtils.showShort(getApplicationContext(), "文档同步成功");
+                    updateWpsDownloadStatus(documentInfo.getProce_id());
                     if (shouldOpen) openWps(downloadWpsPath);
                 } else {
                     ToastUtils.showShort(getApplicationContext(), s);
@@ -789,7 +800,6 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
 
         if (popupWindow == null) {
             View view = LayoutInflater.from(this).inflate(R.layout.sign_layout, null);
-
             writingPadView = (WritingPadView) view.findViewById(R.id.sign_writing);
             tvCancel = (TextView) view.findViewById(R.id.sign_tv_cancel);
             tvClear = (TextView) view.findViewById(R.id.sign_tv_clear);
@@ -882,6 +892,7 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
                             WpsDetailActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    rlDragContent.setBackgroundResource(R.drawable.dash1dp);
                                     rlDragContent.setVisibility(View.VISIBLE);
 
                                     ImageLoader.getInstance().displayImage("file://" + mypath, ivIcon);
@@ -1012,10 +1023,19 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
                         signUnCompleted(opinion, "1", false);
                     }
                 } else if (s.equals("N")) {
-                    if (documentInfo.getStatus().equals("2")) {
-                        uploadFile(opinion, true);
-                    } else if (documentInfo.getStatus().equals("3")) {
-                        signUnCompleted(opinion, "1", true);
+                    if ("n".equals(documentInfo.getIs_download())) {
+                        //md5不同，但未同步文件，所以不上传文件
+                        if (documentInfo.getStatus().equals("2")) {
+                            uploadFile(opinion, false);
+                        } else if (documentInfo.getStatus().equals("3")) {
+                            signUnCompleted(opinion, "1", false);
+                        }
+                    } else {
+                        if (documentInfo.getStatus().equals("2")) {
+                            uploadFile(opinion, true);
+                        } else if (documentInfo.getStatus().equals("3")) {
+                            signUnCompleted(opinion, "1", true);
+                        }
                     }
                 } else {
                     ToastUtils.showShort(WpsDetailActivity.this, s);
@@ -1054,9 +1074,9 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
                             remoteMd5 = data.getString("md5");
                             if (code == 0) {
                                 if (remoteMd5.equals(md5Value)) {
-                                    emitter.onNext("N");
-                                } else {
                                     emitter.onNext("Y");
+                                } else {
+                                    emitter.onNext("N");
                                 }
                             } else {
                                 emitter.onNext(message);
@@ -1077,13 +1097,15 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
         Consumer<String> consumer = new Consumer<String>() {
             @Override
             public void accept(String s) throws Exception {
-                if (s.equals("Y")) {
+                if (s.equals("N")) {
                     //云端文件与本地文件不同
-                    if (needOpen) {
+                    if ("n".equals(documentInfo.getIs_download())) {
+                        downLoadWps(needOpen);
+                    } else {
                         //点击正文，同步完成打开wps
                         new AlertDialog.Builder(WpsDetailActivity.this)
                                 .setTitle("公文")
-                                .setMessage("是否重新同步并覆盖文件？")
+                                .setMessage("本地文件已被您修改，是否重新同步并覆盖文件？")
                                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
 
                                     @Override
@@ -1098,10 +1120,12 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
                                     }
                                 })
                                 .create().show();
-                    } else {
-                        downLoadWps(needOpen);
                     }
-                } else if (s.equals("N")) {
+                } else if (s.equals("Y")) {
+                    //md5相同，更新download_status
+                    if ("n".equals(documentInfo.getIs_download())) {
+                        updateWpsDownloadStatus(documentInfo.getProce_id());
+                    }
                     if (needOpen) {
                         openWps(wpsPath);
                     } else {
@@ -1129,13 +1153,21 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
                     downLoadWps(false);
                 }
             } else if (id == R.id.wpcdetail_iv_artical || id == R.id.wpcdetail_ll_artical) {
-                if (checkFileExist()) {
-                    //打开wps
-
-//                    checkMd5AndDownload(true);
-                } else {
+                //正文
+                if (!checkFileExist() || "n".equals(documentInfo.getIs_download())) {
                     //提示请先同步文件
-                    downLoadWps(true);
+                    new AlertDialog.Builder(WpsDetailActivity.this)
+                            .setTitle("公文")
+                            .setMessage("文档还未同步到本地，请点击【同步】")
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .create().show();
+                } else {
+                    openWps(downloadWpsPath);
                 }
             } else if (id == R.id.wpcdetail_iv_message || id == R.id.wpcdetail_ll_message) {
 //                if (documentInfo.getStatus().equals("1")) {

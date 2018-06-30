@@ -56,7 +56,7 @@ public class StayDoFragment extends BaseFragment {
     private ArrayList<String> list = new ArrayList<>();
     private int pageNUmber = 1;
     private int pageTotal = 0;
-    private ArrayList<DocumentListBean> documents = new ArrayList<>();
+    private ArrayList<DocumentListBean> allDocuments = new ArrayList<>();
     private String wpsMode = "";
 
     @Override
@@ -69,7 +69,7 @@ public class StayDoFragment extends BaseFragment {
     }
 
     private void initView() {
-        adapter = new StayDoAdapter(getActivity(), documents);
+        adapter = new StayDoAdapter(getActivity(), allDocuments);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -78,7 +78,7 @@ public class StayDoFragment extends BaseFragment {
                 Intent intent = new Intent(getActivity(), WpsDetailActivity.class);
                 intent.putExtra(SysytemSetting.WPS_MODE, wpsMode);
                 Bundle bundle = new Bundle();
-                bundle.putParcelable("documentben", documents.get((int) id));
+                bundle.putParcelable("documentben", allDocuments.get((int) id));
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -126,7 +126,6 @@ public class StayDoFragment extends BaseFragment {
 
     private void netWork() {
         ((StayToDoActivity) getActivity()).showProgress();
-
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
@@ -153,9 +152,17 @@ public class StayDoFragment extends BaseFragment {
                             pageTotal = total;
                             JSONArray array = childeObject.getJSONArray("list");
                             Gson gson = new Gson();
-                            documents = gson.fromJson(array.toString(),new TypeToken<ArrayList<DocumentListBean>>() {
+                            ArrayList<DocumentListBean> documents = gson.fromJson(array.toString(), new TypeToken<ArrayList<DocumentListBean>>() {
                             }.getType());
                             emitter.onNext("Y");
+
+                            if (pageNUmber == 1) {
+                                allDocuments.clear();
+                                adapter.updateList(documents);
+                            } else {
+                                adapter.addList(documents);
+                            }
+                            allDocuments.addAll(documents);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -175,11 +182,7 @@ public class StayDoFragment extends BaseFragment {
                 finishLoad();
                 ((StayToDoActivity) getActivity()).hideProgress();
                 if (s.equals("Y")) {
-                    if (pageNUmber == 1) {
-                        adapter.updateList(documents);
-                    } else {
-                        adapter.addList(documents);
-                    }
+
                 } else if (s.equals("N")) {
 
                 } else {

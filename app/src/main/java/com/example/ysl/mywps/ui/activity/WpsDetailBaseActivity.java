@@ -156,6 +156,38 @@ public class WpsDetailBaseActivity extends BaseActivity {
                 .subscribe(consumer);
     }
 
+    public void updateWpsDownloadStatus(final String proce_id) {
+        Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
+                Call<String> call = HttpUtl.updateDownloadStatus("User/Oa/updateDownloadStatus/", token, proce_id);
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        if (!response.isSuccessful()) {
+                            emitter.onNext(response.message());
+                            return;
+                        }
+                        documentInfo.setIs_download("y");
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        emitter.onNext(t.getMessage());
+                    }
+                });
+            }
+        });
+        Consumer<String> consumer = new Consumer<String>() {
+            @Override
+            public void accept(String s) throws Exception {
+                Log.i(TAG, "accept: " + s);
+            }
+        };
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(consumer);
+    }
 
     @Override
     public void initView() {

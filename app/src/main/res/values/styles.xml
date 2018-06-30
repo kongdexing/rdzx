@@ -7,8 +7,13 @@
         <item name="colorPrimaryDark">@color/tool_bar</item>
         <item name="colorAccent">@color/tool_bar</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowIsTranslucent">true</item>
+        <!--<item name="android:windowIsTranslucent">true</item>-->
         <item name="android:windowSoftInputMode">stateAlwaysHidden|adjustNothing</item>
+    </style>
+
+    <style name="Theme.BackgroundTranslucent" parent="@android:style/Theme.NoTitleBar.Fullscreen">
+        <item name="android:windowBackground">@drawable/bg_welcome</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
     <style name="myprogress" parent="Widget.AppCompat.ProgressBar.Horizontal">

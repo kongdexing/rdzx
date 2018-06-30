@@ -1,6 +1,7 @@
 package com.example.ysl.mywps.ui.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -10,9 +11,7 @@ import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.ui.adapter.FlowAdapter;
 import com.example.ysl.mywps.utils.CommonUtil;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
-import com.example.ysl.mywps.utils.ToastUtils;
 import com.google.gson.Gson;
-import com.orhanobut.logger.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -85,7 +84,6 @@ public class FlowActivity extends BaseActivity {
 
     }
 
-
     private void netWork() {
         flows.clear();
         showProgress();
@@ -97,7 +95,7 @@ public class FlowActivity extends BaseActivity {
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
-                        if(!response.isSuccessful()){
+                        if (!response.isSuccessful()) {
                             emitter.onNext(response.message());
                             return;
                         }
@@ -109,9 +107,8 @@ public class FlowActivity extends BaseActivity {
                         }
 
                         String data = response.body();
-                        Logger.i("流程  " + data);
-                        if(CommonUtil.isEmpty(data)){
-
+                        Log.i(TAG, "流程  " + data);
+                        if (CommonUtil.isEmpty(data)) {
                             emitter.onNext("N");
                             return;
                         }
@@ -125,48 +122,45 @@ public class FlowActivity extends BaseActivity {
                                 emitter.onNext(msg);
                             }
 
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
+                            JSONObject dataJson = jsonObject.getJSONObject("data");
+
+                            JSONArray jsonArray = dataJson.getJSONArray("multi");
                             Gson gson = new Gson();
                             for (int i = 0; i < jsonArray.length(); ++i) {
                                 JSONObject childObject = jsonArray.getJSONObject(i);
                                 FlowBean bean = gson.fromJson(childObject.toString(), FlowBean.class);
-
-                                if (bean.getStatus().contains("阶段"))
-                                    bean.setStatus(bean.getStatus().replace("阶段", ""));
-                                if(bean.getStatus().contains("审核通过"))
-                                    bean.setStatus(bean.getStatus().replace("通过", ""));
-
                                 try {
                                     String[] split1 = bean.getCtime().split(" ");
 //                                    String month = split1[0].substring(5, split1[0].length());
 //                                    String time = split1[1].substring(0, 5);
                                     bean.setMonth(split1[0]);
                                     bean.setTime(split1[1]);
-                                }catch (NullPointerException e){
-                                 e.printStackTrace();
+                                } catch (NullPointerException e) {
+                                    e.printStackTrace();
                                 }
                                 flows.add(bean);
                             }
 
+                            //反馈阶段，会反馈给多个人
+                            JSONArray singleArray = dataJson.getJSONArray("single");
+                            for (int i = 0; i < singleArray.length(); ++i) {
+                                JSONObject childObject = singleArray.getJSONObject(i);
+                                FlowBean bean = gson.fromJson(childObject.toString(), FlowBean.class);
+                                flows.add(bean);
+                            }
                             emitter.onNext(msg);
                             emitter.onNext("Y");
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-
                     }
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-
                         emitter.onNext(t.getMessage());
                         emitter.onNext("N");
                     }
                 });
-
-
             }
         });
 
@@ -177,7 +171,7 @@ public class FlowActivity extends BaseActivity {
                 if (s.equals("N") || s.equals("Y")) {
                     adapter.updateAdapter(flows);
                 } else {
-                    ToastUtils.showShort(getApplicationContext(), s);
+//                    ToastUtils.showShort(getApplicationContext(), s);
                 }
             }
         };
@@ -185,9 +179,6 @@ public class FlowActivity extends BaseActivity {
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
-
-
     }
-
 
 }

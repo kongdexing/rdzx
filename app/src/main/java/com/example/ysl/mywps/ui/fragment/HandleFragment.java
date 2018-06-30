@@ -19,6 +19,7 @@ import com.example.ysl.mywps.utils.CommonUtil;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
 import com.example.ysl.mywps.utils.SysytemSetting;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.orhanobut.logger.Logger;
@@ -48,15 +49,14 @@ import retrofit2.Response;
 public class HandleFragment extends BaseFragment {
     private static final int PAGE_SIZE = 20;
 
-
     @BindView(R.id.stay_to_listview)
     PullToRefreshListView listView;
 
     private StayDoAdapter adapter;
     private ArrayList<String> list = new ArrayList<>();
     private int pageNUmber = 1;
-    private ArrayList<DocumentListBean> documents = new ArrayList<>();
-    private boolean isLoadMore = false;
+    private int pageTotal = 0;
+    private ArrayList<DocumentListBean> allDocuments = new ArrayList<>();
     private String wpsMode = "";
     private String wps_type;
 
@@ -68,75 +68,50 @@ public class HandleFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        documents.clear();
-        isLoadMore = false;
         pageNUmber = 1;
         netWork();
     }
 
     public void setWpsMode(String wpsMode) {
         this.wpsMode = wpsMode;
-
         switch (wpsMode) {
-
             case SysytemSetting.HANDLE_WPS:
-
                 wps_type = "3";
                 break;
             case SysytemSetting.OUT_WPS:
-
                 wps_type = "1";
                 break;
             case SysytemSetting.ISSUE_WPS:
-
                 wps_type = "1";
                 break;
-
         }
-
     }
-
 
     @Override
     public View setView(LayoutInflater inflater, ViewGroup container) {
-
         View view = inflater.inflate(R.layout.frament_stay_to_do_layout, container, false);
         ButterKnife.bind(this, view);
 
-        adapter = new StayDoAdapter(getActivity(), documents);
+        adapter = new StayDoAdapter(getActivity(), allDocuments);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 Intent intent = new Intent(getActivity(), WpsDetailActivity.class);
-
                 intent.putExtra(SysytemSetting.WPS_MODE, wpsMode);
 //                intent.putExtra(SysytemSetting.ACTIVITY_KIND,SysytemSetting.HANDLE_WPS);
                 Bundle bundle = new Bundle();
-                bundle.putParcelable("documentben", documents.get((int) id));
+                bundle.putParcelable("documentben", allDocuments.get((int) id));
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
-
-//        documents.clear();
-//        isLoadMore = false;
-//        pageNUmber = 1;
-//        netWork();
-
         return view;
     }
 
     private void netWork() {
-
-        if (isLoadMore) {
-            documents.clear();
-        }
-        if (!isLoadMore) {
-            ((HandleActivity) getActivity()).showProgress();
-        }
+        ((HandleActivity) getActivity()).showProgress();
         Observable<String> observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
@@ -146,7 +121,6 @@ public class HandleFragment extends BaseFragment {
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
-
                         if (!response.isSuccessful()) {
                             emitter.onNext(response.message());
                             emitter.onNext("N");
@@ -155,32 +129,27 @@ public class HandleFragment extends BaseFragment {
                         String data = response.body();
                         Logger.i("stay " + data);
                         try {
-
                             JSONObject jsonObject = new JSONObject(data);
                             int code = jsonObject.getInt("code");
                             String msg = jsonObject.getString("msg");
-                            if (code != 0) {
-                                emitter.onNext(msg);
-                                isLoadMore = true;
-                            } else {
-                                isLoadMore = false;
-                            }
 //                            String datas = jsonObject.getString("data");
                             JSONObject childeObject = jsonObject.getJSONObject("data");
                             int total = childeObject.getInt("total");
+                            pageTotal = total;
                             JSONArray array = childeObject.getJSONArray("list");
-
-
                             Gson gson = new Gson();
-                            for (int i = 0; i < array.length(); ++i) {
-                                JSONObject child = array.getJSONObject(i);
-                                DocumentListBean document = gson.fromJson(child.toString(), DocumentListBean.class);
-                                documents.add(document);
-                            }
-                            emitter.onNext("Y");
+                            ArrayList<DocumentListBean> documents = gson.fromJson(array.toString(), new TypeToken<ArrayList<DocumentListBean>>() {
+                            }.getType());
 
+                            emitter.onNext("Y");
+                            if (pageNUmber == 1) {
+                                allDocuments.clear();
+                                adapter.updateList(documents);
+                            } else {
+                                adapter.addList(documents);
+                            }
+                            allDocuments.addAll(documents);
                         } catch (JSONException e) {
-                            isLoadMore = false;
                             e.printStackTrace();
                             emitter.onNext("N");
                         }
@@ -191,7 +160,6 @@ public class HandleFragment extends BaseFragment {
                         emitter.onNext(t.getMessage());
                     }
                 });
-
             }
         });
 
@@ -201,18 +169,12 @@ public class HandleFragment extends BaseFragment {
                 finishLoad();
                 ((HandleActivity) getActivity()).hideProgress();
                 if (s.equals("Y")) {
-
-                    adapter.updateList(documents);
-
+                    adapter.updateList(allDocuments);
                 } else if (s.equals("N")) {
-
                 } else {
                     if (getActivity() != null)
                         CommonUtil.showShort(getActivity(), s);
                 }
-//                Logger.i("等待事项  " + s);
-
-
             }
 
         };
@@ -220,8 +182,6 @@ public class HandleFragment extends BaseFragment {
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
-
-
     }
 
     @Override
@@ -236,8 +196,7 @@ public class HandleFragment extends BaseFragment {
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-
-                if (isLoadMore) {
+                if (pageTotal > pageNUmber) {
                     ++pageNUmber;
                     netWork();
                 } else {
@@ -254,7 +213,7 @@ public class HandleFragment extends BaseFragment {
                 listView.onRefreshComplete();
 
             }
-        }, 1000);
+        }, 300);
     }
 
     @Override

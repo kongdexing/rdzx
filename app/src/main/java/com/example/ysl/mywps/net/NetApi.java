@@ -161,4 +161,7 @@ public interface NetApi {
     @POST("query")
     Call<String> getDocumentMd5(@Query("token") String token, @Query("doc_id") String doc_id);
 
+    @POST("query")
+    Call<String> updateDownloadStatus(@Query("token") String token, @Query("proce_id") String proce_id);
+
 }

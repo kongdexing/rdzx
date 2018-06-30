@@ -79,6 +79,7 @@ public class DocumentListBean implements Parcelable {
     private String from_uid;
     private String n_time;
     private String opinion;
+    private String is_download;
     private int is_writable;
     private String c_username;
     private String c_nickname;
@@ -89,6 +90,7 @@ public class DocumentListBean implements Parcelable {
     private String dept_name;
     private String is_forward;
     private String is_img_newest ;
+
 
     protected DocumentListBean(Parcel in) {
         doc_imgs = in.createTypedArrayList(DocumentImageBean.CREATOR);
@@ -106,6 +108,7 @@ public class DocumentListBean implements Parcelable {
         from_uid = in.readString();
         n_time = in.readString();
         opinion = in.readString();
+        is_download = in.readString();
         is_writable = in.readInt();
         c_username = in.readString();
         c_nickname = in.readString();
@@ -135,6 +138,7 @@ public class DocumentListBean implements Parcelable {
         dest.writeString(from_uid);
         dest.writeString(n_time);
         dest.writeString(opinion);
+        dest.writeString(is_download);
         dest.writeInt(is_writable);
         dest.writeString(c_username);
         dest.writeString(c_nickname);
@@ -173,6 +177,14 @@ public class DocumentListBean implements Parcelable {
 
     public void setOpinion(String opinion) {
         this.opinion = opinion;
+    }
+
+    public String getIs_download() {
+        return is_download;
+    }
+
+    public void setIs_download(String is_download) {
+        this.is_download = is_download;
     }
 
     public String getC_realname() {

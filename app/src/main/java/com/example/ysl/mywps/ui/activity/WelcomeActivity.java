@@ -1,5 +1,6 @@
 package com.example.ysl.mywps.ui.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,22 +16,19 @@ import com.example.ysl.mywps.utils.SysytemSetting;
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
 
-public class WelcomeActivity extends BaseActivity {
+public class WelcomeActivity extends Activity {
 
     private SharedPreferences preferences;
+    private String TAG = WelcomeActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getWindow().getDecorView().setBackgroundResource(R.drawable.bg_welcome);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-
-        showTitle(false);
         getLogin();
     }
 
     private void getLogin() {
-
         preferences = getSharedPreferences(SysytemSetting.USER_FILE, Context.MODE_PRIVATE);
         String token = preferences.getString(SysytemSetting.USER_TOKEN, "");
         String imToken = preferences.getString(SysytemSetting.ROIM_TOKEN, "");
@@ -93,13 +91,4 @@ public class WelcomeActivity extends BaseActivity {
 
     }
 
-    @Override
-    public void initView() {
-
-    }
-
-    @Override
-    public void initData() {
-
-    }
 }

@@ -17,6 +17,7 @@ public class FlowBean {
      */
     private String avatar;
     private String status;
+    private String status_show;
     private String opinion;
     private String opinion_type;
     private String ctime;
@@ -55,6 +56,14 @@ public class FlowBean {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getStatus_show() {
+        return status_show;
+    }
+
+    public void setStatus_show(String status_show) {
+        this.status_show = status_show;
     }
 
     public String getOpinion() {
