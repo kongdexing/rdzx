@@ -156,6 +156,7 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             progressBar.setProgress(msg.what);
+            Log.i(TAG, "handleMessage progress : " + msg.what);
             if (msg.what == 100) {
                 rlLoading.setVisibility(View.GONE);
                 progressBar.setVisibility(View.GONE);

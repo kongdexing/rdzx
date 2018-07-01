@@ -10,16 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-
         android:background="@color/white_back"
         android:orientation="vertical">
-
-        <ProgressBar
-            android:id="@+id/wpcdetal_pb_top"
-            style="@style/myprogress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:max="100" />
 
         <RelativeLayout
             android:id="@+id/wpcdetail_rl_content"
@@ -54,6 +46,13 @@
                         android:textColor="@color/white_back"
                         android:textSize="@dimen/text_small" />
                 </RelativeLayout>
+
+                <ProgressBar
+                    android:id="@+id/wpcdetal_pb_top"
+                    style="@style/myprogress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="100" />
             </FrameLayout>
 
             <com.example.ysl.mywps.ui.view.DragViewGroup
@@ -75,9 +74,7 @@
                     android:layout_height="65dp" />
             </com.example.ysl.mywps.ui.view.DragViewGroup>
 
-
         </RelativeLayout>
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -98,8 +95,8 @@
 
                 <ImageView
                     android:id="@+id/wpcdownload_iv_artical"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="@dimen/dp_35"
+                    android:layout_height="@dimen/dp_35"
                     android:background="@mipmap/ico_file_download" />
 
                 <TextView
@@ -121,8 +118,8 @@
 
                 <ImageView
                     android:id="@+id/wpcdetail_iv_artical"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="@dimen/dp_35"
+                    android:layout_height="@dimen/dp_35"
                     android:background="@mipmap/ico_file_detail" />
 
                 <TextView
@@ -143,8 +140,8 @@
 
                 <ImageView
                     android:id="@+id/wpcdetail_iv_message"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="@dimen/dp_35"
+                    android:layout_height="@dimen/dp_35"
                     android:background="@mipmap/ico_file_info" />
 
                 <TextView
@@ -165,8 +162,8 @@
 
                 <ImageView
                     android:id="@+id/wpcdetail_iv_sign"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="@dimen/dp_35"
+                    android:layout_height="@dimen/dp_35"
                     android:background="@mipmap/ico_file_sing" />
 
                 <TextView
@@ -187,8 +184,8 @@
 
                 <ImageView
                     android:id="@+id/wpcdetail_iv_send"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="@dimen/dp_35"
+                    android:layout_height="@dimen/dp_35"
                     android:background="@mipmap/ico_file_send" />
 
                 <TextView
