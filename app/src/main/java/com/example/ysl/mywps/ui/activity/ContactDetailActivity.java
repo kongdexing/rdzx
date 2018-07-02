@@ -14,23 +14,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ysl.mywps.R;
-import com.example.ysl.mywps.bean.BannerBean;
 import com.example.ysl.mywps.bean.ContactBean;
 import com.example.ysl.mywps.bean.ContactDetailBean;
 import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.ui.view.CircularImageView;
 import com.example.ysl.mywps.utils.CommonUtil;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
+import com.example.ysl.mywps.utils.SysytemSetting;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -89,8 +86,21 @@ public class ContactDetailActivity extends BaseActivity {
         });
 //        setTitleText("通讯录详情");
 
-        ContactBean contactBean = getIntent().getExtras().getParcelable("contact");
-        getContactDetail(contactBean.getUid());
+        try {
+            ContactBean contactBean = getIntent().getExtras().getParcelable("contact");
+            if (contactBean!=null){
+                getContactDetail(contactBean.getUid());
+            }else{
+                String uid = getIntent().getExtras().getString(SysytemSetting.UID);
+                if (uid!=null){
+                    getContactDetail(uid);
+                }
+            }
+
+        }catch (Exception ex){
+
+        }
+
 
     }
 

@@ -425,6 +425,7 @@ public class WebViewActivity extends BaseWebActivity implements JSCallBack {
                                 comprossVideo(file.getName());
                         } else {
                             //图片文件压缩
+
                             uploadFile(path, file.getName());
                         }
                     }
@@ -583,16 +584,13 @@ public class WebViewActivity extends BaseWebActivity implements JSCallBack {
                 final String type = split[0];
                 if ("primary".equalsIgnoreCase(type)) {
                     return Environment.getExternalStorageDirectory() + "/" + split[1];
-
                 }
             }
             // DownloadsProvider
             else if (isDownloadsDocument(uri)) {
-
                 final String id = DocumentsContract.getDocumentId(uri);
                 final Uri contentUri = ContentUris.withAppendedId(
                         Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-
                 return getDataColumn(context, contentUri, null, null);
             }
             // MediaProvider

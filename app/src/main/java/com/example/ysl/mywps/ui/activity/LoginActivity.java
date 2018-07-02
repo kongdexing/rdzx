@@ -298,7 +298,6 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void run() {
 
-
                 Call call = HttpUtl.getRoimToken("http://oa.qupeiyi.cn/user/Rongcloud/getToken/", token);
                 call.enqueue(new Callback() {
                     @Override
@@ -385,11 +384,8 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         public void click(View v) {
-
             switch (v.getId()) {
-
                 case R.id.login_rl_confirm:
-
                     name = etPhone.getText().toString();
                     password = etPassword.getText().toString();
                     havIdentity = false;

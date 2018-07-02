@@ -73,7 +73,6 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
         showLeftButton(true, "", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (webView.canGoBack()) {
                     webView.goBack();
                 } else {
@@ -94,7 +93,7 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
         webSettings.setDisplayZoomControls(false);//隐藏内置的原生缩放控件
 
         webSettings.setPluginState(WebSettings.PluginState.ON);
-        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE); //缓存模式如下：
+        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT); //缓存模式如下：
         //LOAD_CACHE_ONLY: 不使用网络，只读取本地缓存数据
         //LOAD_DEFAULT: （默认）根据cache-control决定是否从网络上取数据。
         //LOAD_NO_CACHE: 不使用缓存，只从网络获取数据.
@@ -108,7 +107,7 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
         Log.i(TAG, userAgent + "  useragent");
         webSettings.setUserAgentString(userAgent);
         webView.getSettings().setDomStorageEnabled(true);
-        webView.clearCache(true);
+//        webView.clearCache(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             //两者都可以
             webSettings.setMixedContentMode(MIXED_CONTENT_ALWAYS_ALLOW);
@@ -368,9 +367,9 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
     protected void onDestroy() {
         if (webView != null) {
             webView.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
-            webView.clearHistory();
-            webView.clearCache(true);
-            webView.clearFormData();
+//            webView.clearHistory();
+//            webView.clearCache(true);
+//            webView.clearFormData();
             ((ViewGroup) webView.getParent()).removeView(webView);
             webView.destroy();
             webView = null;

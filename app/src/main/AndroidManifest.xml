@@ -57,8 +57,7 @@
 
         <activity
             android:name=".ui.activity.MainActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:launchMode="singleTask"/>
         <activity android:name=".ui.activity.BaseActivity" />
         <activity android:name=".ui.activity.DocumentFlowActivity" />
         <activity android:name=".ui.activity.DocumentTurnActivity" />
