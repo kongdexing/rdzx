@@ -115,12 +115,11 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
         }
 
         MyWebChromeClient chromeClient = new MyWebChromeClient();
-        MyWebviewClient client = new MyWebviewClient();
+        MyWebViewClient client = new MyWebViewClient();
 //file:///android_asset/index.html
 //   http://www.haont.cn/CPPCC/sqmy/#!/submit/    http://www.haont.cn/TiAnPhone/
 //        http://www.haont.cn/TiAnPhone/
         webView.addJavascriptInterface(new JavascriptBridge(this), "javaBridge");
-        webView.loadUrl(webUrl);
         webView.setWebChromeClient(chromeClient);
         webView.setWebViewClient(client);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -133,6 +132,12 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
 //        // 设置是否允许 WebView 使用 File 协议,默认设置为true，即允许在 File 域下执行任意 JavaScript 代码
         webView.getSettings().setAllowFileAccess(true);
         webView.getSettings().setDomStorageEnabled(true);
+        if (webUrl.contains("?")){
+            webUrl+="&token="+token;
+        }else{
+            webUrl+="?token="+token;
+        }
+        webView.loadUrl(webUrl);
     }
 
     @Override
@@ -303,25 +308,23 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
         }
     }
 
-    private class MyWebviewClient extends WebViewClient {
+    private class MyWebViewClient extends WebViewClient {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            Log.i(TAG, "shouldOverrideUrlLoading: " + url);
-            view.loadUrl(url);
-            return super.shouldOverrideUrlLoading(view, url);
+            return super.shouldOverrideUrlLoading(view,url);
         }
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            Log.i(TAG, "onPageStarted: " + url);
             super.onPageStarted(view, url, favicon);
-            Log.i(TAG, "onPageStarted: ");
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            super.onPageFinished(view, url);
             Log.i(TAG, "onPageFinished " + url + "  needToken " + needToken);
+            super.onPageFinished(view, url);
             webviewFinished = true;
             setTokenToWeb();
         }
