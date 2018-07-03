@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -83,10 +84,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         tvRight1 = (IconTextView) findViewById(R.id.title_tv_right1);
         llRoot = (LinearLayout) findViewById(R.id.ll_basetitle_root);
         llBack = (LinearLayout) findViewById(R.id.title_ll_back);
+        ImageView iv_finish = (ImageView)findViewById(R.id.iv_finish);
         rlCotent = (RelativeLayout) findViewById(R.id.tittle_rl_content);
         tittle_rl_content = (RelativeLayout) findViewById(R.id.tittle_rl_content);
 
         llBack.setVisibility(View.INVISIBLE);
+        iv_finish.setVisibility(View.GONE);
         tvTitle.setVisibility(View.INVISIBLE);
         tvRight.setVisibility(View.INVISIBLE);
     }
