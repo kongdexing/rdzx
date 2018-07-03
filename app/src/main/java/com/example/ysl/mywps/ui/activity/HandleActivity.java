@@ -31,7 +31,7 @@ public class HandleActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         setTitleText("经办查询");
-        showLeftButton(true, "", new View.OnClickListener() {
+        showLeftButton(true,new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();

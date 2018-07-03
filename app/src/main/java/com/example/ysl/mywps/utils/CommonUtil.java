@@ -162,7 +162,7 @@ public class CommonUtil {
     }
 
     public static String getCurrentDateHms() {
-        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         return sDateFormat.format(new Date());
     }
 

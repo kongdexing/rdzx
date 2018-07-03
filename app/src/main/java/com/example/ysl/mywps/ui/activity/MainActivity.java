@@ -93,7 +93,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
     float x1, x2, y1, y2;
-    int currentIndex = 0;
+    public int currentIndex = 0;
 //    private PagerAdapter pagerAdapter;
 
 
@@ -252,6 +252,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    public int getCurrentIndex() {
+        return currentIndex;
+    }
+
     public void showMessage(int index) {
         fragmentTransaction = fragmentManager.beginTransaction();
         if (currentFragment != null && index != currentMyIndex)
@@ -275,6 +279,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     fragmentTransaction.add(R.id.main_rl_container, messageFragment);
                 } else {
                     fragmentTransaction.show(messageFragment);
+                    messageFragment.onResume();
                     if (badgeView.getVisibility() == View.VISIBLE) {
                         ((MessageFragment) messageFragment).getFirstPageData();
                     }
@@ -306,7 +311,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 currentFragment = mineFragment;
                 setTextBack(3);
                 break;
-
+        }
+        if (currentIndex != 1 && messageFragment != null) {
+            messageFragment.onPause();
         }
         fragmentTransaction.setCustomAnimations(R.anim.fragment_out, R.anim.fragment_back, R.anim.fragment_out, R.anim.fragment_back);
         fragmentTransaction.commit();

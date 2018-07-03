@@ -55,7 +55,7 @@ public class FlowActivity extends BaseActivity {
         docId = getIntent().getStringExtra("docId");
 
         ButterKnife.bind(this);
-        showLeftButton(true, "", new View.OnClickListener() {
+        showLeftButton(true, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();

@@ -16,7 +16,7 @@ public class SearchActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        showLeftButton(true, "", new View.OnClickListener() {
+        showLeftButton(true,new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();

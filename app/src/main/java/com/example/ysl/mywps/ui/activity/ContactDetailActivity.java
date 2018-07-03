@@ -78,7 +78,7 @@ public class ContactDetailActivity extends BaseActivity {
 
         setContentView(R.layout.activity_contact_detail_layout);
         ButterKnife.bind(this);
-        showLeftButton(true, "", new View.OnClickListener() {
+        showLeftButton(true, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();

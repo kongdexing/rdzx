@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
@@ -36,7 +37,6 @@ import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.net.ProgressListener;
 import com.example.ysl.mywps.utils.CommonUtil;
 import com.example.ysl.mywps.utils.ToastUtils;
-import com.gc.materialdesign.views.ButtonRectangle;
 import com.iceteck.silicompressorr.VideoCompress;
 import com.lx.fit7.Fit7Utils;
 import com.orhanobut.logger.Logger;
@@ -174,11 +174,9 @@ public class WebViewActivity extends BaseWebActivity implements JSCallBack {
         String message = "";
         switch (method) {
             case "callCamera":
-                ToastUtils.showShort(this, "随意拍");
                 callCamera();
                 break;
             case "callDocument":
-                ToastUtils.showShort(this, "选择文件");
                 findDocuments();
                 break;
             case "callCommit":
@@ -273,7 +271,7 @@ public class WebViewActivity extends BaseWebActivity implements JSCallBack {
     private void uploadFile(final String filePath, final String name) {
         Log.i(TAG, "uploadFile: " + filePath + "  name:" + name + " token:" + token);
         progressbar.setVisibility(View.VISIBLE);
-
+        showProgress("正在上传文件");
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -353,9 +351,9 @@ public class WebViewActivity extends BaseWebActivity implements JSCallBack {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            hideProgress();
             if (msg.obj != null) {
                 if (msg.obj.toString().equals("Y")) {
-
                     if (msg.obj.equals("Y")) {
                         ToastUtils.showShort(WebViewActivity.this, "上传成功");
                     } else if (msg.obj.equals("N")) {
@@ -391,7 +389,6 @@ public class WebViewActivity extends BaseWebActivity implements JSCallBack {
         } else {
             if (resultCode == RESULT_OK) {
                 if (requestCode == CAMERA_REQUEST_CODE) {
-                    Log.i(TAG, "onActivityResult: CAMERA_REQUEST_CODE");
                     path = imgPath;
                 } else {
                     if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {//4.4以后
@@ -409,6 +406,7 @@ public class WebViewActivity extends BaseWebActivity implements JSCallBack {
                     ToastUtils.showShort(this, "请选择要上传的文件");
                     return;
                 }
+                Log.i(TAG, "onActivityResult: path " + path);
                 final File file = new File(path);
                 if (!file.exists()) {
                     ToastUtils.showShort(this, "文件不存在");
@@ -451,7 +449,7 @@ public class WebViewActivity extends BaseWebActivity implements JSCallBack {
         File file = new File(outPutPath);
         if (!file.exists())
             file.mkdirs();
-        String name = "sheqing" + ".jpg";
+        String name = CommonUtil.getCurrentDateHms() + ".jpg";
         imgPath = outPutPath + File.separator + name;
         Intent intent = new Intent();
         // 指定开启系统相机的Action
@@ -492,7 +490,6 @@ public class WebViewActivity extends BaseWebActivity implements JSCallBack {
         startActivityForResult(intent, DOCUMENT_REQUEST_CODE);
     }
 
-
     private PopupWindow bottomWindow;
     float alpha = 1;
 
@@ -502,8 +499,8 @@ public class WebViewActivity extends BaseWebActivity implements JSCallBack {
             bottomWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
 
             LinearLayout llDismiss = (LinearLayout) view.findViewById(R.id.ll_dismiss);
-            ButtonRectangle btPhoto = (ButtonRectangle) view.findViewById(R.id.popupwind_bt_photo);
-            ButtonRectangle btVideo = (ButtonRectangle) view.findViewById(R.id.popupwind_bt_video);
+            Button btPhoto = (Button) view.findViewById(R.id.popupwind_bt_photo);
+            Button btVideo = (Button) view.findViewById(R.id.popupwind_bt_video);
 
             btPhoto.setOnClickListener(new View.OnClickListener() {
                 @Override

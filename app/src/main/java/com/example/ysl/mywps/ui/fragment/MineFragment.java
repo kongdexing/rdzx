@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.ysl.mywps.R;
@@ -36,8 +35,6 @@ public class MineFragment extends BaseFragment {
     @BindView(R.id.imgHead)
     ImageView imgHead;
 
-    @BindView(R.id.mine_rl_loginout)
-    RelativeLayout rlLoginOut;
     @BindView(R.id.txtName)
     TextView txtName;
     @BindView(R.id.txtCache)

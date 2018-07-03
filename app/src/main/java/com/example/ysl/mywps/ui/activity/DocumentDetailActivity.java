@@ -51,7 +51,7 @@ public class DocumentDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_document_detail_layout);
         ButterKnife.bind(this);
 
-        showLeftButton(true, "", new View.OnClickListener() {
+        showLeftButton(true, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();

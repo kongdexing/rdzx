@@ -45,7 +45,7 @@ public class DocumentTurnActivity extends BaseActivity {
     @Override
     public void initView() {
 
-        showLeftButton(true, "", new View.OnClickListener() {
+        showLeftButton(true, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();

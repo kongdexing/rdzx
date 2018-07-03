@@ -205,7 +205,7 @@ public class WpsDetailActivity extends WpsDetailBaseActivity {
         rlDragContent.setVisibility(View.GONE);
 
         screenH = CommonUtil.getScreenWH(this)[1];
-        showLeftButton(true, "", new View.OnClickListener() {
+        showLeftButton(true, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();

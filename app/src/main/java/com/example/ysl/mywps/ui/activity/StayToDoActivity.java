@@ -54,7 +54,7 @@ public class StayToDoActivity extends BaseActivity {
 
         setContentView(R.layout.activity_stay_to_do_layout);
         ButterKnife.bind(this);
-        showLeftButton(true, "", new View.OnClickListener() {
+        showLeftButton(true,new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();

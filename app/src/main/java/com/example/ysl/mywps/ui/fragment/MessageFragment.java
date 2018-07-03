@@ -19,6 +19,7 @@ import com.example.ysl.mywps.bean.MessageBean;
 import com.example.ysl.mywps.net.HttpUtl;
 import com.example.ysl.mywps.net.ResultPage;
 import com.example.ysl.mywps.receiver.MyJipushReceiver;
+import com.example.ysl.mywps.ui.activity.MainActivity;
 import com.example.ysl.mywps.ui.adapter.MessageAdapter;
 import com.example.ysl.mywps.ui.view.LoadMoreRecyclerView;
 import com.example.ysl.mywps.utils.SharedPreferenceUtils;
@@ -74,9 +75,6 @@ public class MessageFragment extends BaseFragment {
     public void afterView(View view) {
         Log.i(TAG, "afterView: ");
         initRecyclerView(recyclerview, swipeRefresh);
-        IntentFilter filter = new IntentFilter(MyJipushReceiver.ACTION_RECEIVE_MESSAGE);
-        filter.setPriority(3000);
-        getContext().registerReceiver(pushReceiver, filter);
 //        btnAddItem.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -87,6 +85,28 @@ public class MessageFragment extends BaseFragment {
 //                getContext().sendOrderedBroadcast(intent, null);
 //            }
 //        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume: ");
+        if (((MainActivity) getContext()).getCurrentIndex() == 1) {
+            IntentFilter filter = new IntentFilter(MyJipushReceiver.ACTION_RECEIVE_MESSAGE);
+            filter.setPriority(3000);
+            getContext().registerReceiver(pushReceiver, filter);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause: ");
+        try {
+            getContext().unregisterReceiver(pushReceiver);
+        } catch (Exception ex) {
+
+        }
     }
 
     public void initRecyclerView(LoadMoreRecyclerView recyclerView, final SwipeRefreshLayout swipeRefreshLayout) {

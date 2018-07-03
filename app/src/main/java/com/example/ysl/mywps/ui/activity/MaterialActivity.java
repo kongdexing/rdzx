@@ -86,7 +86,7 @@ public class MaterialActivity extends BaseActivity implements View.OnClickListen
         myWindow = this.getWindow();
         myLp = myWindow.getAttributes();
         ButterKnife.bind(this);
-        showLeftButton(true, "", new View.OnClickListener() {
+        showLeftButton(true, new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {

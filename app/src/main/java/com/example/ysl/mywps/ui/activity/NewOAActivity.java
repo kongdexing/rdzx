@@ -29,7 +29,7 @@ public class NewOAActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_oa);
         ButterKnife.bind(this);
-        showLeftButton(true, "", new View.OnClickListener() {
+        showLeftButton(true,  new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();

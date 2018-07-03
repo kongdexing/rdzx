@@ -60,6 +60,7 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        showClose();
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             webUrl = bundle.getString(WEB_URL);
@@ -70,7 +71,7 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
     }
 
     public void initWebView() {
-        showLeftButton(true, "", new View.OnClickListener() {
+        showLeftButton(true, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (webView.canGoBack()) {
@@ -132,10 +133,10 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
 //        // 设置是否允许 WebView 使用 File 协议,默认设置为true，即允许在 File 域下执行任意 JavaScript 代码
         webView.getSettings().setAllowFileAccess(true);
         webView.getSettings().setDomStorageEnabled(true);
-        if (webUrl.contains("?")){
-            webUrl+="&token="+token;
-        }else{
-            webUrl+="?token="+token;
+        if (webUrl.contains("?")) {
+            webUrl += "&token=" + token;
+        } else {
+            webUrl += "?token=" + token;
         }
         webView.loadUrl(webUrl);
     }
@@ -312,7 +313,7 @@ public class BaseWebActivity extends BaseActivity implements JSCallBack {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            return super.shouldOverrideUrlLoading(view,url);
+            return super.shouldOverrideUrlLoading(view, url);
         }
 
         @Override

@@ -57,10 +57,10 @@
                 android:layout_height="wrap_content"
                 android:text="修改密码" />
 
-            <ImageView
-                style="@style/arrow_right" />
+            <ImageView style="@style/arrow_right" />
 
         </RelativeLayout>
+
         <RelativeLayout
             android:id="@+id/rlClearCache"
             android:layout_width="match_parent"
@@ -91,6 +91,7 @@
                 style="@style/arrow_right" />
 
         </RelativeLayout>
+
         <RelativeLayout
             android:id="@+id/rlFeedback"
             android:layout_width="match_parent"
@@ -106,8 +107,7 @@
                 android:layout_height="wrap_content"
                 android:text="意见反馈" />
 
-            <ImageView
-                style="@style/arrow_right" />
+            <ImageView style="@style/arrow_right" />
 
         </RelativeLayout>
 
@@ -118,30 +118,20 @@
             android:layout_marginBottom="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_horizontal_margin">
 
-            <com.gc.materialdesign.views.ButtonRectangle
+            <Button
                 android:id="@+id/mine_rl_loginout"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
+                android:layout_height="@dimen/dp_50"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="@dimen/activity_horizontal_margin"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:background="@color/rect_red"
-                android:paddingBottom="@dimen/padding_small"
-                android:paddingTop="@dimen/padding_small">
+                android:background="@drawable/bg_logout_button"
+                android:text="退出登录 "
+                android:textColor="@color/white_back"
+                android:textSize="@dimen/text_large">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:text="退出登录 "
-                    android:textColor="@color/white_back"
-                    android:textSize="@dimen/text_large" />
-
-
-            </com.gc.materialdesign.views.ButtonRectangle>
+            </Button>
         </RelativeLayout>
 
     </LinearLayout>

@@ -7,14 +7,11 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.ysl.mywps.R;
@@ -51,7 +48,7 @@ public class DocumentFlowActivity extends BaseActivity {
         Logger.i("conatct   " + R.string.contact_title);
 
 
-        showLeftButton(true, null, new NoDoubleClickListener() {
+        showLeftButton(true, new NoDoubleClickListener() {
             @Override
             public void click(View v) {
                 finish();

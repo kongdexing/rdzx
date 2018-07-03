@@ -102,7 +102,7 @@ public class ContactActivity extends BaseActivity {
         initPageView();
 
         token = SharedPreferenceUtils.loginValue(this, "token");
-        showLeftButton(true, "", new View.OnClickListener() {
+        showLeftButton(true, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
